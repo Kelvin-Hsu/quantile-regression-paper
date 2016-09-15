@@ -1,0 +1,189 @@
+\documentclass[twoside]{article} \usepackage{aistats2017}
+
+% If your paper is accepted, change the options for the package
+% aistats2017 as follows:
+%
+%\usepackage[accepted]{aistats2017}
+%
+% This option will print headings for the title of your paper and
+% headings for the authors names, plus a copyright note at the end of
+% the first column of the first page.
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathbbol}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\usepackage{bm}
+\usepackage{vector}
+\usepackage{color}
+
+\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+\newcommand{\rv}[1]{\underline{\overline{#1}}}
+\newcommand{\warn}[1]{{\color{red} #1}}
+
+\begin{document}
+
+% If your paper is accepted and the title of your paper is very long,
+% the style will print as headings an error message. Use the following
+% command to supply a shorter title of your paper so that it can be
+% used as headings.
+%
+%\runningtitle{I use this title instead because the last one was very long}
+
+% If your paper is accepted and the number of authors is large, the
+% style will print as headings an error message. Use the following
+% command to supply a shorter version of the authors names so that
+% they can be used as headings (for example, use only the surnames)
+%
+%\runningauthor{Surname 1, Surname 2, Surname 3, ...., Surname n}
+
+\twocolumn[
+
+\aistatstitle{Quantile Regression with Kernel Embeddings : \\ Supplementary Material}
+
+\aistatsauthor{ Anonymous Author 1 \And Anonymous Author 2 \And Anonymous Author 3 }
+
+\aistatsaddress{ Unknown Institution 1 \And Unknown Institution 2 \And Unknown Institution 3 } ]
+
+\begin{abstract}
+
+\end{abstract}
+
+\section{Notation}
+
+	\textbf{Vectors.} The only quantities that are bold in notation are vectors. Scalars, matrices, and functions are not denoted in bold. Keep in mind that this convention is chosen even after considering the fact that functions operate as uncountably infinite dimensional vectors in many settings within this paper.
+	
+	A vector $\bvec{v}$ with components $v_{1}, \dots, v_{n}$ can be written in multiple ways.
+	
+	\begin{equation}
+		\bvec{v} = {\begin{bmatrix} v_{1} & \dots & v_{n} \end{bmatrix}}^{T} = \begin{bmatrix} v_{1} \\ \vdots \\ v_{n} \end{bmatrix} = \{v_{i}\}_{i = 1}^{n}
+	\end{equation}
+	
+	\textbf{Indices.} The $j$-th element of a vector $\bvec{x}$ is denoted as $x_{j}$. The $(i, j)$-th element of a matrix $X$ is denoted as $x_{i, j}$.
+	
+	\textbf{Random Variables and Vectors.} A random variable (RV) is denoted with an upper case letter with both overline and underline, as in $\rv{X}$. A random vector (RV) is then denoted in bold, as in $\bvec{\rv{X}}$. Semantically, while random variables and vectors are so named, they are formally a mapping from the sample space $\Omega$ to some other Borel measurable space, such as $\mathcal{X} = \mathbb{R}$ or $\mathcal{X} = \mathbb{R}^{d}$. This is where the notations in probability theory and statistics differ slightly from those in measure theory. In general, while the notations in measure theory are more precise (making clear that RVs are mappings), the notations in probability theory and statistics are easier to read and interpret (treating RVs as what it sounds like - random variables and vectors).
+	
+	For events, a common shorthand used in both probability theory and measure theory is
+	
+	\begin{equation}
+		\{\rv{X} \in A\} := \rv{X}^{-1}[A] := \{\omega \in \Omega : \rv{X}(\omega) \in A\} \in \mathcal{W}
+	\end{equation}
+	
+	\textbf{Measures, Functions, and Functionals.} While both measures and regular functions are mappings, this paper makes a distinction between mappings whose domain is a $\sigma$-algebra (measures) and mappings whose domain is not (other functions). This distinction is emphasised by the notation of how a measure $\nu$ or a regular function $f$ takes its arguments. A measure takes its arguments with square brackets, as in $\nu[\cdot]$. A regular function takes its arguments with round brackets, as in $f(\cdot)$. For functionals $\mathbb{F}$, or mappings that take regular functions as an input, square brackets are also used, such as $\mathbb{F}[\cdot]$.
+	
+	Typical examples of measures are the probability measure $\mathbb{P} : \mathcal{W}_{\Omega} \mapsto [0, 1]$ on the sample space $\Omega$ and the Lebesgue measure $m_{N} : \mathcal{A}_{\mathbb{R}^{N}} \mapsto [0, \infty)$ on Euclidean space $\mathbb{R}^{N}$, where $\mathcal{W}_{\Omega}$ and $\mathcal{A}_{\mathbb{R}^{N}}$ are $\sigma$-algebras of their respective subscripts.
+	
+	Typical examples of regular functions involve functions $f : \mathcal{X} \mapsto \mathbb{R}$ that form a Hilbert space (HS) or reproducing kernel Hilbert space (RKHS) and random variables $\rv{X} : \Omega \mapsto \mathcal{X}$.
+	
+	Typical examples of functionals are the expectance operator $\mathbb{E}$ and variance operator $\mathbb{V}$ that take in a function or function composition whose domain is a $\sigma$-algebra of the sample space $\Omega$. For example, it takes in a function that maps from $\Omega$ to $\mathbb{R}$, and outputs a real number in $\mathbb{R}$. An inner product on an uncountably infinite dimensional Hilbert space $\langle \cdot, \cdot, \rangle$ is a functional of two arguments, recalling that a function can be seen as an uncountably infinite dimensional vector. A Lebesgue integral $\int_{B} \cdot d\nu$ (as opposed to a Riemann integral) with respect to a measure $\nu$ on some set $B$ is also a functional.
+	
+	\textbf{Expectance and Variance Operators.} For a random variable $\rv{X} : \Omega \mapsto \mathcal{X}$ and a function $f : \mathcal{X} \mapsto \mathbb{R}$. The notation in probability theory and statistics for the expectance of a function of a random variable would be $\mathbb{E}[f(\rv{X})]$, as if $\rv{X}$ is a variable and not a function, while in measure theory the more precise notation is $\mathbb{E}[f \circ \rv{X}]$, as it $\mathbb{E}$ is a functional and should therefore take a function as the input. In practice, $\mathbb{E}[f(\rv{X})]$ becomes a shorthand for $\mathbb{E}[f \circ \rv{X}]$, and thus the former is used more often.
+	
+	\textbf{Indicator Measures and Functions.} Another example of a measure is the indicator measure $\mathbb{1} : \mathcal{W} \mapsto \{0, 1\}$. Using the definition $\mathbb{1}_{A}(x) := \mathbb{1}[x \in A]$, the indicator function is then a regular function $\mathbb{1}_{A} : \mathcal{X} \mapsto \{0, 1\}$. Note that the latter is an abuse of notation since the shorthand for $x \in A$ is only defined if $x$ is a random variable (and thus a mapping). 
+	
+	\textbf{Datasets.} A dataset consisting of $n$ observations of $d$-dimensional vector quantities will be denoted using an upper case, such as $\underline{X}$, as it is also a matrix of size $n \times d$ so that $X \in \mathbb{R}^{n \times d}$. We call the dimension from $1$ to $n$ the observation dimension, and the dimension from $1$ to $d$ the covariate dimension. As such, we have $X = \{x_{i, j}\}_{i = 1, j = 1}^{n, d}$, where $x_{i, j}$ is the $j$-th covariate of the $i$-th observation. We also denote those observations equivalently by
+
+	\begin{equation}
+	\bvec{x}_{i} = \{x_{i, j}\}_{j = 1}^{d} \equiv \{x_{i, 1}, \dots, x_{i, d}\} \equiv \begin{bmatrix}
+	x_{i, 1} & \cdots & x_{i, d}
+	\end{bmatrix}^{T}
+	\label{eq:data_vector_notation}
+	\end{equation}
+	
+	for all $i \in \{1, \dots, n\}$, and thus
+
+	\begin{equation}
+		X = \{\bvec{x}_{i}\}_{i = 1}^{n} \equiv \{\bvec{x}_{1}, \dots, \bvec{x}_{n}\} \equiv \begin{bmatrix}
+			\bvec{x}_{1} & \cdots & \bvec{x}_{n}
+		\end{bmatrix}^{T}
+	\label{eq:data_matrix_notation}
+	\end{equation}
+		
+	Since $\{ \cdot \}$ stacks the components in the first axis, stacking $d$ scalars would turn it into a $\mathbb{R}^{d}$ vector \eqref{eq:data_vector_notation}, while stacking $n$ $\mathbb{R}^{d}$ vectors will turn it into a $\mathbb{R}^{n \times d}$ matrix \eqref{eq:data_matrix_notation}.
+	
+	\textbf{Vectorisation.} For a function $f : \mathcal{X} \mapsto \mathbb{R}$ for some Borel measurable space $\mathcal{X}$. Suppose $x_{i} \in \mathcal{X}$, $i \in \{1, \dots, n\}$, and the function $f$ is to be applied on each of those elements. Suppose further, as \eqref{eq:data_matrix_notation} we denote $X = \{x_{i}\}_{i = 1}^{n}$. Note that we do not bold the elements $x_{i}$ as they may or may not be vectors, or even elements of a Euclidean space. We define the following shorthand notation for the vector containing $f(x_{1}), \dots, f(x_{n})$. We choose the curly brackets to remind readers of the shorthand notation for vectors $\{f(x_{i})\}_{i = 1}^{n}$.
+	
+	\begin{equation}
+		f\{X\} := \{f(x_{i})\}_{i = 1}^{n} = {\begin{bmatrix} f(x_{1}) & \dots & f(x_{n}) \end{bmatrix}}^{T}
+	\end{equation}
+	
+	\textbf{Kernel Embeddings.} \warn{We will follow on from the section in the paper.}
+	
+	In the kernel embeddings setting, the partially applied kernel function, $k(x, \cdot)$, acts like a feature vector for the RKHS it spans over $x \in \mathcal{X}$. However, instead of an usual finite dimensional vector, this is an (usually uncountably, depending on the cardinality of $\mathcal{X}$) infinite dimensional vector as it is a function of one variable in $\mathcal{X}$. In many literature, the notation $\phi(x) := k(x, \cdot)$ is used. However, the author prefers $\phi_{x} := k(x, \cdot)$ so that it is clearer that $\phi_{x}$ is a function of one variable such that $\phi_{x}(x') = k(x, x')$. It would be awkward to write $\phi(x)(x')$ otherwise. Also, as an infinite dimensional vector, when an appropriate Hilbert-Schmidt operator comes, say $C_{\rv{Y} | \rv{X}}$, it would look less awkward if we write $C_{\rv{Y} | \rv{X}} \phi_{x}$ as in $\phi_{x}$ is an element of some vector space where linear operations can be applied onto, instead of $C_{\rv{Y} | \rv{X}} \phi(x)$ where it looks like this is $C_{\rv{Y} | \rv{X}}$ multiples of some functional value $\phi(x)$.
+	
+	In this way, we emphasise that $\phi_{x}$ is akin to an infinite dimensional vector, or a matrix with size $\infty \times 1$.
+	
+	We can then write tensor products and inner products with matrix notation, which is what many papers implicitly do but do not explicitly say so.
+	
+	For example, the cross-variance operator for the distribution of $\rv{X}$ in $\mathcal{X}$ is
+	
+		\begin{equation}
+			C_{\rv{X} \rv{X}} := \mathbb{E}[k(\rv{X}, \cdot) \otimes k(\rv{X}, \cdot)]
+		\end{equation}
+		
+	Notice that this takes two arguments in $\mathcal{X}$. As such, when applied onto a function that takes one argument in $\mathcal{X}$, this acts like a matrix with size $\infty \times \infty$ (recall that all linear operators have respective matrix representations). Taking arguments becomes like indexing. For an usual finite dimensional matrix, we usually write $A_{i j}$ for the element at the $i$-th row and $j$-th column. In programming, we usually write something like \texttt{A[i, j]} or \texttt{A(i, j)}. Now, this operator is indexed by the arguments instead, which are uncountably infinite, so we write $C_{\rv{X} \rv{X}}(x_{1}, x_{2})$ for example.
+	
+	Now that we establish that this linear operator has a matrix representation, we can write 
+
+		\begin{equation}
+			C_{\rv{X} \rv{X}} := \mathbb{E}[\phi_{\rv{X}} \otimes \phi_{\rv{X}}] = \mathbb{E}[\phi_{\rv{X}} \phi_{\rv{X}}^{T}]
+		\end{equation}
+	
+	where we used the matrix notation for a tensor product between vectors. Now, when we apply this linear operator to a feature vector (function), we usually use the notation
+	
+		\begin{equation}
+			(a \otimes b) c = a \langle b, c \rangle
+		\end{equation}
+		
+	In matrix notation this is simply
+	
+		\begin{equation}
+			(a b^{T}) c = a (b^{T} c) = a b^{T} c
+		\end{equation}
+		
+	Noting that the first term is an outer product applied to a vector, the second term is a vector multiplied by a dot product which returns a scalar, and the third term shows this notation readily makes associativity clear.
+	
+	In the kernel embedding context we would see things like
+	
+		\begin{equation}
+			C_{\rv{X} \rv{X}} \phi_{x} = \mathbb{E}[\phi_{\rv{X}} \phi_{\rv{X}}^{T}] \phi_{x} = \mathbb{E}[\phi_{\rv{X}} \phi_{\rv{X}}^{T} \phi_{x}] = \mathbb{E}[\phi_{\rv{X}} k(\rv{X}, x)]
+		\end{equation}
+			
+	Then we know that this is now a $\infty \times \infty$ operator applied on a $\infty \times 1$ vector which gives another $\infty \times \infty$ vector, in loose terms.
+	
+	The convenience of this notation becomes evident when we use it to derive the kernel sum rule, kernel chain rule, and kernel Bayes rule with finite samples.
+	
+	Suppose we have a dataset $X = \{x_{i}\}_{i = 1}^{n}$. We concatenate the feature vectors at the observed locations together by columns.
+	
+	\begin{equation}
+		\Phi_{X} := \begin{bmatrix} \phi_{x_{1}} & \dots & \phi_{x_{n}} \end{bmatrix} = (\{x_{i}\}_{i = 1}^{n})^{T}
+	\end{equation}
+	
+	By stacking the feature vectors of size $\infty \times 1$ in the column axis, we have a feature matrix of the size $\infty \times n$, where $n$ is number of observations.
+	
+	Then, a kernel embedding with weights $\bm{\beta} \in \mathbb{R}^{n}$ can be written as
+	
+	\begin{equation}
+		\hat{\mu}_{\rv{X}} = \sum_{i = 1}^{n} \beta_{i} k(x_{i}, \cdot) = \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}} = \Phi_{X} \bm{\beta}
+	\end{equation}
+	
+	We can quickly verify the dimensionality of this equation. On the left we have  $\hat{\mu}_{\rv{X}}$ being a $\infty \times 1$ vector. On the right we have $\Phi_{X} \bm{\beta}$ being a $\infty \times n$ matrix applied on a $n \times 1$ vector, which also results in a $\infty \times 1$ vector.
+	
+	\warn{Rewrite the stuff I wrote in my notes last time for RKHS mathematics here.}
+	
+\section{Optimal Approximate Embedding Derivations}
+
+		\begin{equation}
+		\begin{aligned}
+			\Vert \hat{f} - f \Vert &= \langle \hat{f} - f, \hat{f} - f \rangle \\
+			&= \langle \hat{f}, \hat{f} \rangle - 2 \langle \hat{f}, f \rangle + \langle f, f \rangle \\
+			&=  \hat{f}^{T} \hat{f} - 2 \hat{f}^{T} f + f^{T} f \\
+			&= (\Phi_{\underline{X}} \bm{\alpha})^{T} \Phi_{\underline{X}}  \bm{\alpha} - 2 (\Phi_{\underline{X}}  \bm{\alpha})^{T} f + f^{T} f \\
+			&= \bm{\alpha}^{T} \Phi_{\underline{X}} ^{T} \Phi_{\underline{X}}  \bm{\alpha} - 2 \bm{\alpha}^{T} \Phi_{\underline{X}} ^{T} f + f^{T} f \\
+			&= \bm{\alpha}^{T} K_{\underline{X} \underline{X}}  \bm{\alpha} - 2 \bm{\alpha}^{T} \bvec{f}_{\underline{X}} + f^{T} f \\
+			\end{aligned}
+		\label{eq:approximate_embedding_derivation}
+		\end{equation}
+		
+\end{document}
