@@ -19,7 +19,9 @@
 \usepackage{color}
 
 \newcommand{\argmin}{\operatornamewithlimits{argmin}}
-\newcommand{\rv}[1]{\underline{\overline{#1}}}
+%\newcommand{\rv}[1]{\underline{\overline{#1}}}
+\newcommand{\rv}[1]{\underline{#1}}
+\newcommand{\ds}[1]{{#1}}
 \newcommand{\warn}[1]{{\color{red} #1}}
 
 \begin{document}
@@ -171,79 +173,91 @@
 		
 		Quantile regression is then the problem of finding an empirical estimate $\hat{q}_{\rv{Y} | \bvec{\rv{X}} = \bvec{x}}(\tau)$ for $q_{\rv{Y} | \bvec{\rv{X}} = \bvec{x}}(\tau)$ given a set of paired observations $\{(\bvec{x}_{i}, y_{i})\}_{i = 1}^{n}$ and a query point $\bvec{x}$.
 		
-		\warn{This is where we introduce the pinball loss and the basics of quantile regression}
+		In practice, it is sufficient to replace the infimum with the minimum if the CDF estimate is smooth. Since the CDF is always non-decreasing, the inequality becomes an equality, and obtaining quantiles becomes a root finding procedure once an estimate of the CDF is obtained \eqref{eq:quantile_root_finding}. In this paper, we present methods for estimating the CDF from a dataset.
 		
+		\begin{equation}
+			q_{\rv{Y} | \bvec{\rv{X}} = \bvec{x}}(\tau) = y : P_{\rv{Y} | \bvec{\rv{X}} = \bvec{x}}(y) = \tau
+		\label{eq:quantile_root_finding}
+		\end{equation}	
+	
+		\warn{This is where we introduce the pinball loss and the basics of quantile regression}
+				
 		\warn{Need perhaps illustrative examples through description}
 		
 \section{Discriminative Quantile Regression}
 
-	Discriminative Quantile Regression refers to 
+	The discriminative approach to quantile regression refers to techniques which computes an estimate of the CDF directly, without needing to compute the PDF first.
 	
-	Recall that the probability measure of a set is the expected indicator value of that set for a given random vector $\bvec{\rv{X}}$, and since we can write expected value of a function as the inner product between the kernel embedding and the function, we have
+	The central idea here revolves around the fact that the probability measure of a set is the expected indicator value of that set for a given random vector $\bvec{\rv{X}}$, and the expected value of a function can be written as the inner product between the kernel embedding and the function \eqref{eq:distribution_inner}.
+	
 	\begin{equation}
 		\mathbb{P}_{\bvec{\rv{X}}}[A] = \mathbb{E}[\mathbb{1}_{A}(\bvec{\rv{X}})] = \langle \mu_{\rv{X}}, \mathbb{1}_{A} \rangle
 	\label{eq:distribution_inner}
 	\end{equation}
 	
-	From the definition of the CDF \eqref{eq:cdf} we then have
+	As the CDF $P_{\rv{X}}$ is defined through the distribution $\mathbb{P}_{\rv{X}}$ \eqref{eq:cdf}, it becomes straightforward to obtain the CDF as an inner product between the kernel embedding and the corresponding indicator function. \eqref{eq:cdf_inner}.
+	
 	\begin{equation}
 		P_{\bvec{\rv{X}}}(\bvec{x}) = \mathbb{P}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \langle \mu_{\bvec{\rv{X}}}, \mathbb{1}_{(-\bvec{\infty}, \bvec{x}]} \rangle
 	\label{eq:cdf_inner}
 	\end{equation}
 	
+	We will now focus our attention on how to estimate the distribution and CDF from a given dataset.
+	
 	\subsection{Optimal Empirical Projection for Function Approximation}
-		
-		\warn{There is something the reviewers might pick up here: We do not know if the indicator function is in the full RKHS $\mathcal{H}_{k}$ in general. In fact, the paper ``Recovering Distributions from Gaussian RKHS Embeddings'' said that polynomial functions and indicator functions are included in Besov spaces under certain assumptions. The paper does continue to derive a bound and also empirically show that the estimator we derived does converge to the true value. I guess we should probably mention this: That while indicator functions are not generally contained in the RKHS, the estimator we derived for its expectation, by assuming that it is contained in the RKHS, converges to the actual expectation.}
 
-		Suppose $f \in \mathcal{H}_{k}$. Suppose we have collected samples $X := \{\bvec{x}_{1}, \dots, \bvec{x}_{n}\} \in \mathbb{R}^{n \times d}$. We want to find an approximate function $\hat{f} \in \mathcal{H}_{k, X}$ that is the closest approximation to $f$. Notice that $\mathcal{H}_{k, X} \subset \mathcal{H}_{k}$ is a finite vector subspace of the full RKHS for finite $n$, which is also a RKHS in its own right.
-		
-		Since the RKHS $\mathcal{H}_{k, X}$ is the span obtained by the basis $\{k(\bvec{x}_{i}, \cdot)\}_{i = 1}^{n}$, we have that $\hat{f}$ must be given in the form
+		In order to estimate the distribution and CDF empirically, we would need both the empirical kernel embedding $\hat{\mu}_{\rv{X}}$ and a projection $\hat{\mathbb{1}}_{A}$ of the indicator function $\mathbb{1}_{A}$ into the same RKHS as $\hat{\mu}_{\rv{X}}$ so that a proper inner product within that RKHS can be evaluated.
+
+		Suppose $\ds{X} := \{\bvec{x}_{1}, \dots, \bvec{x}_{n}\} \in \mathbb{R}^{n \times d}$ is set of observations from $\mathbb{P}_{\rv{X}}$. The embeddings that can be represented by these samples are linear combinations of the feature functions $\phi_{\bvec{x}_{i}}$ at the observations \eqref{eq:function_projection}. The span obtained by those basis $\{\phi_{\bvec{x}_{i}}\}_{i = 1}^{n}$ also forms a RKHS, denoted by $\mathcal{H}_{k, \ds{X}}$, and is a finite vector subspace of the full RKHS $\mathcal{H}_{k}$.
 		
 		\begin{equation}
-			\hat{f} = \sum_{i = 1}^{n} \alpha_{i} k(\bvec{x}_{i}, \cdot)
-		\label{eq:approximate_function_form}
+			\hat{f} = \sum_{i = 1}^{n} \alpha_{i} k(\bvec{x}_{i}, \cdot) = \sum_{i = 1}^{n} \alpha_{i} \phi_{\bvec{x}_{i}} = \Phi_{\ds{X}} \bm{\alpha}
+		\label{eq:function_projection}
 		\end{equation}
-		
-		To find the optimal weights, we minimise the distance between $f$ and $\hat{f}$ in the Hilbert norm sense. That is
+	
+		We are interested in approximating the function $f \in \mathcal{H}_{k}$ with $\hat{f} \in \mathcal{H}_{k, \ds{X}}$ so that they are close as measured by the norm induced by the full RKHS $\mathcal{H}_{k}$, by tuning the embedding weights $\bm{\alpha} = \{\alpha_{i}\}_{i = 1}^{n}$ \eqref{eq:function_projection_optimisation}.
 			
 		\begin{equation}
 			\bm{\alpha}^{\star} = \argmin_{\bm{\alpha} \in \mathbb{R}^{n}} \Vert \hat{f} - f \Vert
-		\label{eq:approximate_embedding_optimisation}
+		\label{eq:function_projection_optimisation}
 		\end{equation}
 		
-		This optimisation problem has a closed form solution (equation \ref{eq:approximate_function_optimisation_solution}), where $K_{X X} := \{k(\bvec{x}_{i}, \bvec{x}_{j})\}_{i = 1, j = 1}^{n, n}$ is the gram matrix and $f\{X\} := \{f(\bvec{x}_{i})\}_{i = 1}^{n}$ is the function evaluated at the observed points (see supplementary material).
+		This optimisation problem has a closed form solution \eqref{eq:function_projection_solution}, where $K_{\ds{X} \ds{X}} := \{k(\bvec{x}_{i}, \bvec{x}_{j})\}_{i = 1, j = 1}^{n, n}$ is the gram matrix and $f\{\ds{X}\} := \{f(\bvec{x}_{i})\}_{i = 1}^{n}$ is the function evaluated at the observed points (see supplementary material).
 		
 		\begin{equation}
-			\bm{\alpha}^{\star} = K_{X X}^{-1} f\{X\}
-		\label{eq:approximate_function_optimisation_solution}
+			\begin{aligned}
+				\bm{\alpha}^{\star} &= K_{\ds{X} \ds{X}}^{-1} f\{\ds{X}\} \\
+				\hat{f} = \Phi_{\ds{X}} \bm{\alpha}^{\star} &= \Phi_{\ds{X}} K_{\ds{X} \ds{X}}^{-1} f\{\ds{X}\}
+			\end{aligned}
+		\label{eq:function_projection_solution}
 		\end{equation}
-		
-		Hence, the optimal empirical projection of $f$ is
-
-		\begin{equation}
-			\hat{f} = \Phi_{X} K_{X X}^{-1} f\{X\}
-		\label{eq:empirical_projection}
-		\end{equation}
-
 		
 	\subsection{Optimal Empirical Distribution}
+
+		\warn{There is something the reviewers might pick up here: We do not know if the indicator function is in the full RKHS $\mathcal{H}_{k}$ in general. In fact, the paper ``Recovering Distributions from Gaussian RKHS Embeddings'' said that polynomial functions and indicator functions are included in Besov spaces under certain assumptions. The paper does continue to derive a bound and also empirically show that the estimator we derived does converge to the true value. I guess we should probably mention this: That while indicator functions are not generally contained in the RKHS, the estimator we derived for its expectation, by assuming that it is contained in the RKHS, converges to the actual expectation.}
+				
+		Letting $f = \mathbb{1}_{A}$, we can find the projection of an indicator function into $\mathcal{H}_{k, \ds{X}}$ \eqref{eq:indicator_projection}.
 		
 		\begin{equation}
-			\hat{\mathbb{1}}_{A} = \Phi_{X} K_{X X}^{-1} \mathbb{1}_{A}\{X\}
+			\hat{\mathbb{1}}_{A} = \Phi_{\ds{X}} K_{\ds{X} \ds{X}}^{-1} \mathbb{1}_{A}\{\ds{X}\}
+		\label{eq:indicator_projection}
 		\end{equation}
+		
+		The empirical distribution \eqref{eq:empirical_distribution} and CDF \eqref{eq:empirical_cdf} can then be derived.
 		
 		\begin{equation}
 		\begin{aligned}
 			\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{\mathbb{1}}_{A} \rangle = \hat{\mu}_{\bvec{\rv{X}}}^{T}\hat{\mathbb{1}}_{A} \\
-			&= (\Phi_{X} \bm{\beta})^{T} \Phi_{X} K_{X X}^{-1} \mathbb{1}_{A}\{X\} \\
-			&= \bm{\beta}^{T} \Phi_{X}^{T} \Phi_{X} K_{X X}^{-1} \mathbb{1}_{A}\{X\} \\
-			&= \bm{\beta}^{T} K_{X X} K_{X X}^{-1} \mathbb{1}_{A}\{X\} \\
-			&= \bm{\beta}^{T} \mathbb{1}_{A}\{X\} \\
+			&= (\Phi_{\ds{X}} \bm{\beta})^{T} \Phi_{\ds{X}} K_{\ds{X} \ds{X}}^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
+			&= \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \Phi_{\ds{X}} K_{\ds{X} \ds{X}}^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
+			&= \bm{\beta}^{T} K_{\ds{X} \ds{X}} K_{\ds{X} \ds{X}}^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
+			&= \bm{\beta}^{T} \mathbb{1}_{A}\{\ds{X}\} \\
 			&= \sum_{i = 1}^{n} \beta_{i} \mathbb{1}_{A}(\bvec{x}_{i}) \\
 			&= \sum_{\bvec{x}_{i} \in A} \beta_{i}
 		\end{aligned}
 		\label{eq:empirical_distribution}
 		\end{equation}
+		
 		
 		\begin{equation}
 			\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \sum_{\bvec{x}_{i} \in (-\bvec{\infty}, \bvec{x}]} \beta_{i} = \sum_{\bvec{x}_{i} \leq \bvec{x}} \beta_{i}
@@ -263,10 +277,10 @@
 		\begin{equation}
 		\begin{aligned}
 		\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{\mathbb{1}}_{A} \rangle = \hat{\mu}_{\bvec{\rv{X}}}^{T}\hat{\mathbb{1}}_{A} \\
-		&= (\Phi_{X} \bm{\beta})^{T} \int_{A} \phi_{\bvec{x}} d\bvec{x} \\
-		&= \bm{\beta}^{T} \Phi_{X}^{T} \int_{A} \phi_{\bvec{x}} d\bvec{x} \\
-		&= \int_{A} \bm{\beta}^{T} \Phi_{X}^{T} \phi_{\bvec{x}} d\bvec{x} \\
-		&= \int_{A} \bm{\beta}^{T} K_{X \bvec{x}} d\bvec{x} \\
+		&= (\Phi_{\ds{X}} \bm{\beta})^{T} \int_{A} \phi_{\bvec{x}} d\bvec{x} \\
+		&= \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \int_{A} \phi_{\bvec{x}} d\bvec{x} \\
+		&= \int_{A} \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \phi_{\bvec{x}} d\bvec{x} \\
+		&= \int_{A} \bm{\beta}^{T} K_{\ds{X} \bvec{x}} d\bvec{x} \\
 		&= \int_{A} \sum_{i = 1}^{n} \beta_{i} k(\bvec{x}_{i}, \bvec{x}) d\bvec{x} \\
 		&= \sum_{i = 1}^{n} \beta_{i} \int_{A}  k(\bvec{x}_{i}, \bvec{x}) d\bvec{x} \\
 		\end{aligned}
