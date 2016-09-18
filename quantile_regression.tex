@@ -8,6 +8,10 @@
 % This option will print headings for the title of your paper and
 % headings for the authors names, plus a copyright note at the end of
 % the first column of the first page.
+
+\bibliographystyle{apalike}  % Use the "unsrtnat" BibTeX style for formatting the Bibliography
+\usepackage[square, authoryear, comma, sort&compress]{natbib}  % Use the "Natbib" style for the references in the Bibliography
+
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
@@ -16,13 +20,14 @@
 \usepackage{mathrsfs}     
 \usepackage{bm}           
 \usepackage{vector}       
-\usepackage{color}
+\usepackage[usenames, dvipsnames]{color}
 
 \newcommand{\argmin}{\operatornamewithlimits{argmin}}
 %\newcommand{\rv}[1]{\underline{\overline{#1}}}
 \newcommand{\rv}[1]{\underline{#1}}
 \newcommand{\ds}[1]{{#1}}
-\newcommand{\warn}[1]{{\color{red} #1}}
+\newcommand{\warn}[1]{{\color{RedOrange} #1}}
+\newcommand{\extra}[1]{{\color{ForestGreen} #1}}
 
 \begin{document}
 
@@ -56,30 +61,50 @@
   Abstract. The Abstract must be limited to one paragraph.
 \end{abstract}
 
-	\warn{Meeting 15/09/2016:
-		
-		\begin{itemize}
-			\item Milestones
-			\item Notations
-			\item Work distribution
-			\item What to include in supplementary
-			\item How to share and collaborate
-		\end{itemize}}
+\warn{Red lines are notes to pay attention to. They are not part of the paper.}
+
+\extra{Green lines are sections that we are considering to delete. They are part of the paper.}
 
 \section{Introduction}
 		
+	
 	\warn{Why quantile regression? What are the advantages of quantile regression over regular regression?}
 	
+	Understanding risk is critical to making decisions based on uncertain information. Computing uncertainty through the use of probability, and then bounding that uncertainty with quantile estimation is one approach to this problem. Building from our work in chapter three, we now aim to extend our non-parametric, multi-modal techniques for regression to include cumulative and quantile estimation. With these additions, our work can be applied to problems with unknown prior and likelihood and produce not only probabilistic estimations, but also quantify the risk associated with decisions that rely on them.
 	
 \section{Related Work}
 
-	\warn{Discuss things like non-parameteric quantile regression (I think it's Smola's paper) and then also quantile regression with GP, and why we are in search for an even more flexible model. Follow Lachlan's related work section on this.}
-	
-\section{Background}
+	Quantile regression was first introduced by \cite{Koenker1978}. This work considered the regression problem of inferring values of an unknown linea model given noisy samples of inputs and outputs. Rather than using the mean as an estimator of the function, Koenker chose the 0.5 quantile (the median), on the basis that it was less sensitive to outliers, and hence effective in cases with non-Gaussian or heavy tailed noise. A general regression quantile was then defined as the function value minimising the pinball loss \citep{Koenker1978}. For linear models, the minimisation was formulated as a linear programming problem and so solved efficiently.
 
-	\subsection{Measure Theory Notation and Setup} % DON'T NEED TO DO THIS: ASSUME HILBERT SPACE STUFF IS KNOWN (ASK FABIO)
-	
-	% SWITCH RELATED WORKS AND BACKGROUND
+	The pursuit of conditional quantiles quickly divided the field into so-called discriminative methods, that attempt to directly compute the quantile from the training data through minimisation of the pinball loss, and generative methods, that attempt to first model the conditional cumulative distribution, and from there derive quantile estimates \citep{Koenker2005}.
+
+	The discriminative initially demonstrated the advantage of flexibility --- non-parametric function estimation techniques could be applied that made no assumptions about the underlying distribution. Examples include locally-constant and locally-linear approximations \citep{Chaudhuri1991, Yu1998}. However, this flexibility also led to problems such as quantile crossing; in which a data point might be considered to be below the 0.5 quantile but above the 0.6 quantile\cite{Koenker2005}. 
+
+	An important development was the addition of non-crossing constraints to discriminative quantile regression solutions \citep{He1997}. This ensured that different quantile estimates obeyed a strict ordering, with no two quantiles having the same function value. Such a strict ordering was achieved by adding a penalty term to the optimisation \citep{Cole1992}, or by reducing the class of possible functions used to represent the quantiles, for instance to classes of location-scale models \citep{Koenker1984, He1997}. Unfortunately, such models implicitly restricted the underlying distribution, causing reduced applicability to data that did not fit the assumptions of the model \citep{Koenker2005}.
+
+	Standard machine learning techniques have also been co-opted for conditional quantile estimation, including the support vector machine (SVM), which finds the decision boundary associated with the minimisation of the pinball loss, with additional non-crossing constraints \citep{Takeuchi2006}. However, in this algorithm, the non-crossing constraints may cause the resulting estimates to violate the (empirical) quantile definition.
+
+	More recently, Chernozhukov et. al. developed a monotisation procedure based on function re-arrangement to remove crossing from quantile estimates generated by other algorithms. The resulting quantiles were guaranteed to be more accurate, and no assumptions were made about the underlying distribution \citep{Chernozhukov2010}.
+
+	The `quanting' algorithm \citep{Langford2006} introduced an important development in discriminative estimation of conditional quantiles, which was to re-cast quantile regression as a classification problem. By placing a set of classifiers over the range of the regression, each classifier can be trained on whether the quantile is above or below it. The quantile estimate is then the expectation of this assignment, over all the classifiers.  A set of importance weights were learned to minimise the error of the estimation.
+
+	Generative models for conditional quantile regression have also been examined in the semi-parametric and non-parametric setting. Linear models for Bayesian quantile estimation were examined in \cite{Yu2001}, using Laplacian likelihood functions and uniform priors. These methods require Markov chain Monte Carlo (MCMC) integration to perform inference, as well as making the uni-modal assumption. Similar semi-parametric methods such as \cite{Hjort2006, Hjort2009} use Dirichlet process priors, which again required costly inference approximations.
+
+	Kernel conditional quantiles using Gaussian process regression to explicitly compute the cumulative distribution were examined by \cite{Quadrianto2009}. The underlying PDF was estimated using a Gaussian process, which enforced the non-crossing constraint and allowed for efficient inference. Additionally, heteroskedastic covariance functions were employed to account for input-dependent noise in the data. One limitation of the work was that the underlying Gaussianity assumption restricts applicability to uni-modal distributions.
+
+	A more general formulation of Bayesian quantile regression was developed in \cite{Taddy2010}, which used Dirichlet process mixture models to represent the underlying joint distribution. This allowed a very general class of distributions to be represented, but inference required expensive MCMC integration.
+
+% Indicator co-Kriging in a non-parametric approach in the geo-statistics
+% literature based on explicit modelling of the underlying distribution through
+% Kriging~\cite{Pardo2005}.
+
+% check chen and muller 2012 for a nonparametric CDF
+% approach~\cite{Chen2012} 
+
+	Our work aims to overcome limitations of both these methods-- giving the flexibility of a mixture distribution representation for modelling multi-modal behaviour, with the efficient inference inherent in the MKBR algorithm. It is to this new algorithm we now turn our attention.
+
+
+\section{Background}
 	
 		Let $(\Omega, \mathcal{W}, \mathbb{P})$ be a probability space, where $\Omega$ is the sample space, $\mathcal{W}$ is a $\sigma$-algebra on $\Omega$, and $\mathbb{P} : \mathcal{W} \mapsto [0, 1]$ a probability measure. The elements $W$ of $\mathcal{W}$, that is, the measurable sets, are called events, which are by definition subsets of $\Omega$.
 		
@@ -88,9 +113,9 @@
 			\mathbb{P}_{\rv{X}}[A] := \mathbb{P}[\rv{X} \in A]
 		\label{eq:distribution}
 		\end{equation}
-		where the event $\{\rv{X} \in A\} := \rv{X}^{-1}[A] := \{\omega \in \Omega : \rv{X}(\omega) \in A\} \in \mathcal{W}$ is the inverse image (pre-image) of $A \subseteq \mathcal{X}$ under the random variable $\rv{X}$. Here $\mathcal{A}$ is a $\sigma$-algebra of subsets on $\mathcal{X}$. Recall that a random variable (in this case, $\rv{X}$) is formally a map from the sample space (in this case, $\Omega$) to some Borel measurable domain (in this case, $\mathcal{X}$) of interest. The \textit{distribution} is also a probability measure itself, as it satisfies the defining properties of a probability measure, such that $(\mathcal{X}, \mathcal{A}, \mathbb{P}_{\rv{X}})$ is also a probability space. It differs from $\mathbb{P}$ in that it operates in a different domain - not directly on the events, but on the values the random variable takes for those events. 
+		where the event $\{\rv{X} \in A\} := \rv{X}^{-1}[A] := \{\omega \in \Omega : \rv{X}(\omega) \in A\} \in \mathcal{W}$ is the inverse image (pre-image) of $A \subseteq \mathcal{X}$ under the random variable $\rv{X}$, and $\mathcal{A}$ is a $\sigma$-algebra of subsets on $\mathcal{X}$. \extra{Recall that a random variable (in this case, $\rv{X}$) is formally a map from the sample space (in this case, $\Omega$) to some Borel measurable domain (in this case, $\mathcal{X}$) of interest. The \textit{distribution} is also a probability measure itself, as it satisfies the defining properties of a probability measure, such that $(\mathcal{X}, \mathcal{A}, \mathbb{P}_{\rv{X}})$ is also a probability space. It differs from $\mathbb{P}$ in that it operates in a different domain - not directly on the events, but on the values the random variable takes for those events.}
 		
-		The \textit{cumulative distribution function} (CDF) $P_{\rv{X}} : \mathcal{X} \mapsto [0, 1]$ of a \textit{real-valued} random variable $\rv{X} : \Omega \mapsto \mathcal{X}$ (that is, take $\mathcal{X}$ to be $\mathbb{R}$ or a subset thereof) is defined by
+		The \textit{cumulative distribution function} (CDF) $P_{\rv{X}} : \mathbb{R} \mapsto [0, 1]$ of a \textit{real-valued} random variable $\rv{X} : \Omega \mapsto \mathbb{R}$ (that is, take $\mathcal{X}$ to be $\mathbb{R}$) is defined by
 		\begin{equation}
 			P_{\rv{X}}(x) := \mathbb{P}_{\rv{X}}[(-\infty, x]] = \mathbb{P}[\rv{X} \leq x]
 		\label{eq:cdf}
@@ -106,7 +131,7 @@
 				
 %		Note that in most literature the cumulative distribution function would be denoted by $F_{X}$ and not $P_{X}$. However, with a lot of different spaces and variables to introduce later on, we will reserve $F$ and consequently $f$ for other quantities later.
 		
-		If the distribution $\mathbb{P}_{\rv{X}}$ is absolutely continuous with respect to the Lebesgue measure on $\mathbb{R}$, then the Radon-Nikodym theorem implies the existence of a density for $\mathbb{P}_{\rv{X}}$. We call this the distribution density of $\rv{X}$, or more commonly known as the \textit{probability density function} (PDF), denoted by $p_{\rv{X}}$. Note that $p_{\rv{X}} : \mathcal{X} \mapsto [0, \infty)$ is a mapping from the Borel measurable domain to the positive real numbers.
+		If the distribution $\mathbb{P}_{\rv{X}}$ is absolutely continuous with respect to the Lebesgue measure on $\mathcal{X} = \mathbb{R}^{d}$, then the Radon-Nikodym theorem implies the existence of a density for $\mathbb{P}_{\rv{X}}$. We call this the distribution density of $\rv{X}$, or more commonly known as the \textit{probability density function} (PDF), denoted by $p_{\rv{X}}: \mathcal{X} \mapsto [0, \infty)$.
 		
 		Let $f : \mathcal{X} \mapsto \mathbb{R}$ be some arbitrary function over the domain, then we have
 		\begin{equation}
@@ -114,7 +139,7 @@
 		\label{eq:functional_expectation}
 		\end{equation}
 		
-		Recall that $\mathbb{P}[W] = \mathbb{E}[\mathbb{1}[W]] \;\; \forall W \in \mathcal{W}$, so that the cumulative distribution function for a vector-valued random variable $\bvec{\rv{X}}$ is
+		Recall that $\mathbb{P}[W] = \mathbb{E}[\mathbb{1}[W]] \;\; \forall W \in \mathcal{W}$, so that the CDF for a vector-valued random variable $\bvec{\rv{X}}$ is
 		\begin{equation}
 			\begin{aligned}
 				P_{\bvec{\rv{X}}}(\bvec{x}) &= \mathbb{P}[\bvec{\rv{X}} \leq \bvec{x}] = \mathbb{E}[\mathbb{1}[\bvec{\rv{X}} \leq \bvec{x}]] = \mathbb{E}[\mathbb{1}_{(-\bvec{\infty}, \bvec{x}]}(\bvec{X})] \\
@@ -125,31 +150,29 @@
 		\end{equation}
 		where we use the common notation $\mathbb{1}_{A}(x) := \mathbb{1}[x \in A]$.
 		
-		\warn{I am already detailing the notations in the supplementary material. Is it appropriate if we just put this whole section into the supplementary material so we have more space actually talking about Quantile Regression?}
-		
-	\subsection{Kernel Embeddings Notation}
+	\subsection{Kernel Embeddings}
 	
-		In this section we assume all kernels we deal with are characteristic. That is, a characteristic kernel $k : \mathcal{X} \times \mathcal{X} \mapsto \mathbb{R}$ defines a unique reproducing kernel Hilbert space (RKHS), which we will denote by $\mathcal{H}_{k}$. Note that in some literature, since $k$ takes elements $x$ of $\mathcal{X}$ as arguments, the corresponding reproducing kernel Hilbert space is denoted as $\mathcal{H}_{\mathcal{X}}$ instead. However, since the kernel $k$ also includes information about the space $\mathcal{X}$ it operates on, the notation $\mathcal{H}_{k}$ will be preferred.
+		In this paper we assume all kernels we deal with are positive definite and characteristic. That is, the kernel $k : \mathcal{X} \times \mathcal{X} \mapsto \mathbb{R}$ defines a unique reproducing kernel Hilbert space (RKHS), which we will denote by $\mathcal{H}_{k}$. \extra{Note that in some literature, since $k$ takes elements $x$ of $\mathcal{X}$ as arguments, the corresponding reproducing kernel Hilbert space is denoted as $\mathcal{H}_{\mathcal{X}}$ instead. However, since the kernel $k$ also includes information about the space $\mathcal{X}$ it operates on, the notation $\mathcal{H}_{k}$ will be preferred.}
 		 
 		The kernel embedding $\mu_{\rv{X}}$ of a distribution measure $\mathbb{P}_{\rv{X}}$ under kernel $k$ is defined by
 		\begin{equation}
 			\mu_{\rv{X}}(x) := \mathbb{E}[k(\rv{X}, x)] = \int_{\mathcal{X}} k(\cdot, x) d \mathbb{P}_{\rv{X}}
 		\label{eq:basic_embedding}
 		\end{equation}
-		where it is understood that the $\cdot$ is a place-holder for an argument such that $k(\cdot, x) : \mathcal{X} \mapsto \mathbb{R}$ is a function and not just a value.
+		\extra{where it is understood that the $\cdot$ is a place-holder for an argument such that $k(\cdot, x) : \mathcal{X} \mapsto \mathbb{R}$ is a function and not just a value.}
 		
 		We can also write the definition equivalently as
 		\begin{equation}
 			\mu_{\rv{X}} \equiv \mu_{\rv{X}}(\cdot) := \mathbb{E}[k(\rv{X}, \cdot)]
 		\label{eq:basic_embedding_alternative}
 		\end{equation}
-		where it is understood that the $\cdot$ here in the last equation is for a different argument than the previous equations.
+		\extra{where it is understood that the $\cdot$ here in the last equation is for a different argument than the previous equations.}
 		 
-		In some literature, to make explicit of the fact that the kernel embedding is an embedding of a distribution measure $\mathbb{P}_{\rv{X}}$, the kernel embedding is instead denoted by $\mu_{\mathbb{P}_{\rv{X}}}$. We will not do this here in general here. Since the specification of a random variable $\rv{X}$ and its distribution $\mathbb{P}_{\rv{X}}$ must come together, either notation is equally informative.
+		\extra{In some literature, to make explicit of the fact that the kernel embedding is an embedding of a distribution measure $\mathbb{P}_{\rv{X}}$, the kernel embedding is instead denoted by $\mu_{\mathbb{P}_{\rv{X}}}$. We will not do this here in general here. Since the specification of a random variable $\rv{X}$ and its distribution $\mathbb{P}_{\rv{X}}$ must come together, either notation is equally informative.}
 		 
 		Usually, the kernel $k$ comes from a family of kernel functions with a set of hyperparameters $\theta$. To make this relationship explicit, we may attach a subscript to the notation as $k_{\theta}$. Correspondingly, the kernel embedding would then be denoted as $\mu_{\rv{X}, \theta}$.
 
-		It would indeed be more precise to put a subscript $k$ on the kernel embedding, as $\mu_{\rv{X}, k}$ or $\mu_{\rv{X}, k_{\theta}}$, to make clear that it was embedded with kernel $k$. However, as we will not be changing the kernel much except up to some hyperparameter tuning, this will just be implicitly assumed.
+		\extra{It would indeed be more precise to put a subscript $k$ on the kernel embedding, as $\mu_{\rv{X}, k}$ or $\mu_{\rv{X}, k_{\theta}}$, to make clear that it was embedded with kernel $k$. However, as we will not be changing the kernel much except up to some hyperparameter tuning, this will just be implicitly assumed.}
 			 
 		The kernel embeddings of Cartesian products of random variables over the same event space $\Omega$ define uncentred covariance and cross-covariance operators. Note that most of the important operations regarding uncertred versions also hold for centred versions.
 		 
@@ -183,7 +206,8 @@
 		\warn{This is where we introduce the pinball loss and the basics of quantile regression}
 				
 		\warn{Need perhaps illustrative examples through description}
-		
+	
+	
 \section{Discriminative Quantile Regression}
 
 	The discriminative approach to quantile regression refers to techniques which computes an estimate of the CDF directly, without needing to compute the PDF first.
@@ -233,8 +257,6 @@
 		\end{equation}
 		
 	\subsection{Optimal Empirical Distribution}
-
-		\warn{There is something the reviewers might pick up here: We do not know if the indicator function is in the full RKHS $\mathcal{H}_{k}$ in general. In fact, the paper ``Recovering Distributions from Gaussian RKHS Embeddings'' said that polynomial functions and indicator functions are included in Besov spaces under certain assumptions. The paper does continue to derive a bound and also empirically show that the estimator we derived does converge to the true value. I guess we should probably mention this: That while indicator functions are not generally contained in the RKHS, the estimator we derived for its expectation, by assuming that it is contained in the RKHS, converges to the actual expectation.}
 				
 		Letting $f = \mathbb{1}_{A}$, we can find the projection of an indicator function into $\mathcal{H}_{k, \ds{X}}$ \eqref{eq:indicator_projection}.
 		
@@ -247,22 +269,19 @@
 		
 		\begin{equation}
 		\begin{aligned}
-			\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{\mathbb{1}}_{A} \rangle = \hat{\mu}_{\bvec{\rv{X}}}^{T}\hat{\mathbb{1}}_{A} \\
-			&= (\Phi_{\ds{X}} \bm{\beta})^{T} \Phi_{\ds{X}} K_{\ds{X} \ds{X}}^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
-			&= \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \Phi_{\ds{X}} K_{\ds{X} \ds{X}}^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
-			&= \bm{\beta}^{T} K_{\ds{X} \ds{X}} K_{\ds{X} \ds{X}}^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
-			&= \bm{\beta}^{T} \mathbb{1}_{A}\{\ds{X}\} \\
-			&= \sum_{i = 1}^{n} \beta_{i} \mathbb{1}_{A}(\bvec{x}_{i}) \\
-			&= \sum_{\bvec{x}_{i} \in A} \beta_{i}
+			\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{\mathbb{1}}_{A} \rangle = \hat{\mu}_{\bvec{\rv{X}}}^{T}\hat{\mathbb{1}}_{A} = (\Phi_{\ds{X}} \bm{\beta})^{T} \Phi_{\ds{X}} K_{\ds{X} \ds{X}}^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
+			&= \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \Phi_{\ds{X}} K_{\ds{X} \ds{X}}^{-1} \mathbb{1}_{A}\{\ds{X}\} = \bm{\beta}^{T} K_{\ds{X} \ds{X}} K_{\ds{X} \ds{X}}^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
+			&= \bm{\beta}^{T} \mathbb{1}_{A}\{\ds{X}\} = \sum_{i = 1}^{n} \beta_{i} \mathbb{1}_{A}(\bvec{x}_{i}) = \sum_{\bvec{x}_{i} \in A} \beta_{i}
 		\end{aligned}
 		\label{eq:empirical_distribution}
 		\end{equation}
-		
 		
 		\begin{equation}
 			\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \sum_{\bvec{x}_{i} \in (-\bvec{\infty}, \bvec{x}]} \beta_{i} = \sum_{\bvec{x}_{i} \leq \bvec{x}} \beta_{i}
 		\label{eq:empirical_cdf}
 		\end{equation}
+		
+		There is however a subtlety in this derivation. It is not guaranteed that the indicator function is an element of the full RKHS $\mathcal{H}_{k}$. Nevertheless, \cite{Kanagawa:RecoveringDistributions} showed that the estimator $\langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{f} \rangle$ is consistent for $\mathbb{E}[f(\bvec{\rv{X}})]$ if $f$ is in the Besov space, which is a superset of the full RKHS $\mathcal{H}_{k}$. While indicator functions are included in the Besov space only under certain assumptions, the estimators we derived for its expectation, by assuming that it is contained in the RKHS, empirically converges to the actual expectation.
 		
 		\warn{Add examples figures}
 	
@@ -314,187 +333,14 @@
 
 	\warn{Future work would include a better learning method for the hyperparameters, and also a better density recovery method for the generative approach besides MKBR. We perhaps needs to justify our estimators a bit more for the discriminative approach. To me, the learning algorithm is the major thing waiting to be solved right now.}
 	
-\newpage
-
-\section{Background}
-
-First level headings are all caps, flush left, bold, and in point size
-12. Use one line space before the first level heading and one-half line space
-after the first level heading.
-
-\subsection{Second Level Heading}
-
-Second level headings are initial caps, flush left, bold, and in point
-size 10. Use one line space before the second level heading and one-half line
-space after the second level heading.
-
-\subsubsection{Third Level Heading}
-
-Third level headings are flush left, initial caps, bold, and in point
-size 10. Use one line space before the third level heading and one-half line
-space after the third level heading.
-
-\paragraph{Fourth Level Heading}
-
-Fourth level headings must be flush left, initial caps, bold, and
-Roman type.  Use one line space before the fourth level heading, and
-place the section text immediately after the heading with no line
-break, but an 11 point horizontal space.
-
-\subsection{CITATIONS, FIGURES, REFERENCES}
-
-
-\subsubsection{Citations in Text}
-
-Citations within the text should include the author's last name and
-year, e.g., (Cheesman, 1985). References should follow any style that
-you are used to using, as long as their style is consistent throughout
-the paper.  Be sure that the sentence reads correctly if the citation
-is deleted: e.g., instead of ``As described by (Cheesman, 1985), we
-first frobulate the widgets,'' write ``As described by Cheesman
-(1985), we first frobulate the widgets.''  Be sure to avoid
-accidentally disclosing author identities through citations.
-
-\subsubsection{Footnotes}
-
-Indicate footnotes with a number\footnote{Sample of the first
-  footnote.} in the text. Use 8 point type for footnotes. Place the
-footnotes at the bottom of the column in which their markers appear,
-continuing to the next column if required. Precede the footnote
-section of a column with a 0.5 point horizontal rule 1~inch (6~picas)
-long.\footnote{Sample of the second footnote.}
-
-\subsubsection{Figures}
-
-All artwork must be centered, neat, clean, and legible.  All lines
-should be very dark for purposes of reproduction, and art work should
-not be hand-drawn.  Figures may appear at the top of a column, at the
-top of a page spanning multiple columns, inline within a column, or
-with text wrapped around them, but the figure number and caption
-always appear immediately below the figure.  Leave 2 line spaces
-between the figure and the caption. The figure caption is initial caps
-and each figure should be numbered consecutively.
-
-Make sure that the figure caption does not get separated from the
-figure. Leave extra white space at the bottom of the page rather than
-splitting the figure and figure caption.
-\begin{figure}[h]
-\vspace{.3in}
-\centerline{\fbox{This figure intentionally left non-blank}}
-\vspace{.3in}
-\caption{Sample Figure Caption}
-\end{figure}
-
-\subsubsection{Tables}
-
-All tables must be centered, neat, clean, and legible. Do not use hand-drawn tables. Table number and title always appear above the table.
-See Table~\ref{sample-table}.
-
-Use one line space before the table title, one line space after the table title, and one line space after the table. The table title must be
-initial caps and each table numbered consecutively.
-
-\begin{table}[h]
-\caption{Sample Table Title} \label{sample-table}
-\begin{center}
-\begin{tabular}{ll}
-{\bf PART}  &{\bf DESCRIPTION} \\
-\hline \\
-Dendrite         &Input terminal \\
-Axon             &Output terminal \\
-Soma             &Cell body (contains cell nucleus) \\
-\end{tabular}
-\end{center}
-\end{table}
-
-\section{SUPPLEMENTARY MATERIAL}
-
-If you need to include additional appendices during submission, you
-can include them in the supplementary material file.
-
-
-\newpage
-
-\section{INSTRUCTIONS FOR CAMERA-READY PAPERS}
-
-For the camera-ready paper, if you are using \LaTeX, please make sure
-that you follow these instructions.  (If you are not using \LaTeX,
-please make sure to achieve the same effect using your chosen
-typesetting package.)
-
-\begin{enumerate}
-    \item Download \texttt{fancyhdr.sty} -- the
-    \texttt{aistats2017.sty} file will make use of it.
-    \item Begin your document with
-    \begin{flushleft}
-    \texttt{\textbackslash documentclass[twoside]\{article\}}\\
-    \texttt{\textbackslash usepackage[accepted]\{aistats2017\}}
-    \end{flushleft}
-    The \texttt{twoside} option for the class article allows the
-    package \texttt{fancyhdr.sty} to include headings for even and odd
-    numbered pages. The option \texttt{accepted} for the package
-    \texttt{aistats2017.sty} will write a copyright notice at the end of
-    the first column of the first page. This option will also print
-    headings for the paper.  For the \emph{even} pages, the title of
-    the paper will be used as heading and for \emph{odd} pages the
-    author names will be used as heading.  If the title of the paper
-    is too long or the number of authors is too large, the style will
-    print a warning message as heading. If this happens additional
-    commands can be used to place as headings shorter versions of the
-    title and the author names. This is explained in the next point.
-    \item  If you get warning messages as described above, then
-    immediately after $\texttt{\textbackslash
-    begin\{document\}}$, write
-    \begin{flushleft}
-    \texttt{\textbackslash runningtitle\{Provide here an alternative shorter version of the title of your
-    paper\}}\\
-    \texttt{\textbackslash runningauthor\{Provide here the surnames of the authors of your paper, all separated by
-    commas\}}
-    \end{flushleft}
-    Note that the text that appears as argument in \texttt{\textbackslash
-      runningtitle} will be printed as a heading in the \emph{even}
-    pages. The text that appears as argument in \texttt{\textbackslash
-      runningauthor} will be printed as a heading in the \emph{odd}
-    pages.  If even the author surnames do not fit, it is acceptable
-    to give a subset of author names followed by ``et al.''
-
-    \item Use the file sample\_paper.tex as an example.
-
-    \item Both submitted and camera-ready versions of the paper are 8
-      pages, plus any additional pages needed for references.
-
-    \item If you need to include additional appendices,
-      you can include them in the supplementary
-      material file.
-
-    \item Please, don't change the layout given by the above
-      instructions and by the style file.
-
-\end{enumerate}
 
 \subsubsection*{Acknowledgements}
-
-Use unnumbered third level headings for the acknowledgements.  All
-acknowledgements go at the end of the paper.  Be sure to omit any
-identifying information in the initial double-blind submission!
 
 
 \subsubsection*{References}
 
-References follow the acknowledgements.  Use an unnumbered third level
-heading for the references section.  Any choice of citation style is
-acceptable as long as you are consistent.  Please use the same font
-size for references as for the body of the paper---remember that
-references do not count against your page length total.
-
-J.~Alspector, B.~Gupta, and R.~B.~Allen (1989). Performance of a
-stochastic learning microchip.  In D. S. Touretzky (ed.), {\it
-  Advances in Neural Information Processing Systems 1}, 748-760.  San
-Mateo, Calif.: Morgan Kaufmann.
-
-F.~Rosenblatt (1962). {\it Principles of Neurodynamics.} Washington,
-D.C.: Spartan Books.
-
-G.~Tesauro (1989). Neurogammon wins computer Olympiad.  {\it Neural
-  Computation} {\bf 1}(3):321-323.
+	
+\bibliographystyle{named}
+\bibliography{kernel_embeddings}
 
 \end{document}

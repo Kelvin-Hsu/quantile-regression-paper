@@ -84,7 +84,7 @@
 	
 	\textbf{Indicator Measures and Functions.} Another example of a measure is the indicator measure $\mathbb{1} : \mathcal{W} \mapsto \{0, 1\}$. Using the definition $\mathbb{1}_{A}(x) := \mathbb{1}[x \in A]$, the indicator function is then a regular function $\mathbb{1}_{A} : \mathcal{X} \mapsto \{0, 1\}$. Note that the latter is an abuse of notation since the shorthand for $x \in A$ is only defined if $x$ is a random variable (and thus a mapping). 
 	
-	\textbf{Datasets.} A dataset consisting of $n$ observations of $d$-dimensional vector quantities will be denoted using an upper case, such as $\underline{X}$, as it is also a matrix of size $n \times d$ so that $X \in \mathbb{R}^{n \times d}$. We call the dimension from $1$ to $n$ the observation dimension, and the dimension from $1$ to $d$ the covariate dimension. As such, we have $X = \{x_{i, j}\}_{i = 1, j = 1}^{n, d}$, where $x_{i, j}$ is the $j$-th covariate of the $i$-th observation. We also denote those observations equivalently by
+	\textbf{Datasets.} A dataset consisting of $n$ observations of $d$-dimensional vector quantities will be denoted using an upper case, such as $\ds{X}$, as it is also a matrix of size $n \times d$ so that $\ds{X} \in \mathbb{R}^{n \times d}$. We call the dimension from $1$ to $n$ the observation dimension, and the dimension from $1$ to $d$ the covariate dimension. As such, we have $\ds{X} = \{x_{i, j}\}_{i = 1, j = 1}^{n, d}$, where $x_{i, j}$ is the $j$-th covariate of the $i$-th observation. We also denote those observations equivalently by
 
 	\begin{equation}
 	\bvec{x}_{i} = \{x_{i, j}\}_{j = 1}^{d} \equiv \{x_{i, 1}, \dots, x_{i, d}\} \equiv \begin{bmatrix}
@@ -96,7 +96,7 @@
 	for all $i \in \{1, \dots, n\}$, and thus
 
 	\begin{equation}
-		X = \{\bvec{x}_{i}\}_{i = 1}^{n} \equiv \{\bvec{x}_{1}, \dots, \bvec{x}_{n}\} \equiv \begin{bmatrix}
+		\ds{X} = \{\bvec{x}_{i}\}_{i = 1}^{n} \equiv \{\bvec{x}_{1}, \dots, \bvec{x}_{n}\} \equiv \begin{bmatrix}
 			\bvec{x}_{1} & \cdots & \bvec{x}_{n}
 		\end{bmatrix}^{T}
 	\label{eq:data_matrix_notation}
@@ -107,7 +107,7 @@
 	\textbf{Vectorisation.} For a function $f : \mathcal{X} \mapsto \mathbb{R}$ for some Borel measurable space $\mathcal{X}$. Suppose $x_{i} \in \mathcal{X}$, $i \in \{1, \dots, n\}$, and the function $f$ is to be applied on each of those elements. Suppose further, as \eqref{eq:data_matrix_notation} we denote $X = \{x_{i}\}_{i = 1}^{n}$. Note that we do not bold the elements $x_{i}$ as they may or may not be vectors, or even elements of a Euclidean space. We define the following shorthand notation for the vector containing $f(x_{1}), \dots, f(x_{n})$. We choose the curly brackets to remind readers of the shorthand notation for vectors $\{f(x_{i})\}_{i = 1}^{n}$.
 	
 	\begin{equation}
-		f\{X\} := \{f(x_{i})\}_{i = 1}^{n} = {\begin{bmatrix} f(x_{1}) & \dots & f(x_{n}) \end{bmatrix}}^{T}
+		f\{\ds{X}\} := \{f(x_{i})\}_{i = 1}^{n} = {\begin{bmatrix} f(x_{1}) & \dots & f(x_{n}) \end{bmatrix}}^{T}
 	\end{equation}
 	
 	\textbf{Kernel Embeddings.} \warn{We will follow on from the section in the paper.}
@@ -159,7 +159,7 @@
 	Suppose we have a dataset $X = \{x_{i}\}_{i = 1}^{n}$. We concatenate the feature vectors at the observed locations together by columns.
 	
 	\begin{equation}
-		\Phi_{X} := \begin{bmatrix} \phi_{x_{1}} & \dots & \phi_{x_{n}} \end{bmatrix} = (\{x_{i}\}_{i = 1}^{n})^{T}
+		\Phi_{\ds{X}} := \begin{bmatrix} \phi_{x_{1}} & \dots & \phi_{x_{n}} \end{bmatrix} = (\{x_{i}\}_{i = 1}^{n})^{T}
 	\end{equation}
 	
 	By stacking the feature vectors of size $\infty \times 1$ in the column axis, we have a feature matrix of the size $\infty \times n$, where $n$ is number of observations.
@@ -167,10 +167,10 @@
 	Then, a kernel embedding with weights $\bm{\beta} \in \mathbb{R}^{n}$ can be written as
 	
 	\begin{equation}
-		\hat{\mu}_{\rv{X}} = \sum_{i = 1}^{n} \beta_{i} k(x_{i}, \cdot) = \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}} = \Phi_{X} \bm{\beta}
+		\hat{\mu}_{\rv{X}} = \sum_{i = 1}^{n} \beta_{i} k(x_{i}, \cdot) = \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}} = \Phi_{\ds{X}} \bm{\beta}
 	\end{equation}
 	
-	We can quickly verify the dimensionality of this equation. On the left we have  $\hat{\mu}_{\rv{X}}$ being a $\infty \times 1$ vector. On the right we have $\Phi_{X} \bm{\beta}$ being a $\infty \times n$ matrix applied on a $n \times 1$ vector, which also results in a $\infty \times 1$ vector.
+	We can quickly verify the dimensionality of this equation. On the left we have  $\hat{\mu}_{\rv{X}}$ being a $\infty \times 1$ vector. On the right we have $\Phi_{\ds{X}} \bm{\beta}$ being a $\infty \times n$ matrix applied on a $n \times 1$ vector, which also results in a $\infty \times 1$ vector.
 	
 	\warn{Rewrite the stuff I wrote in my notes last time for RKHS mathematics here.}
 	
@@ -181,11 +181,11 @@
 			\Vert \hat{f} - f \Vert &= \langle \hat{f} - f, \hat{f} - f \rangle \\
 			&= \langle \hat{f}, \hat{f} \rangle - 2 \langle \hat{f}, f \rangle + \langle f, f \rangle \\
 			&=  \hat{f}^{T} \hat{f} - 2 \hat{f}^{T} f + f^{T} f \\
-			&= (\Phi_{\underline{X}} \bm{\alpha})^{T} \Phi_{\underline{X}}  \bm{\alpha} - 2 (\Phi_{\underline{X}}  \bm{\alpha})^{T} f + f^{T} f \\
-			&= \bm{\alpha}^{T} \Phi_{\underline{X}} ^{T} \Phi_{\underline{X}}  \bm{\alpha} - 2 \bm{\alpha}^{T} \Phi_{\underline{X}} ^{T} f + f^{T} f \\
-			&= \bm{\alpha}^{T} K_{\underline{X} \underline{X}}  \bm{\alpha} - 2 \bm{\alpha}^{T} \bvec{f}_{\underline{X}} + f^{T} f \\
+			&= (\Phi_{\ds{X}} \bm{\alpha})^{T} \Phi_{\ds{X}}  \bm{\alpha} - 2 (\Phi_{\ds{X}}  \bm{\alpha})^{T} f + f^{T} f \\
+			&= \bm{\alpha}^{T} \Phi_{\ds{X}} ^{T} \Phi_{\ds{X}}  \bm{\alpha} - 2 \bm{\alpha}^{T} \Phi_{\ds{X}} ^{T} f + f^{T} f \\
+			&= \bm{\alpha}^{T} K_{\ds{X} \ds{X}}  \bm{\alpha} - 2 \bm{\alpha}^{T} \bvec{f}_{\ds{X}} + f^{T} f \\
 			\end{aligned}
 		\label{eq:approximate_embedding_derivation}
 		\end{equation}
-		
+
 \end{document}
