@@ -28,6 +28,7 @@
 \newcommand{\ds}[1]{{#1}}
 \newcommand{\warn}[1]{{\color{RedOrange} #1}}
 \newcommand{\extra}[1]{{\color{ForestGreen} #1}}
+\newcommand{\qpi}{QPI }
 
 \begin{document}
 
@@ -72,6 +73,8 @@
 	
 	Understanding risk is critical to making decisions based on uncertain information. Computing uncertainty through the use of probability, and then bounding that uncertainty with quantile estimation is one approach to this problem. Building from our work in chapter three, we now aim to extend our non-parametric, multi-modal techniques for regression to include cumulative and quantile estimation. With these additions, our work can be applied to problems with unknown prior and likelihood and produce not only probabilistic estimations, but also quantify the risk associated with decisions that rely on them.
 	
+	\warn{Not done yet. Come back later.}
+	
 \section{Related Work}
 
 	Quantile regression was first introduced by \cite{Koenker1978}. This work considered the regression problem of inferring values of an unknown linea model given noisy samples of inputs and outputs. Rather than using the mean as an estimator of the function, Koenker chose the 0.5 quantile (the median), on the basis that it was less sensitive to outliers, and hence effective in cases with non-Gaussian or heavy tailed noise. A general regression quantile was then defined as the function value minimising the pinball loss \citep{Koenker1978}. For linear models, the minimisation was formulated as a linear programming problem and so solved efficiently.
@@ -103,7 +106,8 @@
 
 	Our work aims to overcome limitations of both these methods-- giving the flexibility of a mixture distribution representation for modelling multi-modal behaviour, with the efficient inference inherent in the MKBR algorithm. It is to this new algorithm we now turn our attention.
 
-
+	\warn{Need to talk about recent advances in quantile regression since 2014. Need to go back to this literature review and update it too.}
+	
 \section{Background}
 	
 		Let $(\Omega, \mathcal{W}, \mathbb{P})$ be a probability space, where $\Omega$ is the sample space, $\mathcal{W}$ is a $\sigma$-algebra on $\Omega$, and $\mathbb{P} : \mathcal{W} \mapsto [0, 1]$ a probability measure. The elements $W$ of $\mathcal{W}$, that is, the measurable sets, are called events, which are by definition subsets of $\Omega$.
@@ -150,7 +154,7 @@
 		\end{equation}
 		where we use the common notation $\mathbb{1}_{A}(x) := \mathbb{1}[x \in A]$.
 		
-	\subsection{Kernel Embeddings}
+	\subsection{Kernel Embedding}
 	
 		In this paper we assume all kernels we deal with are positive definite and characteristic. That is, the kernel $k : \mathcal{X} \times \mathcal{X} \mapsto \mathbb{R}$ defines a unique reproducing kernel Hilbert space (RKHS), which we will denote by $\mathcal{H}_{k}$. \extra{Note that in some literature, since $k$ takes elements $x$ of $\mathcal{X}$ as arguments, the corresponding reproducing kernel Hilbert space is denoted as $\mathcal{H}_{\mathcal{X}}$ instead. However, since the kernel $k$ also includes information about the space $\mathcal{X}$ it operates on, the notation $\mathcal{H}_{k}$ will be preferred.}
 		 
@@ -170,11 +174,11 @@
 		 
 		\extra{In some literature, to make explicit of the fact that the kernel embedding is an embedding of a distribution measure $\mathbb{P}_{\rv{X}}$, the kernel embedding is instead denoted by $\mu_{\mathbb{P}_{\rv{X}}}$. We will not do this here in general here. Since the specification of a random variable $\rv{X}$ and its distribution $\mathbb{P}_{\rv{X}}$ must come together, either notation is equally informative.}
 		 
-		Usually, the kernel $k$ comes from a family of kernel functions with a set of hyperparameters $\theta$. To make this relationship explicit, we may attach a subscript to the notation as $k_{\theta}$. Correspondingly, the kernel embedding would then be denoted as $\mu_{\rv{X}, \theta}$.
+		Usually, the kernel $k$ comes from a family of kernel functions with a set of hyperparameters $\bm{\theta}$. To make this relationship explicit, we may attach a subscript to the notation as $k_{\bm{\theta}}$. Correspondingly, the kernel embedding would then be denoted as $\mu_{\rv{X}, \bm{\theta}}$.
 
-		\extra{It would indeed be more precise to put a subscript $k$ on the kernel embedding, as $\mu_{\rv{X}, k}$ or $\mu_{\rv{X}, k_{\theta}}$, to make clear that it was embedded with kernel $k$. However, as we will not be changing the kernel much except up to some hyperparameter tuning, this will just be implicitly assumed.}
+		\extra{It would indeed be more precise to put a subscript $k$ on the kernel embedding, as $\mu_{\rv{X}, k}$ or $\mu_{\rv{X}, k_{\bm{\theta}}}$, to make clear that it was embedded with kernel $k$. However, as we will not be changing the kernel much except up to some hyperparameter tuning, this will just be implicitly assumed.}
 			 
-		The kernel embeddings of Cartesian products of random variables over the same event space $\Omega$ define uncentred covariance and cross-covariance operators. Note that most of the important operations regarding uncertred versions also hold for centred versions.
+		\extra{The kernel embeddings of Cartesian products of random variables over the same event space $\Omega$ define uncentred covariance and cross-covariance operators. Note that most of the important operations regarding uncertred versions also hold for centred versions.}
 		 
 		\warn{This could be more detailed but space is really limited. Perhaps just a short paragraph introducing cross-covariance operators and also conditional operators and reference a previous paper. However, in the supplementary material we will have to make consistent the notation.}
 
@@ -194,19 +198,18 @@
 		\label{eq:conditional_quantile}
 		\end{equation}
 		
+		Clearly, finding the conditional quantile is the exact same problem as finding a regular quantile, except with the CDF replaced by a conditional CDF. As such, for brevity and simpleness, in this paper we will present CDF estimation from a general embedding with general weights, whose form both conditional embeddings and regular embeddings share.
+		
 		Quantile regression is then the problem of finding an empirical estimate $\hat{q}_{\rv{Y} | \bvec{\rv{X}} = \bvec{x}}(\tau)$ for $q_{\rv{Y} | \bvec{\rv{X}} = \bvec{x}}(\tau)$ given a set of paired observations $\{(\bvec{x}_{i}, y_{i})\}_{i = 1}^{n}$ and a query point $\bvec{x}$.
 		
-		In practice, it is sufficient to replace the infimum with the minimum if the CDF estimate is smooth. Since the CDF is always non-decreasing, the inequality becomes an equality, and obtaining quantiles becomes a root finding procedure once an estimate of the CDF is obtained \eqref{eq:quantile_root_finding}. In this paper, we present methods for estimating the CDF from a dataset.
+		In practice, it is sufficient to replace the infimum with the minimum if the CDF estimate is smooth. Since the CDF is always non-decreasing, the inequality becomes an equality, and obtaining quantiles becomes a root finding procedure once an estimate of the CDF is obtained \eqref{eq:quantile_root_finding}. In this paper, we present methods for estimating the CDF from a dataset. 
 		
 		\begin{equation}
 			q_{\rv{Y} | \bvec{\rv{X}} = \bvec{x}}(\tau) = y : P_{\rv{Y} | \bvec{\rv{X}} = \bvec{x}}(y) = \tau
 		\label{eq:quantile_root_finding}
 		\end{equation}	
 	
-		\warn{This is where we introduce the pinball loss and the basics of quantile regression}
-				
-		\warn{Need perhaps illustrative examples through description}
-	
+		\warn{Do we need to introduce the pinball loss and the basics of quantile regression?}
 	
 \section{Discriminative Quantile Regression}
 
@@ -283,25 +286,33 @@
 		
 		There is however a subtlety in this derivation. It is not guaranteed that the indicator function is an element of the full RKHS $\mathcal{H}_{k}$. Nevertheless, \cite{Kanagawa:RecoveringDistributions} showed that the estimator $\langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{f} \rangle$ is consistent for $\mathbb{E}[f(\bvec{\rv{X}})]$ if $f$ is in the Besov space, which is a superset of the full RKHS $\mathcal{H}_{k}$. While indicator functions are included in the Besov space only under certain assumptions, the estimators we derived for its expectation, by assuming that it is contained in the RKHS, empirically converges to the actual expectation.
 		
-		\warn{Add examples figures}
-	
+		\begin{figure}
+			\begin{center}
+				\includegraphics[width=\columnwidth]{figures/cumulativeexampleragged}
+			\end{center}
+			\caption{\small (Left) A MKBR estimate of the PDF from the Motorcycle dataset. The blue line indicates the PDF, and the red bars indicate the weights of training points at those $X$ locations. (Right) The resulting CDF estimate using \eqref{eq:empirical_cdf}. Note that the estimate jumps at locations corresponding to training points. \warn{Figure not referenced in text. Caption not updated.}}
+			\label{fig:cumulativeragged} 
+		\end{figure}
+			
 	\subsection{Smooth Empirical Distribution}
 	
-		\warn{The good news for this section is that the function we are taking an expectation of is now in the RKHS. The bad news is that it is no longer a proper indicator function. However, empirically, it works well. Also, unlike the previous part where the resulting estimator coincides with the Motonobu's paper, this part is completely novel.}
+%		\warn{The good news for this section is that the function we are taking an expectation of is now in the RKHS. The bad news is that it is no longer a proper indicator function. However, empirically, it works well. Also, unlike the previous part where the resulting estimator coincides with the Motonobu's paper, this part is completely novel.}
+		
+		By embedding indicator functions, the resulting CDF estimate \eqref{eq:empirical_cdf} is discontinuous at the jumps located at each data point. Directly differentiating this would result in a superposition of Dirac deltas for the PDF. However, in many applications, the PDF is rather smooth, and thus so is the CDF. Many characteristic kernels are also smooth, and thus so are the functions within their RKHS. Therefore, instead of taking the inner product between the embedding and the indicator function, we propose to take the inner product with a function $\tilde{\mathbb{1}}_{A}$ \eqref{eq:indicator_smooth} that is within the full RKHS $\mathcal{H}_{k}$ and converges to the indicator function $\mathbb{1}_{A}$ as the kernel bandwidth goes to zero.
 		
 		\begin{equation}
-		\hat{\mathbb{1}}_{A} := \int_{A} k(\bvec{x}, \cdot) d\bvec{x} = \int_{A} \phi_{\bvec{x}} d\bvec{x}
+			\tilde{\mathbb{1}}_{A} := \int_{A} k(\bvec{x}, \cdot) d\bvec{x} = \int_{A} \phi_{\bvec{x}} d\bvec{x}
+		\label{eq:indicator_smooth}
 		\end{equation}
 		
+		This results in a distribution estimate \eqref{eq:smooth_empirical_distribution} and CDF estimate \eqref{eq:smooth_empirical_cdf} that are smooth.
+
 		\begin{equation}
 		\begin{aligned}
-		\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{\mathbb{1}}_{A} \rangle = \hat{\mu}_{\bvec{\rv{X}}}^{T}\hat{\mathbb{1}}_{A} \\
-		&= (\Phi_{\ds{X}} \bm{\beta})^{T} \int_{A} \phi_{\bvec{x}} d\bvec{x} \\
-		&= \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \int_{A} \phi_{\bvec{x}} d\bvec{x} \\
-		&= \int_{A} \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \phi_{\bvec{x}} d\bvec{x} \\
-		&= \int_{A} \bm{\beta}^{T} K_{\ds{X} \bvec{x}} d\bvec{x} \\
-		&= \int_{A} \sum_{i = 1}^{n} \beta_{i} k(\bvec{x}_{i}, \bvec{x}) d\bvec{x} \\
-		&= \sum_{i = 1}^{n} \beta_{i} \int_{A}  k(\bvec{x}_{i}, \bvec{x}) d\bvec{x} \\
+			\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \langle \hat{\mu}_{\bvec{\rv{X}}}, \tilde{\mathbb{1}}_{A} \rangle = \hat{\mu}_{\bvec{\rv{X}}}^{T} \tilde{\mathbb{1}}_{A} = (\Phi_{\ds{X}} \bm{\beta})^{T} \int_{A} \phi_{\bvec{x}} d\bvec{x} \\
+			&= \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \int_{A} \phi_{\bvec{x}} d\bvec{x} = \int_{A} \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \phi_{\bvec{x}} d\bvec{x} \\
+			&= \int_{A} \bm{\beta}^{T} K_{\ds{X} \bvec{x}} d\bvec{x} = \int_{A} \sum_{i = 1}^{n} \beta_{i} k(\bvec{x}_{i}, \bvec{x}) d\bvec{x} \\
+			&= \sum_{i = 1}^{n} \beta_{i} \int_{A}  k(\bvec{x}_{i}, \bvec{x}) d\bvec{x} \\
 		\end{aligned}
 		\label{eq:smooth_empirical_distribution}
 		\end{equation}	
@@ -311,21 +322,70 @@
 		\label{eq:smooth_empirical_cdf}
 		\end{equation}
 		
-		For a Gaussian kernel:
-		
+		The estimates are expressed as a summation of the kernel integrals, which would need to be analytically derived or otherwise estimated. For a Gaussian kernel, analytical form can be derived \eqref{eq:smooth_empirical_cdf_gaussian_kernel}. Even if analytical form cannot be derived for some kernels $k$, since the integral is independent of the embedding weights, they can be approximated and pre-computed before inference begins.
+
 		\begin{equation}
-		\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \frac{1}{2} \sum_{i = 1}^{n} \beta_{i} \prod_{j = 1}^{d} \Bigg[1 + \mathrm{erf}\bigg(\frac{x_{j} - x_{i, j}}{\sigma_{j} \sqrt{2}}\bigg)\Bigg]
+			\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \frac{1}{2} \sum_{i = 1}^{n} \beta_{i} \prod_{j = 1}^{d} \Bigg[1 + \mathrm{erf}\bigg(\frac{x_{j} - x_{i, j}}{\sigma_{j} \sqrt{2}}\bigg)\Bigg]
+		\label{eq:smooth_empirical_cdf_gaussian_kernel}
 		\end{equation}
 		
-		\warn{Add examples figures}
+		With this approach, CDF estimates are now smooth and can be shown to converge to the true CDF in the limit of $n \rightarrow \infty$ and vanishing kernel bandwidth. However, due to the possibility of negative weights $\beta_{i}$, both discriminative approaches may produce CDF estimates that are not strictly non-decreasing. To rectify this, we propose a generative approach to estimating the CDF.
+
+		\begin{figure}
+			\begin{center}
+				\includegraphics[width=\columnwidth]{figures/cumulativeexamplesmooth}
+			\end{center}
+			\caption{\small (Left) A MKBR estimate of the PDF from the Motorcycle dataset. The blue line indicates the PDF, and the red bars indicate the weights of training points at those $X$ locations. (Right) The resulting smooth CDF estimate using \eqref{eq:smooth_empirical_cdf_gaussian_kernel} overlaid on the previous (non-smooth) estimate. \warn{Figure not referenced in text. Caption not updated.}}
+			\label{fig:cumulativeexamplesmooth}
+		\end{figure}
 
 \section{Generative Quantile Regression}
 
-	\warn{It seems like the MKBR stuff also isn't published yet. So we need to talk about that before we talk about integrating it. The integration part is relatively short and straight forward, so the section would comprise of deriving and discussing MKBR with examples, and then discuss integration briefly, and then present example figures.}
+%	\warn{So we need to cite MKBR before we talk about integrating it. The integration part is relatively short and straight forward, so the section would comprise of deriving and discussing MKBR with examples, and then discuss integration briefly, and then present example figures.}
 	
+	Given a particular embedding, the empirical PDF can be recovered through the quadratic programming pre-image (\qpi) method proposed by \cite{McCalman2013}. This method represents the PDF as a mixture of the kernel $k$ centred at each of the data points, and thus has as many components as the number of data points. Through minimising the RKHS distance between the true PDF and the PDF estimate, the resulting algorithm reduces to a tractable quadratic programming optimisation problem, which finds the optimal weights $\{w_{i}\}_{i = 1}^{n}$ for which $\hat{p}_{\bvec{\rv{X}}}$ is closest to the true PDF \eqref{eq:qpi}. 
+	
+	\begin{equation}
+		\hat{p}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} w_{i} k(\bvec{x}_{i}, \bvec{x})
+	\label{eq:qpi}
+	\end{equation}
+
+	Since \qpi recovers a valid PDF that is as smooth as the kernel $k$, integrating this PDF would result a smooth, proper distribution $\hat{\mathbb{P}}_{\bvec{\rv{X}}}$ \eqref{eq:qpi_empirical_distribution} and CDF $\hat{P}_{\bvec{\rv{X}}}$ \eqref{eq:qpi_empirical_cdf} that is always non-decreasing.
+	
+	\begin{equation}
+		\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] = \int_{A} \hat{p}_{\bvec{\rv{X}}}(\bvec{x}) d\bvec{x} = \sum_{i = 1}^{n} w_{i} \int_{A} k(\bvec{x}_{i}, \bvec{x}) d\bvec{x}
+	\label{eq:qpi_empirical_distribution}
+	\end{equation}
+	
+	\begin{equation}
+		\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \sum_{i = 1}^{n} w_{i} \int_{(-\bvec{\infty}, \bvec{x}]} k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}'
+	\label{eq:qpi_empirical_cdf}
+	\end{equation}
+	
+	Similar to the smooth distribution estimate \eqref{eq:smooth_empirical_distribution} and CDF estimate \eqref{eq:smooth_empirical_cdf}, the estimates \eqref{eq:qpi_empirical_distribution} and \eqref{eq:qpi_empirical_cdf} require the integral of the kernel $k$, which can either be analytically derived or at least approximated and pre-computed beforehand. Again, analytical form is available for Gaussian kernels \eqref{eq:qpi_empirical_cdf_gaussian_kernel}.
+	
+	\begin{equation}
+		\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \frac{1}{2} \sum_{i = 1}^{n} w_{i} \prod_{j = 1}^{d} \Bigg[1 + \mathrm{erf}\bigg(\frac{x_{j} - x_{i, j}}{\sigma_{j} \sqrt{2}}\bigg)\Bigg]
+	\label{eq:qpi_empirical_cdf_gaussian_kernel}
+	\end{equation}
+	
+	This CDF estimate is essentially of the same form as the smooth discriminative estimate \eqref{eq:smooth_empirical_cdf_gaussian_kernel}, but with the embedding weights $\bm{\beta}$ replaced by the recovered density weights $\bvec{w}$. Since the density weights $\bvec{w}$ are by construction of \qpi always positive, unlike the embedding weights $\bm{\beta}$, the resulting CDF is guaranteed to be non-decreasing. This form equivalence also highlights the fact that the smooth CDF estimate is simply the integral of the normalised embedding.
+	
+		\begin{figure}
+			\begin{center}
+				\includegraphics[width=\columnwidth]{figures/cumulativeexampleerf}
+			\end{center}
+			\caption{\small CDF estimate of the Motorcycle data with a Gaussian kernel. The individual components from equation \eqref{eq:qpi_empirical_cdf_gaussian_kernel} are also plotted. Just as the posterior density is a sum of Gaussians, the posterior cumulative is a sum of error functions. Note, negative weights mean that some of the contributions from the terms in the sum are negative. The resultant CDF estimate may not be strictly non-decreasing. \warn{Figure not referenced in text. Caption not updated.}}
+			\label{fig:cumulativeexampleerf} 
+		\end{figure}
+		
 \section{Hyperparameter Learning}
 
 	\warn{There are two major methods for hyperparameter tuning: Directly optimising for error for a particular quantile, and using the negative log probability from MKBR.}
+	
+	With all kernel based techniques, the kernel $k = k_{\bm{\theta}}$ itself is usually specified from a family of kernels parametrised by some hyperparameters $\bm{\theta}$. For example, a Gaussian kernel would be specified by its length scale parameters. The number of parameters would depend on whether the kernel is isotropic ($1$ parameter), anisotropic axis-aligned ($d$ parameters), or general ($d(d - 1)/2$ parameters). Whichever family we choose, we would have to find the optimal hyperparameter setting that gives the best performance in terms of inference accuracy.
+	
+	We considered two approaches to hyperparameter learning for the purpose of quantile regression.
 	
 \section{Experiments}
 
@@ -334,12 +394,8 @@
 	\warn{Future work would include a better learning method for the hyperparameters, and also a better density recovery method for the generative approach besides MKBR. We perhaps needs to justify our estimators a bit more for the discriminative approach. To me, the learning algorithm is the major thing waiting to be solved right now.}
 	
 
-\subsubsection*{Acknowledgements}
+\section*{Acknowledgements}
 
-
-\subsubsection*{References}
-
-	
 \bibliographystyle{named}
 \bibliography{kernel_embeddings}
 
