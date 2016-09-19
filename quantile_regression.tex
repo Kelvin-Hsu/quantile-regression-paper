@@ -67,7 +67,7 @@
 \extra{Green lines are sections that we are considering to delete. They are part of the paper.}
 
 \section{Introduction}
-		
+\label{sec:introduction}
 	
 	\warn{Why quantile regression? What are the advantages of quantile regression over regular regression?}
 	
@@ -76,6 +76,7 @@
 	\warn{Not done yet. Come back later.}
 	
 \section{Related Work}
+\label{sec:related_work}
 
 	Quantile regression was first introduced by \cite{Koenker1978}. This work considered the regression problem of inferring values of an unknown linea model given noisy samples of inputs and outputs. Rather than using the mean as an estimator of the function, Koenker chose the 0.5 quantile (the median), on the basis that it was less sensitive to outliers, and hence effective in cases with non-Gaussian or heavy tailed noise. A general regression quantile was then defined as the function value minimising the pinball loss \citep{Koenker1978}. For linear models, the minimisation was formulated as a linear programming problem and so solved efficiently.
 
@@ -109,6 +110,7 @@
 	\warn{Need to talk about recent advances in quantile regression since 2014. Need to go back to this literature review and update it too.}
 	
 \section{Background}
+\label{sec:background}
 	
 		Let $(\Omega, \mathcal{W}, \mathbb{P})$ be a probability space, where $\Omega$ is the sample space, $\mathcal{W}$ is a $\sigma$-algebra on $\Omega$, and $\mathbb{P} : \mathcal{W} \mapsto [0, 1]$ a probability measure. The elements $W$ of $\mathcal{W}$, that is, the measurable sets, are called events, which are by definition subsets of $\Omega$.
 		
@@ -155,6 +157,7 @@
 		where we use the common notation $\mathbb{1}_{A}(x) := \mathbb{1}[x \in A]$.
 		
 	\subsection{Kernel Embedding}
+	\label{sec:background:kernel_embedding}
 	
 		In this paper we assume all kernels we deal with are positive definite and characteristic. That is, the kernel $k : \mathcal{X} \times \mathcal{X} \mapsto \mathbb{R}$ defines a unique reproducing kernel Hilbert space (RKHS), which we will denote by $\mathcal{H}_{k}$. \extra{Note that in some literature, since $k$ takes elements $x$ of $\mathcal{X}$ as arguments, the corresponding reproducing kernel Hilbert space is denoted as $\mathcal{H}_{\mathcal{X}}$ instead. However, since the kernel $k$ also includes information about the space $\mathcal{X}$ it operates on, the notation $\mathcal{H}_{k}$ will be preferred.}
 		 
@@ -184,7 +187,8 @@
 
 		
 	\subsection{Quantiles and Quantile Regression}
-	
+	\label{sec:background:quantiles}
+
 		Consider a real-valued random variable $\rv{X} : \Omega \mapsto \mathbb{R}$ with distribution $\mathbb{P}_{X}$ and cumulative distribution function $P_{\rv{X}}$. The $\tau$-quantile, $\tau \in (0, 1)$, of $\mathbb{P}_{\rv{X}}$ is defined as
 		\begin{equation}
 			q_{\rv{X}}(\tau) = \inf\{x : P_{\rv{X}}(x) \geq \tau\} \equiv \inf_{P_{\rv{X}}(x) \geq \tau} x
@@ -212,6 +216,7 @@
 		\warn{Do we need to introduce the pinball loss and the basics of quantile regression?}
 	
 \section{Discriminative Quantile Regression}
+\label{sec:discriminative_quantile_regression}
 
 	The discriminative approach to quantile regression refers to techniques which computes an estimate of the CDF directly, without needing to compute the PDF first.
 	
@@ -232,7 +237,8 @@
 	We will now focus our attention on how to estimate the distribution and CDF from a given dataset.
 	
 	\subsection{Optimal Empirical Projection for Function Approximation}
-
+	\label{sec:discriminative_quantile_regression:optimal_function_approximation}
+	
 		In order to estimate the distribution and CDF empirically, we would need both the empirical kernel embedding $\hat{\mu}_{\rv{X}}$ and a projection $\hat{\mathbb{1}}_{A}$ of the indicator function $\mathbb{1}_{A}$ into the same RKHS as $\hat{\mu}_{\rv{X}}$ so that a proper inner product within that RKHS can be evaluated.
 
 		Suppose $\ds{X} := \{\bvec{x}_{1}, \dots, \bvec{x}_{n}\} \in \mathbb{R}^{n \times d}$ is set of observations from $\mathbb{P}_{\rv{X}}$. The embeddings that can be represented by these samples are linear combinations of the feature functions $\phi_{\bvec{x}_{i}}$ at the observations \eqref{eq:function_projection}. The span obtained by those basis $\{\phi_{\bvec{x}_{i}}\}_{i = 1}^{n}$ also forms a RKHS, denoted by $\mathcal{H}_{k, \ds{X}}$, and is a finite vector subspace of the full RKHS $\mathcal{H}_{k}$.
@@ -260,7 +266,8 @@
 		\end{equation}
 		
 	\subsection{Optimal Empirical Distribution}
-				
+	\label{sec:discriminative_quantile_regression:optimal_empirical_distribution}
+	
 		Letting $f = \mathbb{1}_{A}$, we can find the projection of an indicator function into $\mathcal{H}_{k, \ds{X}}$ \eqref{eq:indicator_projection}.
 		
 		\begin{equation}
@@ -295,7 +302,8 @@
 		\end{figure}
 			
 	\subsection{Smooth Empirical Distribution}
-	
+	\label{sec:discriminative_quantile_regression:smooth_empirical_distribution}
+
 %		\warn{The good news for this section is that the function we are taking an expectation of is now in the RKHS. The bad news is that it is no longer a proper indicator function. However, empirically, it works well. Also, unlike the previous part where the resulting estimator coincides with the Motonobu's paper, this part is completely novel.}
 		
 		By embedding indicator functions, the resulting CDF estimate \eqref{eq:empirical_cdf} is discontinuous at the jumps located at each data point. Directly differentiating this would result in a superposition of Dirac deltas for the PDF. However, in many applications, the PDF is rather smooth, and thus so is the CDF. Many characteristic kernels are also smooth, and thus so are the functions within their RKHS. Therefore, instead of taking the inner product between the embedding and the indicator function, we propose to take the inner product with a function $\tilde{\mathbb{1}}_{A}$ \eqref{eq:indicator_smooth} that is within the full RKHS $\mathcal{H}_{k}$ and converges to the indicator function $\mathbb{1}_{A}$ as the kernel bandwidth goes to zero.
@@ -340,6 +348,7 @@
 		\end{figure}
 
 \section{Generative Quantile Regression}
+\label{sec:generative_quantile_regression}
 
 %	\warn{So we need to cite MKBR before we talk about integrating it. The integration part is relatively short and straight forward, so the section would comprise of deriving and discussing MKBR with examples, and then discuss integration briefly, and then present example figures.}
 	
@@ -380,18 +389,56 @@
 		\end{figure}
 		
 \section{Hyperparameter Learning}
+\label{sec:hyperparameter_learning}
 
-	\warn{There are two major methods for hyperparameter tuning: Directly optimising for error for a particular quantile, and using the negative log probability from MKBR.}
-	
 	With all kernel based techniques, the kernel $k = k_{\bm{\theta}}$ itself is usually specified from a family of kernels parametrised by some hyperparameters $\bm{\theta}$. For example, a Gaussian kernel would be specified by its length scale parameters. The number of parameters would depend on whether the kernel is isotropic ($1$ parameter), anisotropic axis-aligned ($d$ parameters), or general ($d(d - 1)/2$ parameters). Whichever family we choose, we would have to find the optimal hyperparameter setting that gives the best performance in terms of inference accuracy.
 	
 	We considered two approaches to hyperparameter learning for the purpose of quantile regression.
 	
+%	\begin{equation}
+%		L_{\rv{X}, \tau}(x) = \left\{ \begin{array}{lr}
+%			(x - q_{\rv{X}}(\tau)) \tau & : x \geq q_{\rv{X}}(\tau) \\
+%			(q_{\rv{X}}(\tau) - x) (1 - \tau) & : x <  q_{\rv{X}}(\tau)
+%		\end{array} \right.
+%	\end{equation}
+	
+	The first approach involves minimising the expected pinball loss \eqref{eq:expected_pinball_loss} for a given dataset $\ds{X} := \{x_{i}\}_{i = 1}^{n}$, where the pinball loss is defined by \eqref{eq:pinball_loss}. The minimiser of the expected pinball loss \eqref{eq:expected_pinball_loss} is the $\tau$-quantile $z = q_{\rv{X}}(\tau)$ of the distribution $\mathbb{P}_{\rv{X}}$ \citep{Koenker1978}.
+	
+	\begin{equation}
+		L_{\tau}(x, z) = \left\{ \begin{array}{lr}
+			(x - z) \tau & : x \geq z \\
+			(z - x) (1 - \tau) & : x < z
+		\end{array} \right.
+	\label{eq:pinball_loss}
+	\end{equation}
+	
+	This expected pinball loss \eqref{eq:expected_pinball_loss} is evaluated over a leave-out validation set from the available training data obtained from a standard cross-validation procedure. 
+	
+	\begin{equation}
+		\bar{L}_{\tau}(\ds{X}, z) := \frac{1}{n} \sum_{i = 1}^{n} L_{\tau}(x_{i}, z)
+	\label{eq:expected_pinball_loss}
+	\end{equation}
+	
+	For a particular quantile, a function which minimises the pinball loss will also minimise the
+	error in the quantile estimate. Additionally, this loss function is tolerant to CDF estimates which may not be strictly non-decreasing, such as \eqref{eq:empirical_cdf} and \eqref{eq:smooth_empirical_cdf}. This however also means that the loss function is specific to a particular quantile such that each quantiles estimate requires separate optimisations despite using the same training set. The result is that quantile estimates may actually cross for certain query locations, a phenomenon known as quantile crossing.
+	
+	Another possible approach to parameter learning is to optimise the parameters with respect to the joint probability of observing the collected dataset \eqref{eq:lml}. Evaluated over the whole training set, this is akin to method of log marginal likelihood optimisation in the Gaussian process context. However, here we again choose to only evaluate it over a leave-out validation set. The advantage of this approach is that it is independent of the particular quantile estimate chosen. As such, a single, consistent CDF is generated for all quantile queries, eliminating the possibility of quantile crossing. 
+	
+	\begin{equation}
+		p_{\rv{X}^{(n)}, \bm{\theta}}(x_{1}, \cdots, x_{n}) = \sum_{i = 1}^{n} \log(\hat{p}_{\rv{X}, \bm{\theta}}(x_{i}))
+	\label{eq:lml}
+	\end{equation}
+	
+	 However, clearly this requires the PDF to be estimated first, even though discriminative approaches do not require them. Thus, this method is more natural in the generative approach. Nevertheless, this is only required during the learning stage. Once the optimal hyperparameters are obtained, one can choose to use the resulting hyperparameters in the discriminative approach for inference.
+	
+	
 \section{Experiments}
+\label{sec:experiments}
 
 \section{Conclusion}
+\label{sec:conclusion}
 
-	\warn{Future work would include a better learning method for the hyperparameters, and also a better density recovery method for the generative approach besides MKBR. We perhaps needs to justify our estimators a bit more for the discriminative approach. To me, the learning algorithm is the major thing waiting to be solved right now.}
+	\warn{Future work would include a better learning method for the hyperparameters, and also a better density recovery method for the generative approach besides \qpi.}
 	
 
 \section*{Acknowledgements}
