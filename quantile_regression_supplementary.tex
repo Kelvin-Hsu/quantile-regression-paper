@@ -18,6 +18,13 @@
 \usepackage{vector}
 \usepackage{color}
 
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
 \newcommand{\eq}[1]{\begin{equation} \begin{aligned} #1 \end{aligned} \end{equation}}
 
 \newcommand{\argmin}{\operatornamewithlimits{argmin}}
@@ -143,81 +150,146 @@
 
 	As always, let $\rv{X} : \Omega \mapsto \mathcal{X}$ be a random variable taking values in $\mathcal{X}$. Similarly, let $\rv{Y} : \Omega \mapsto \mathcal{Y}$ be a random variable taking values in $\mathcal{Y}$. Let $k$ and $l$ be characteristic positive definite kernels defined on $\mathcal{X}$ and $\mathcal{Y}$ respectively. Let $f \in \mathcal{H}_{k}$ and $g \in \mathcal{H}_{l}$.
 		
-	\subsection{Features}
-	
+
+	\begin{theorem} \label{thm:feature_functions}
+		(Feature Functions)
+		The feature functions that form the basis for the full RKHS are obtained by partially applying the respective kernel of that RKHS. \eqref{eq:feature_functions}.
 		\begin{equation}
 		\begin{aligned}
 			\phi_{x} &:= k(x, \cdot) \\
 			\psi_{y} &:= l(y, \cdot)
+		\label{eq:feature_functions}
 		\end{aligned}
-		\end{equation}	
-			
+		\end{equation}
+	\end{theorem}
 
-	\subsection{Reproducing property}
-	
+	\begin{theorem} \label{thm:reproducing_property}
+		(Reproducing Property)
+		The evaluation operator of a function within the full RKHS is the inner product with the feature function in that RKHS \eqref{eq:reproducing_property}.
 		\begin{equation}
 		\begin{aligned}
 			\inner{\phi_{x}}{f} &= f(x) \\
 			\inner{\psi_{y}}{g} &= g(y)
+		\label{eq:reproducing_property}
 		\end{aligned}
 		\end{equation}	
+	\end{theorem}
 
-
-	\subsection{Mean Embeddings}
-	
+	\begin{definition} \label{def:kernel_embedding}
+		(Kernel Embedding)
+		The kernel embedding (or mean embedding) of a distribution $\mathbb{P}_{\rv{X}}$ is defined as the expectation of the corresponding feature function in that RKHS \eqref{eq:kernel_embedding}.
+		
 		\begin{equation}
 		\begin{aligned}
 			\muX &:= \expect{\phiX} = \expect{k(\rv{X}, \cdot)} \\
 			\muY &:= \expect{\psiY} = \expect{l(\rv{Y}, \cdot)}
+		\label{eq:kernel_embedding}
 		\end{aligned}
 		\end{equation}	
+	\end{definition}
 
-	\subsection{Cross-Covariance Operators}
+	\begin{definition} \label{def:tensor_operator}
+		(Tensor Operator)
+		The definition of a tensor product $(a \otimes b)$ applied on an appropriate element $c$ is defined as follows \eqref{eq:tensor_operator}. Note that sometimes we may use $\cdot$ to emphasise this operation so that it is not confused with scalar multiplication.
+		\begin{equation}
+			(a \otimes b) c \equiv (a \otimes b) \cdot c := a \langle b, c \rangle
+		\label{eq:tensor_operator}
+		\end{equation}
+	\end{definition}
 	
+	\begin{definition} \label{def:inner_of_tensor}
+		(Inner Products of Tensor Products)
+		The inner product of two tensor products are defined as follows \eqref{eq:inner_of_tensor}.
+		\begin{equation}
+			\inner{a \otimes b}{c \otimes d} := \inner{a}{c} \inner{b}{d}
+		\label{eq:inner_of_tensor}
+		\end{equation}
+	\end{definition}
+	
+	\begin{definition} \label{def:cross_cov}
+		(Uncentred Cross-Covariance Operators)
+		The uncentred cross-covariance operators are defined as the kernel embedding of the tensor-joint RKHS, which is the span of the tensor products of their respective feature functions \eqref{eq:cross_cov}.
 		\begin{equation}
 		\begin{aligned}
 			\Cxx &:= \expect{\phiX \otimes \psiY} \\
 			\Cxy &:= \expect{\phiX \otimes \psiY} \\
 			\Cyx &:= \expect{\psiY \otimes \phiX} \\
 			\Cyy &:= \expect{\psiY \otimes \psiY}
+		\label{eq:cross_cov}
 		\end{aligned}
 		\end{equation}		
+	\end{definition}
 
-		
+	\begin{theorem} \label{thm:cxy_g}
+		We can derive the following useful identity \eqref{eq:cxy_g}.
 		\begin{equation}
 		\begin{aligned}
-			\Cxy g &=  (\expect{\phiX \otimes \psiY}) g \\
-			&= \expect{(\phiX \otimes \psiY) g}\\
-			&= \expect{\phiX \inner{\psiY}{g}} \\
-			&= \expect{g(\rv{Y}) \phiX} \in \mathcal{H}_{k}
-			\label{equation:cxy_g}
+			\Cxy \cdot g = \expect{g(\rv{Y}) \phiX}
+		\label{eq:cxy_g}
 		\end{aligned}
-		\end{equation}	
+		\end{equation}
+	
+		\begin{proof}
+		\begin{align*}
+			\Cxy \cdot g &=  (\expect{\phiX \otimes \psiY}) \cdot g \tag{By Definition \ref{def:cross_cov}} \\
+			&= \expect{(\phiX \otimes \psiY) \cdot g} \tag{By linearity of $\expect{\cdot}$} \\
+			&= \expect{\phiX \inner{\psiY}{g}} \tag{By Definition \ref{def:tensor_operator}} \\
+			&= \expect{g(\rv{Y}) \phiX} \tag{By Theorem \ref{thm:reproducing_property}}
+		\end{align*}
+		\end{proof}
 		
-		\begin{equation}
-		\begin{aligned}
-			\inner{\Cxy g}{f} &= \inner{\expect{g(\rv{Y}) \phiX}}{f} \\
-			&= \expect{g(\rv{Y}) \inner{\phiX}{f}} \\
-			&= \expect{f(\rv{X}) g(\rv{Y})}
-		\end{aligned}
-		\end{equation}	
+		This also shows that $\Cxy \cdot g \in \mathcal{H}_{k}$.
+	\end{theorem}
+		
+	% CONTINUE FROM HERE
+		
+		\begin{align*}
+			\inner{\Cxy \cdot g}{f} &= \inner{\expect{g(\rv{Y}) \phiX}}{f} \tag{By Theorem \ref{thm:cxy_g}}\\
+			&= \expect{g(\rv{Y}) \inner{\phiX}{f}} \tag{By bilinearity of $\inner{\cdot}{\cdot}$} \\
+			&= \expect{f(\rv{X}) g(\rv{Y})} \tag{By property \eqref{eq:reproducing_property}}
+		\end{align*}	
+			
+		\begin{align*}
+			\inner{\Cxy}{f \otimes g} &= \inner{\expect{\phiX \otimes \psiY}}{f \otimes g} \tag{By definition \eqref{eq:cross_cov}} \\
+			&= \expect{\inner{\phiX \otimes \psiY}{f \otimes g}} \tag{By bilinearity of $\inner{\cdot}{\cdot}$} \\
+			&= \expect{\inner{\phiX}{f} \inner{\psiY}{g}} \tag{By definition \eqref{eq:inner_of_tensor}}\\
+			&= \expect{f(X) g(Y)} \tag{By property \eqref{eq:reproducing_property}}
+		\end{align*}		
 			
 		\begin{equation}
-		\begin{aligned}
-			\inner{\Cxy}{f \otimes g} &= \inner{\expect{\phiX \otimes \psiY}}{f \otimes g} \\
-			&= \expect{\inner{\phiX \otimes \psiY}{f \otimes g}} \\
-			&= \expect{\inner{\phiX}{f} \inner{\psiY}{g}} \\
-			&= \expect{f(X) g(Y)}
-		\end{aligned}
-		\end{equation}			
-			
-		\begin{equation}
-			\inner{\Cxy g}{f}_{\mathcal{X}} = \inner{\Cxy}{f \otimes g}_{\mathcal{X} \times \mathcal{Y}} = \inner{\Cyx f}{g}_{\mathcal{Y}}
+			\expect{f(\rv{X}) g(\rv{Y})} = \inner{\Cxy g}{f} = \inner{\Cxy}{f \otimes g} = \inner{\Cyx f}{g}
 		\end{equation}
 			
 		where we obtained the last equality through symmetry. \\
 		
+		We now set $f$ to be defined as follows.
+	
+		\begin{equation}
+			f := \expect{g(Y) | X = \cdot}
+		\end{equation}
 		
+		Note that this is a function in $\mathcal{H}_{k}$ and the domain of $f$ is $\mathcal{X}$ as $f(x) = \expect{g(\rv{Y}) | \rv{X} = x}$.
+		
+		\begin{align*}
+			\Cxx \cdot f &= \expect{\phiX \otimes \phiX} \cdot f \\
+			&= \expect{(\phiX \otimes \phiX) \cdot f} \\
+			&= \expect{\phiX \inner{\phiX}{f}} \\
+			&= \expect{\phiX f(\rv{X})} \\
+			&= \expect{\phiX \expect{g(\rv{Y}) | \rv{X}}} \\
+			&= \expect{\expect{\phiX g(\rv{Y}) | \rv{X}}} \\
+			&= \expect{\phiX g(\rv{Y})} \tag{Tower Property} \\
+			&= \Cxy \cdot g \tag{From \ref{eq:cxy_g}}
+		\end{align*}
+		
+		If the inverse of $\Cxx \cdot$ exists, then we can write the following.
+		
+		\begin{equation}
+		\begin{aligned}
+			\Cxx \cdot f &= \Cxy \cdot g \\
+			f &= {\Cxx \cdot}^{-1} \Cxy \cdot g \\
+			\expect{g(Y) | X = \cdot} &= {\Cxx \cdot}^{-1} \Cxy \cdot g
+		\end{aligned}
+		\end{equation}
 	\subsection{Kernel Sum Rule}
 	
 	\subsection{Kernel Chain Rule}
