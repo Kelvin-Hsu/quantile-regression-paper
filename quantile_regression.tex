@@ -69,13 +69,6 @@
   Abstract. The Abstract must be limited to one paragraph.
 \end{abstract}
 
-% TEST COMMENT FOR EDITTING ON OVERLEAF
-
-% TEST COMMENT FOR LOCAL BRANCH
-
-% ANOTHER TEST COMMENT FOR EDITTING ON OVERLEAF. SOME CHANGES WILL BE MADE ON THE LOCAL BRANCH. WE WILL SEE IF IT MERGES CORRECTLY.
-
-
 \warn{Red lines are notes to pay attention to. They are not part of the paper.}
 
 \extra{Green lines are sections that we are considering to delete. They are part of the paper.}
@@ -183,6 +176,8 @@
 	\subsection{Kernel Embedding}
 	\label{sec:background:kernel_embedding}
 	
+		% ADD DEFINITIONS AND EXPAND THIS TO ONE PAGE
+
 		In this paper we assume all kernels we deal with are positive definite and characteristic. That is, the kernel $k : \mathcal{X} \times \mathcal{X} \mapsto \mathbb{R}$ defines a unique reproducing kernel Hilbert space (RKHS), which we will denote by $\mathcal{H}_{k}$. \extra{Note that in some literature, since $k$ takes elements $x$ of $\mathcal{X}$ as arguments, the corresponding reproducing kernel Hilbert space is denoted as $\mathcal{H}_{\mathcal{X}}$ instead. However, since the kernel $k$ also includes information about the space $\mathcal{X}$ it operates on, the notation $\mathcal{H}_{k}$ will be preferred.}
 		 
 		The kernel embedding $\mu_{\rv{X}}$ of a distribution measure $\mathbb{P}_{\rv{X}}$ under kernel $k$ is defined by
@@ -460,7 +455,7 @@
 	
 	However, clearly this requires the PDF to be estimated first, even though discriminative approaches do not require them. Thus, this method is more natural in the generative approach. Nevertheless, this is only required during the learning stage. Once the optimal hyperparameters are obtained, one can choose to use the resulting hyperparameters in the discriminative approach for inference.
 	
-	\warn{I need to put in the Bayesian learning algorithm with the joint embedding and then the conditional embedding.}
+	\warn{We want to put in the Bayesian learning algorithm with the joint embedding and then the conditional embedding if we get results for that.}
 	
 \section{Quantile Regression Algorithms}
 \label{sec:quantile_regression_algorithms}
