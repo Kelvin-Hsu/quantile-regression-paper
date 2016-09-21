@@ -18,11 +18,27 @@
 \usepackage{vector}
 \usepackage{color}
 
+\newcommand{\eq}[1]{\begin{equation} \begin{aligned} #1 \end{aligned} \end{equation}}
+
 \newcommand{\argmin}{\operatornamewithlimits{argmin}}
 %\newcommand{\rv}[1]{\underline{\overline{#1}}}
 \newcommand{\rv}[1]{\underline{#1}}
 \newcommand{\ds}[1]{{#1}}
 \newcommand{\warn}[1]{{\color{red} #1}}
+
+\newcommand{\expect}[1]{{\mathbb{E}[#1]}}
+\newcommand{\inner}[2]{{\langle #1, #2 \rangle}}
+
+\newcommand{\muX}{\mu_{\rv{X}}}
+\newcommand{\muY}{\mu_{\rv{Y}}}
+\newcommand{\phiX}{\phi_{\rv{X}}}
+\newcommand{\psiY}{\psi_{\rv{Y}}}
+\newcommand{\Cxy}{{C_{\rv{X} \rv{Y}}}}
+\newcommand{\Cyx}{{C_{\rv{Y} \rv{X}}}}
+\newcommand{\Cxx}{{C_{\rv{X} \rv{X}}}}
+\newcommand{\Cyy}{{C_{\rv{Y} \rv{Y}}}}
+\newcommand{\Cylx}{{C_{\rv{Y} | \rv{X}}}}
+\newcommand{\Cxly}{{C_{\rv{X} | \rv{Y}}}}
 
 \begin{document}
 
@@ -119,120 +135,92 @@
 	\label{eq:function_vectorisation}
 	\end{equation}
 	
-	\textbf{Kernel Embeddings.} \warn{We will follow on from the section in the paper.}
+	\textbf{Kernel Embeddings.} In the kernel embeddings setting, the partially applied kernel function, $k(x, \cdot)$, acts like a feature vector for the RKHS it spans over $x \in \mathcal{X}$. However, instead of an usual finite dimensional vector, this is an (usually uncountably, depending on the cardinality of $\mathcal{X}$) infinite dimensional vector as it is a function of one variable in $\mathcal{X}$. In many literature, the notation $\phi(x) := k(x, \cdot)$ is used. However, the author prefers $\phi_{x} := k(x, \cdot)$ so that it is clearer that $\phi_{x}$ is a function of one variable such that $\phi_{x}(x') = k(x, x')$. It would be awkward to write $\phi(x)(x')$ otherwise. Also, as an infinite dimensional vector, when an appropriate Hilbert-Schmidt operator comes, say $C_{\rv{Y} | \rv{X}}$, it would look less awkward if we write $C_{\rv{Y} | \rv{X}} \phi_{x}$ as in $\phi_{x}$ is an element of some vector space where linear operations can be applied onto, instead of $C_{\rv{Y} | \rv{X}} \phi(x)$ where it looks like this is $C_{\rv{Y} | \rv{X}}$ multiples of some functional value $\phi(x)$.
 	
-	In the kernel embeddings setting, the partially applied kernel function, $k(x, \cdot)$, acts like a feature vector for the RKHS it spans over $x \in \mathcal{X}$. However, instead of an usual finite dimensional vector, this is an (usually uncountably, depending on the cardinality of $\mathcal{X}$) infinite dimensional vector as it is a function of one variable in $\mathcal{X}$. In many literature, the notation $\phi(x) := k(x, \cdot)$ is used. However, the author prefers $\phi_{x} := k(x, \cdot)$ so that it is clearer that $\phi_{x}$ is a function of one variable such that $\phi_{x}(x') = k(x, x')$. It would be awkward to write $\phi(x)(x')$ otherwise. Also, as an infinite dimensional vector, when an appropriate Hilbert-Schmidt operator comes, say $C_{\rv{Y} | \rv{X}}$, it would look less awkward if we write $C_{\rv{Y} | \rv{X}} \phi_{x}$ as in $\phi_{x}$ is an element of some vector space where linear operations can be applied onto, instead of $C_{\rv{Y} | \rv{X}} \phi(x)$ where it looks like this is $C_{\rv{Y} | \rv{X}}$ multiples of some functional value $\phi(x)$.
+	In this way, we emphasise that $\phi_{x}$ is akin to an infinite dimensional vector, or a matrix with size $\infty \times 1$. We can then write tensor products and inner products with matrix notation as usual.
 	
-	In this way, we emphasise that $\phi_{x}$ is akin to an infinite dimensional vector, or a matrix with size $\infty \times 1$.
+\section{Kernel Embeddings}
+
+	As always, let $\rv{X} : \Omega \mapsto \mathcal{X}$ be a random variable taking values in $\mathcal{X}$. Similarly, let $\rv{Y} : \Omega \mapsto \mathcal{Y}$ be a random variable taking values in $\mathcal{Y}$. Let $k$ and $l$ be characteristic positive definite kernels defined on $\mathcal{X}$ and $\mathcal{Y}$ respectively. Let $f \in \mathcal{H}_{k}$ and $g \in \mathcal{H}_{l}$.
+		
+	\subsection{Features}
 	
-	We can then write tensor products and inner products with matrix notation, which is what many papers implicitly do but do not explicitly say so.
+		\begin{equation}
+		\begin{aligned}
+			\phi_{x} &:= k(x, \cdot) \\
+			\psi_{y} &:= l(y, \cdot)
+		\end{aligned}
+		\end{equation}	
+			
+
+	\subsection{Reproducing property}
 	
-%	For example, the cross-variance operator for the distribution of $\rv{X}$ in $\mathcal{X}$ is
-%	
-%		\begin{equation}
-%			C_{\rv{X} \rv{X}} := \mathbb{E}[k(\rv{X}, \cdot) \otimes k(\rv{X}, \cdot)]
-%		\end{equation}
-%		
-%	Notice that this takes two arguments in $\mathcal{X}$. As such, when applied onto a function that takes one argument in $\mathcal{X}$, this acts like a matrix with size $\infty \times \infty$ (recall that all linear operators have respective matrix representations). Taking arguments becomes like indexing. For an usual finite dimensional matrix $A$, we usually write $A_{i j}$ for the element at the $i$-th row and $j$-th column. In programming, we usually write something like \texttt{A[i, j]} or \texttt{A(i, j)}. Now, this operator is indexed by the arguments instead, which are uncountably infinite, so we write $C_{\rv{X} \rv{X}}(x_{1}, x_{2})$ for example, which evaluates to be $\mathbb{E}[k(\rv{X}, x_{1}) k(\rv{X}, x_{2})]$.
-%	
-%	Now that we remember that all linear operators has their matrix representations, we can write 
-%
-%		\begin{equation}
-%			C_{\rv{X} \rv{X}} := \mathbb{E}[\phi_{\rv{X}} \otimes \phi_{\rv{X}}] = \mathbb{E}[\phi_{\rv{X}} \phi_{\rv{X}}^{T}]
-%		\end{equation}
-%	
-%	where we used the matrix notation for a tensor product between vectors. Now, when we apply this linear operator to a feature vector (which are functions in our case), we usually use the notation
-%	
-%		\begin{equation}
-%			(a \otimes b) c = a \langle b, c \rangle
-%		\end{equation}
-%		
-%	In matrix notation this is simply
-%	
-%		\begin{equation}
-%			(a b^{T}) c = a (b^{T} c) = a b^{T} c
-%		\end{equation}
-%		
-%	Noting that the first expression is an outer product applied to a vector, the second expression is a vector multiplied by a dot product which returns a scalar, and the third expression shows this notation readily makes associativity clear.
-%
-%	Of course, this is just notation, and this notation with 2-tensors at a time. With 3-tensors or higher tensor products, the original notation $\otimes$ would be more extendible.
-%		
-%	As an artificial example, we could have the following.
-%	
-%		\begin{equation}
-%			C_{\rv{X} \rv{X}} \phi_{x} = \mathbb{E}[\phi_{\rv{X}} \phi_{\rv{X}}^{T}] \phi_{x} = \mathbb{E}[\phi_{\rv{X}} \phi_{\rv{X}}^{T} \phi_{x}] = \mathbb{E}[\phi_{\rv{X}} k(\rv{X}, x)]
-%		\end{equation}
-%			
-%	Then we know that this is now a $\infty \times \infty$ operator applied on a $\infty \times 1$ vector which gives another $\infty \times \infty$ vector, in loose terms.
-%	
-%	The convenience of this notation becomes evident when we use it to derive the kernel sum rule, kernel chain rule, and kernel Bayes rule with finite samples.
-%	
-%	Suppose we have a dataset $X = \{x_{i}\}_{i = 1}^{n}$. We concatenate the feature vectors at the observed locations together by columns.
-%	
-%	\begin{equation}
-%		\Phi_{\ds{X}} := \begin{bmatrix} \phi_{x_{1}} & \dots & \phi_{x_{n}} \end{bmatrix} = (\{\phi_{x_{i}}\}_{i = 1}^{n})^{T}
-%	\end{equation}
-%	
-%	By stacking the feature vectors of size $\infty \times 1$ in the column axis, we have a feature matrix of the size $\infty \times n$, where $n$ is number of observations.
-%	
-%	Then, a kernel embedding with weights $\bm{\beta} \in \mathbb{R}^{n}$ can be written as
-%	
-%	\begin{equation}
-%		\hat{\mu}_{\rv{X}} = \sum_{i = 1}^{n} \beta_{i} k(x_{i}, \cdot) = \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}} = \Phi_{\ds{X}} \bm{\beta}
-%	\end{equation}
-%	
-%	We can quickly verify the dimensionality of this equation. On the left we have  $\hat{\mu}_{\rv{X}}$ being a $\infty \times 1$ vector. On the right we have $\Phi_{\ds{X}}$ being a $\infty \times n$ matrix applied on a $n \times 1$ vector $\bm{\beta}$, which also results in a $\infty \times 1$ vector.
-%	
-%\section{Standard Kernel Embedding Results and Derivations}
-%
-%	\subsection{Reproducing Property}
-%		
-%		Notation 1:
-%		
-%		\begin{equation}
-%			\langle \phi_{x}, f \rangle = f(x)
-%		\end{equation}
-%		
-%		Notation 2:
-%		
-%		\begin{equation}
-%			\phi_{x}^{T} f = f(x)
-%		\end{equation}
-%		
-%	\subsection{Theorem 1}
-%	
-%		
-%	
-%		As always, let $\rv{X} : \Omega \mapsto \mathcal{X}$ be a random variable taking values in $\mathcal{X}$. Similarly, let $\rv{Y} : \Omega \mapsto \mathcal{Y}$ be a random variable taking values in $\mathcal{Y}$. Let $k$ and $l$ be characteristic positive definite kernels defined on $\mathcal{X}$ and $\mathcal{Y}$ respectively.\\
-%		
-%		Let $g \in \mathcal{H}_{l}$. Define $f \in \mathcal{H}_{k}$ as follows.
-%		
-%		\begin{equation}
-%			f \equiv f(\cdot) := \mathbb{E}[g(Y) | X = \cdot]
-%		\end{equation}
-%		
-%		Note that this is a function in $\mathcal{H}_{k}$ and the domain of $f$ is $\mathcal{X}$ as $f(x) = \mathbb{E}[g(Y) | X = x]$.
-%	
-%		\begin{equation}
-%			\begin{aligned}
-%				C_{\rv{X} \rv{X}} f &= \mathbb{E}[\phi_{\rv{X}} \phi_{\rv{X}}^{T}] f\\
-%				&= \mathbb{E}[\phi_{\rv{X}} \phi_{\rv{X}}^{T} f] \\
-%				&= \mathbb{E}[\phi_{\rv{X}} f(\rv{X})] \\
-%				&= \mathbb{E}[\phi_{\rv{X}} \mathbb{E}[g(\rv{Y}) | \rv{X}]] \\
-%				&= \mathbb{E}[\mathbb{E}[\phi_{\rv{X}} g(\rv{Y}) | \rv{X}]] \\
-%				&= \mathbb{E}[\phi_{\rv{X}} g(\rv{Y})]
-%			\end{aligned}
-%		\end{equation}
-	%	
-	%	If the inverse of $\Cxx \cdot$ exists, then we can write the following.
-	%	
-	%	\begin{equation}
-	%	\begin{aligned}
-	%	\Cxx \cdot f &= \Cxy \cdot g \\
-	%	f &= {\Cxx \cdot}^{-1} \Cxy \cdot g \\
-	%	\expect{g(Y) | X = \cdot} &= {\Cxx \cdot}^{-1} \Cxy \cdot g
-	%	\end{aligned}
-	%	\end{equation}
+		\begin{equation}
+		\begin{aligned}
+			\inner{\phi_{x}}{f} &= f(x) \\
+			\inner{\psi_{y}}{g} &= g(y)
+		\end{aligned}
+		\end{equation}	
+
+
+	\subsection{Mean Embeddings}
+	
+		\begin{equation}
+		\begin{aligned}
+			\muX &:= \expect{\phiX} = \expect{k(\rv{X}, \cdot)} \\
+			\muY &:= \expect{\psiY} = \expect{l(\rv{Y}, \cdot)}
+		\end{aligned}
+		\end{equation}	
+
+	\subsection{Cross-Covariance Operators}
+	
+		\begin{equation}
+		\begin{aligned}
+			\Cxx &:= \expect{\phiX \otimes \psiY} \\
+			\Cxy &:= \expect{\phiX \otimes \psiY} \\
+			\Cyx &:= \expect{\psiY \otimes \phiX} \\
+			\Cyy &:= \expect{\psiY \otimes \psiY}
+		\end{aligned}
+		\end{equation}		
+
+		
+		\begin{equation}
+		\begin{aligned}
+			\Cxy g &=  (\expect{\phiX \otimes \psiY}) g \\
+			&= \expect{(\phiX \otimes \psiY) g}\\
+			&= \expect{\phiX \inner{\psiY}{g}} \\
+			&= \expect{g(\rv{Y}) \phiX} \in \mathcal{H}_{k}
+			\label{equation:cxy_g}
+		\end{aligned}
+		\end{equation}	
+		
+		\begin{equation}
+		\begin{aligned}
+			\inner{\Cxy g}{f} &= \inner{\expect{g(\rv{Y}) \phiX}}{f} \\
+			&= \expect{g(\rv{Y}) \inner{\phiX}{f}} \\
+			&= \expect{f(\rv{X}) g(\rv{Y})}
+		\end{aligned}
+		\end{equation}	
+			
+		\begin{equation}
+		\begin{aligned}
+			\inner{\Cxy}{f \otimes g} &= \inner{\expect{\phiX \otimes \psiY}}{f \otimes g} \\
+			&= \expect{\inner{\phiX \otimes \psiY}{f \otimes g}} \\
+			&= \expect{\inner{\phiX}{f} \inner{\psiY}{g}} \\
+			&= \expect{f(X) g(Y)}
+		\end{aligned}
+		\end{equation}			
+			
+		\begin{equation}
+			\inner{\Cxy g}{f}_{\mathcal{X}} = \inner{\Cxy}{f \otimes g}_{\mathcal{X} \times \mathcal{Y}} = \inner{\Cyx f}{g}_{\mathcal{Y}}
+		\end{equation}
+			
+		where we obtained the last equality through symmetry. \\
+		
+		
+	\subsection{Kernel Sum Rule}
+	
+	\subsection{Kernel Chain Rule}
 	
 \section{Optimal Approximate Embedding Derivations}
 
