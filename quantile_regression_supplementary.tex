@@ -60,6 +60,19 @@
 \newcommand{\Cylx}{C_{\rv{Y} | \rv{X}}}
 \newcommand{\Cxly}{C_{\rv{X} | \rv{Y}}}
 
+\newcommand{\hatmuX}{\hat{\mu}_{\rv{X}}}
+\newcommand{\hatmuY}{\hat{\mu}_{\rv{Y}}}
+\newcommand{\hatmuYx}{\hat{\mu}_{\rv{Y} | \rv{X} = x}}
+\newcommand{\hatmuXy}{\hat{\mu}_{\rv{X} | \rv{Y} = y}}
+\newcommand{\hatCxy}{\hat{C}_{\rv{X} \rv{Y}}}
+\newcommand{\hatCyx}{\hat{C}_{\rv{Y} \rv{X}}}
+\newcommand{\hatCxx}{\hat{C}_{\rv{X} \rv{X}}}
+\newcommand{\hatCyy}{\hat{C}_{\rv{Y} \rv{Y}}}
+\newcommand{\hatCylx}{\hat{C}_{\rv{Y} | \rv{X}}}
+\newcommand{\hatCxly}{\hat{C}_{\rv{X} | \rv{Y}}}
+\newcommand{\cardX}{\Vert \mathcal{X} \Vert}
+\newcommand{\cardY}{\Vert \mathcal{Y} \Vert}
+
 \begin{document}
 
 % If your paper is accepted and the title of your paper is very long,
@@ -160,290 +173,399 @@
 	In this way, we emphasise that $\phi_{x}$ is akin to an infinite dimensional vector, or a matrix with size $\infty \times 1$. We can then write tensor products and inner products with matrix notation as usual.
 	
 \section{Kernel Embeddings}
-	
+\label{sec:kernel_embeddings}
 	% If you want to remove the underline for random variables, use the following command
 	% \renewcommand{\rv}[1]{#1}
-	As always, let $\rv{X} : \Omega \mapsto \mathcal{X}$ be a random variable taking values in $\mathcal{X}$. Similarly, let $\rv{Y} : \Omega \mapsto \mathcal{Y}$ be a random variable taking values in $\mathcal{Y}$. Let $k$ and $l$ be characteristic positive definite kernels defined on $\mathcal{X}$ and $\mathcal{Y}$ respectively. Let $f \in \Hk$ and $g \in \Hl$.
+	
+	This section summarises fundamental and important results in the field of kernel embeddings. The purpose is to present relevant results and theorems that form the basis for understanding works that involve kernel embeddings, as well as to provide a reference for its literature in both notation and concept. 
+	
+	\Cref{sec:kernel_embeddings:theoretical_representation} introduces and summarises the formulation and theory of kernel embeddings. \Cref{sec:kernel_embeddings:empirical_representation} then extends the theoretical work to the empirical case, focusing on representations of kernel embeddings and its structure given finite amounts of sample data.
+	
+	\subsection{Theoretical Representations}
+	\label{sec:kernel_embeddings:theoretical_representation}
+	
+		As always, let $\rv{X} : \Omega \mapsto \mathcal{X}$ be a random variable taking values in $\mathcal{X}$. Similarly, let $\rv{Y} : \Omega \mapsto \mathcal{Y}$ be a random variable taking values in $\mathcal{Y}$. Let $k$ and $l$ be characteristic positive definite kernels defined on $\mathcal{X}$ and $\mathcal{Y}$ respectively. Let $f \in \Hk$ and $g \in \Hl$.
+			
+		\begin{theorem} \label{thm:feature_functions}
+			(Feature Functions)
+			The feature functions that form the basis for the full RKHS are obtained by partially applying the respective kernel of that RKHS. \eqref{eq:feature_functions}.
+			\begin{equation}
+			\begin{aligned}
+				\phi_{x} &:= k(x, \cdot) \in \Hk \\
+				\psi_{y} &:= l(y, \cdot) \in \Hl
+			\label{eq:feature_functions}
+			\end{aligned}
+			\end{equation}
+		\end{theorem}
+	
+		\begin{theorem} \label{thm:reproducing_property}
+			(Reproducing Property)
+			The evaluation operator of a function within the full RKHS is the inner product with the feature function in that RKHS \eqref{eq:reproducing_property}.
+			\begin{equation}
+			\begin{aligned}
+				\inner{\phi_{x}}{f} &= f(x) \\
+				\inner{\psi_{y}}{g} &= g(y)
+			\label{eq:reproducing_property}
+			\end{aligned}
+			\end{equation}	
+		\end{theorem}
+	
+		\begin{definition} \label{def:kernel_embedding}
+			(Kernel Embedding)
+			The kernel embedding (or mean embedding) of a distribution $\mathbb{P}_{\rv{X}}$ is defined as the expectation of the corresponding feature function in that RKHS \eqref{eq:kernel_embedding}.
+			
+			\begin{equation}
+			\begin{aligned}
+				\muX &:= \expect{\phiX} = \expect{k(\rv{X}, \cdot)} \in \Hk \\
+				\muY &:= \expect{\psiY} = \expect{l(\rv{Y}, \cdot)} \in \Hl
+			\label{eq:kernel_embedding}
+			\end{aligned}
+			\end{equation}	
+		\end{definition}
+	
+		\begin{theorem} \label{thm:function_expectation}
+			(Function Expectation)
+			The expectation of a function of a random variable can be evaluated as the inner product between the corresponding kernel embedding and the function \eqref{eq:function_expectation}.
+			\begin{equation}
+				\inner{\muX}{f} = \expect{f(\rv{X})}
+				\label{eq:function_expectation}
+			\end{equation}
+			
+			\begin{proof}
+				\begin{align*}
+					\inner{\muX}{f} &= \inner{\expect{\phiX}}{f} \tag{\cref{def:kernel_embedding}} \\
+					&= \expect{\inner{\phiX}{f}} \tag{bilinearity of $\inner{\cdot}{\cdot}$} \\
+					&= \expect{f(\rv{X})} \tag{\cref{thm:reproducing_property}}
+				\end{align*}
+			\end{proof}
+		\end{theorem}
 		
-
-	\begin{theorem} \label{thm:feature_functions}
-		(Feature Functions)
-		The feature functions that form the basis for the full RKHS are obtained by partially applying the respective kernel of that RKHS. \eqref{eq:feature_functions}.
-		\begin{equation}
-		\begin{aligned}
-			\phi_{x} &:= k(x, \cdot) \in \Hk \\
-			\psi_{y} &:= l(y, \cdot) \in \Hl
-		\label{eq:feature_functions}
-		\end{aligned}
-		\end{equation}
-	\end{theorem}
-
-	\begin{theorem} \label{thm:reproducing_property}
-		(Reproducing Property)
-		The evaluation operator of a function within the full RKHS is the inner product with the feature function in that RKHS \eqref{eq:reproducing_property}.
-		\begin{equation}
-		\begin{aligned}
-			\inner{\phi_{x}}{f} &= f(x) \\
-			\inner{\psi_{y}}{g} &= g(y)
-		\label{eq:reproducing_property}
-		\end{aligned}
-		\end{equation}	
-	\end{theorem}
-
-	\begin{definition} \label{def:kernel_embedding}
-		(Kernel Embedding)
-		The kernel embedding (or mean embedding) of a distribution $\mathbb{P}_{\rv{X}}$ is defined as the expectation of the corresponding feature function in that RKHS \eqref{eq:kernel_embedding}.
+		\begin{definition} \label{def:tensor_operator}
+			(Tensor Product as an Operator)
+			Suppose $a \in \mathcal{H}_{1}$ and $b \in \mathcal{H}_{2}$. Applying the tensor product $(a \otimes b) \in \mathcal{H}_{1} \otimes \mathcal{H}_{2}$ on $c \in \mathcal{H}_{2}$ results in an element in $\mathcal{H}_{1}$ according to \eqref{eq:tensor_operator}. Note that sometimes we may use $\cdot$ to emphasise this operation so that it is not confused with scalar multiplication. Also note that the result of the dot product $\langle b, c \rangle$ is a scalar.
+			\begin{equation}
+				(a \otimes b) c \equiv (a \otimes b) \cdot c := a \langle b, c \rangle = \langle b, c \rangle a \in \mathcal{H}_{1}
+			\label{eq:tensor_operator}
+			\end{equation}
+		\end{definition}
 		
-		\begin{equation}
-		\begin{aligned}
-			\muX &:= \expect{\phiX} = \expect{k(\rv{X}, \cdot)} \in \Hk \\
-			\muY &:= \expect{\psiY} = \expect{l(\rv{Y}, \cdot)} \in \Hl
-		\label{eq:kernel_embedding}
-		\end{aligned}
-		\end{equation}	
-	\end{definition}
-
-	\begin{theorem} \label{thm:function_expectation}
-		(Function Expectation)
-		The expectation of a function of a random variable can be evaluated as the inner product between the corresponding kernel embedding and the function \eqref{eq:function_expectation}.
-		\begin{equation}
-			\inner{\muX}{f} = \expect{f(\rv{X})}
-			\label{eq:function_expectation}
-		\end{equation}
+		\begin{definition} \label{def:inner_of_tensor}
+			(Inner Products of Tensor Products)
+			Suppose $a, c \in \mathcal{H}_{1}$ and $b, d \in \mathcal{H}_{2}$. The inner product of the two tensor products are defined to be the product of the corresponding component inner products \eqref{eq:inner_of_tensor}.
+			\begin{equation}
+				\inner{a \otimes b}{c \otimes d} := \inner{a}{c} \inner{b}{d}
+			\label{eq:inner_of_tensor}
+			\end{equation}
+		\end{definition}
 		
-		\begin{proof}
+		\begin{definition} \label{def:cross_cov}
+			(Uncentred Cross-Covariance Operators)
+			The uncentred cross-covariance operators are defined as the kernel embedding of the corresponding tensor-joint RKHS. \eqref{eq:cross_cov}.
+			\begin{equation}
+			\begin{aligned}
+				\Cxx &:= \expect{\phiX \otimes \psiY} \in \Hk \otimes \Hk \\
+				\Cxy &:= \expect{\phiX \otimes \psiY} \in \Hk \otimes \Hl \\
+				\Cyx &:= \expect{\psiY \otimes \phiX} \in \Hl \otimes \Hk \\
+				\Cyy &:= \expect{\psiY \otimes \psiY} \in \Hl \otimes \Hl 
+			\label{eq:cross_cov}
+			\end{aligned}
+			\end{equation}		
+		\end{definition}
+	
+		\begin{lemma} \label{thm:cxy_g}
+			$\Cxy \in \mathcal{H}_{k} \otimes \mathcal{H}_{l}$ is also an operator from $\Hl$ to $\Hk$, such that $\Cxy : \Hl \mapsto \Hk$, with its operation given by the following identity \eqref{eq:cxy_g}.
+			\begin{equation}
+				\Cxy \cdot g = \expect{g(\rv{Y}) \phiX}
+			\label{eq:cxy_g}
+			\end{equation}
+		
+			\begin{proof}
 			\begin{align*}
-				\inner{\muX}{f} &= \inner{\expect{\phiX}}{f} \tag{\cref{def:kernel_embedding}} \\
-				&= \expect{\inner{\phiX}{f}} \tag{bilinearity of $\inner{\cdot}{\cdot}$} \\
-				&= \expect{f(\rv{X})} \tag{\cref{thm:reproducing_property}}
+				\Cxy \cdot g &=  (\expect{\phiX \otimes \psiY}) \cdot g \tag{\cref{def:cross_cov}} \\
+				&= \expect{(\phiX \otimes \psiY) \cdot g} \tag{linearity of $\expect{\cdot}$} \\
+				&= \expect{\phiX \inner{\psiY}{g}} \tag{\cref{def:tensor_operator}} \\
+				&= \expect{g(\rv{Y}) \phiX} \tag{\cref{thm:reproducing_property}}
 			\end{align*}
-		\end{proof}
-	\end{theorem}
-	
-	\begin{definition} \label{def:tensor_operator}
-		(Tensor Product as an Operator)
-		Suppose $a \in \mathcal{H}_{1}$ and $b \in \mathcal{H}_{2}$. Applying the tensor product $(a \otimes b) \in \mathcal{H}_{1} \otimes \mathcal{H}_{2}$ on $c \in \mathcal{H}_{2}$ results in an element in $\mathcal{H}_{1}$ according to \eqref{eq:tensor_operator}. Note that sometimes we may use $\cdot$ to emphasise this operation so that it is not confused with scalar multiplication. Also note that the result of the dot product $\langle b, c \rangle$ is a scalar.
-		\begin{equation}
-			(a \otimes b) c \equiv (a \otimes b) \cdot c := a \langle b, c \rangle = \langle b, c \rangle a \in \mathcal{H}_{1}
-		\label{eq:tensor_operator}
-		\end{equation}
-	\end{definition}
-	
-	\begin{definition} \label{def:inner_of_tensor}
-		(Inner Products of Tensor Products)
-		Suppose $a, c \in \mathcal{H}_{1}$ and $b, d \in \mathcal{H}_{2}$. The inner product of the two tensor products are defined to be the product of the corresponding component inner products \eqref{eq:inner_of_tensor}.
-		\begin{equation}
-			\inner{a \otimes b}{c \otimes d} := \inner{a}{c} \inner{b}{d}
-		\label{eq:inner_of_tensor}
-		\end{equation}
-	\end{definition}
-	
-	\begin{definition} \label{def:cross_cov}
-		(Uncentred Cross-Covariance Operators)
-		The uncentred cross-covariance operators are defined as the kernel embedding of the corresponding tensor-joint RKHS. \eqref{eq:cross_cov}.
-		\begin{equation}
-		\begin{aligned}
-			\Cxx &:= \expect{\phiX \otimes \psiY} \in \Hk \otimes \Hk \\
-			\Cxy &:= \expect{\phiX \otimes \psiY} \in \Hk \otimes \Hl \\
-			\Cyx &:= \expect{\psiY \otimes \phiX} \in \Hl \otimes \Hk \\
-			\Cyy &:= \expect{\psiY \otimes \psiY} \in \Hl \otimes \Hl 
-		\label{eq:cross_cov}
-		\end{aligned}
-		\end{equation}		
-	\end{definition}
-
-	\begin{lemma} \label{thm:cxy_g}
-		$\Cxy \in \mathcal{H}_{k} \otimes \mathcal{H}_{l}$ is also an operator from $\Hl$ to $\Hk$, such that $\Cxy : \Hl \mapsto \Hk$, with its operation given by the following identity \eqref{eq:cxy_g}.
-		\begin{equation}
-			\Cxy \cdot g = \expect{g(\rv{Y}) \phiX}
-		\label{eq:cxy_g}
-		\end{equation}
-	
-		\begin{proof}
-		\begin{align*}
-			\Cxy \cdot g &=  (\expect{\phiX \otimes \psiY}) \cdot g \tag{\cref{def:cross_cov}} \\
-			&= \expect{(\phiX \otimes \psiY) \cdot g} \tag{linearity of $\expect{\cdot}$} \\
-			&= \expect{\phiX \inner{\psiY}{g}} \tag{\cref{def:tensor_operator}} \\
-			&= \expect{g(\rv{Y}) \phiX} \tag{\cref{thm:reproducing_property}}
-		\end{align*}
-		\end{proof}
-	\end{lemma}
-		
-	\begin{lemma} \label{thm:cxy_g_f}
-		Being the expectation of a scalar multiple of $\phiX$, this shows that $\Cxy \cdot g \in \mathcal{H}_{k}$, so that the inner product with $f \in \mathcal{H}_{k}$ can also be applied, resulting in the following identity \eqref{eq:cxy_g_f}.
-		\begin{equation}
-			\inner{\Cxy \cdot g}{f} = \expect{f(\rv{X}) g(\rv{Y})}
-		\label{eq:cxy_g_f}
-		\end{equation}
-		\begin{proof}
-		\begin{align*}
-			\inner{\Cxy \cdot g}{f} &= \inner{\expect{g(\rv{Y}) \phiX}}{f} \tag{\cref{thm:cxy_g}}\\
-			&= \expect{g(\rv{Y}) \inner{\phiX}{f}} \tag{bilinearity of $\inner{\cdot}{\cdot}$} \\
-			&= \expect{f(\rv{X}) g(\rv{Y})} \tag{\cref{thm:reproducing_property}}
-		\end{align*}
-		\end{proof}
-	\end{lemma}
-		
-
-	\begin{lemma} \label{thm:cxy_f_g}
-		Alternatively, since $\Cxy \in \mathcal{H}_{k} \otimes \mathcal{H}_{l}$, the inner product of $\Cxy$ and a function $f \otimes g \in \mathcal{H}_{k} \otimes \mathcal{H}_{l}$ in the same space results in another identity \eqref{eq:cxy_f_g}.
-		\begin{equation}
-			\inner{\Cxy}{f \otimes g} = \expect{f(X) g(Y)}
-		\label{eq:cxy_f_g}
-		\end{equation}
-		
-		\begin{proof}
-		\begin{align*}
-			\inner{\Cxy}{f \otimes g} &= \inner{\expect{\phiX \otimes \psiY}}{f \otimes g} \tag{\cref{def:cross_cov}} \\
-			&= \expect{\inner{\phiX \otimes \psiY}{f \otimes g}} \tag{bilinearity} \\
-			&= \expect{\inner{\phiX}{f} \inner{\psiY}{g}} \tag{\cref{def:inner_of_tensor}}\\
-			&= \expect{f(\rv{X}) g(\rv{Y})} \tag{\cref{thm:reproducing_property}}
-		\end{align*}
-		\end{proof}			
-	\end{lemma}
-	
-	\begin{theorem}
-		Together, \cref{thm:cxy_g_f} and \cref{thm:cxy_f_g} reveals an important identity for the cross-covariance operator $\Cxy$ \eqref{eq:cxy}.
-		
-		\begin{equation}
-		\begin{aligned}
-			 \inner{\Cxy g}{f} &= \inner{\Cxy}{f \otimes g} = \inner{\Cyx f}{g} \\
-			 &= \expect{f(\rv{X}) g(\rv{Y})}
-			 \label{eq:cxy}			
-		\end{aligned}
-		\end{equation}
-		
-		where the second equality is obtained through symmetry. \\
-	\end{theorem}
-
-	\begin{theorem} \label{thm:cxx_f_cxy_g}
-		Define $f$ in relation to $g$ as follows \eqref{eq:f_def_by_g}.
-		\begin{equation}
-			f := \expect{g(Y) | X = \cdot}
-		\label{eq:f_def_by_g}
-		\end{equation}
-		
-		Then, the following result hold \eqref{eq:cxx_f_cxy_g}.
-		\begin{equation}
-			\Cxx \cdot f = \Cxy \cdot g
-		\label{eq:cxx_f_cxy_g}
-		\end{equation}
-		
-		Further, if the inverse of the operator $\Cxx \equiv \Cxx \cdot$ exists, then $f$ is uniquely defined by \eqref{eq:f_cxxinv_cxy_g}.
-		
-		\begin{equation}
-			f := \expect{g(\rv{Y}) | \rv{X} = \cdot} = \Cxx^{-1} \Cxy g
-		\label{eq:f_cxxinv_cxy_g}
-		\end{equation}
-
-		\begin{proof}
-		Notice that $f$ is a function in $\mathcal{H}_{k}$ and the domain of $f$ is $\mathcal{X}$ such that $f(x) = \expect{g(\rv{Y}) | \rv{X} = x}$.
-		
-		\begin{align*}
-			\Cxx \cdot f &= \expect{\phiX \otimes \phiX} \cdot f \tag{\cref{def:cross_cov}} \\
-			&= \expect{(\phiX \otimes \phiX) \cdot f} \tag{linearity of $\expect{\cdot}$} \\
-			&= \expect{\phiX \inner{\phiX}{f}} \tag{\cref{def:tensor_operator}} \\
-			&= \expect{\phiX f(\rv{X})} \tag{\cref{thm:reproducing_property}} \\
-			&= \expect{\phiX \expect{g(\rv{Y}) | \rv{X}}} \tag{equation \eqref{eq:f_def_by_g}} \\
-			&= \expect{\expect{\phiX g(\rv{Y}) | \rv{X}}} \tag{$\rv{X}$ is given} \\
-			&= \expect{\phiX g(\rv{Y})} \tag{tower property} \\
-			&= \Cxy \cdot g \tag{\cref{thm:cxy_g}}
-		\end{align*}
-		
-		If the inverse of the operator $\Cxx \equiv \Cxx \cdot$ exists, then we can write the following.
-		
-		\begin{align*}
-			\Cxx f &= \Cxy g \tag{equation \eqref{eq:cxx_f_cxy_g}} \\
-			f &= \Cxx^{-1} \Cxy g \tag{$\Cxx^{-1}$ exists} \\
-			\expect{g(\rv{Y}) | \rv{X} = \cdot} &= \Cxx^{-1} \Cxy g \tag{equation \eqref{eq:f_def_by_g}}
-		\end{align*}
-		
-		\end{proof}
-	\end{theorem}
-
-	\begin{definition} \label{def:conditional_embedding}
-		(Conditional Embedding)
-		The conditional embedding of $\rv{Y}$ given $\{\rv{X} = x\}$ is the kernel embedding of the distribution $\mathbb{P}_{\rv{Y} | \rv{X} = x}$ \eqref{eq:conditional_embedding}. Symmetrically, the conditional embedding of $\rv{X}$ given $\{\rv{Y} = y\}$ is the kernel embedding of the distribution $\mathbb{P}_{\rv{X} | \rv{Y} = y}$ \eqref{eq:conditional_embedding}.
-		
-		\begin{equation}
-		\begin{aligned}
-			\muYx &:= \expect{\psiY | \rv{X} = x} = \expect{l(\rv{Y}, \cdot) | \rv{X} = x} \\
-			\muXy &:= \expect{\phiX | \rv{Y} = y} = \expect{k(\rv{X}, \cdot) | \rv{Y} = y}
-		\label{eq:conditional_embedding}
-		\end{aligned}
-		\end{equation}
-	\end{definition}
-	
-	\begin{theorem} \label{thm:conditional_function_expectation}
-		(Conditional Function Expectation)
-		The conditional expectation of a function can be evaluated as the inner product between the corresponding conditional embedding and the function \eqref{eq:conditional_function_expectation}.
-		\begin{equation}
-			\inner{\muYx}{g} = \expect{g(\rv{Y}) | \rv{X} = x}
-		\label{eq:conditional_function_expectation}
-		\end{equation}
-		
-		Furthermore, the conditional expectation of a function can also be obtained from applying cross-covariance operators to the function and then evaluating that function \eqref{eq:conditional_function_expectation_alt}.
-		
-		\begin{equation}
-			\expect{g(\rv{Y}) | \rv{X} = x} = (\Cxx^{-1} \Cxy g)(x)
-		\label{eq:conditional_function_expectation_alt}
-		\end{equation}
-		
-		Thus, the following identity holds \eqref{eq:conditional_function_expectation_identity}
-		
-		\begin{equation}
-			\inner{\muYx}{g} = \expect{g(\rv{Y}) | \rv{X} = x} = (\Cxx^{-1} \Cxy g)(x)
-		\label{eq:conditional_function_expectation_identity}	
-		\end{equation}
-
-		\begin{proof}
+			\end{proof}
+		\end{lemma}
+			
+		\begin{lemma} \label{thm:cxy_g_f}
+			Being the expectation of a scalar multiple of $\phiX$, this shows that $\Cxy \cdot g \in \mathcal{H}_{k}$, so that the inner product with $f \in \mathcal{H}_{k}$ can also be applied, resulting in the following identity \eqref{eq:cxy_g_f}.
+			\begin{equation}
+				\inner{\Cxy \cdot g}{f} = \expect{f(\rv{X}) g(\rv{Y})}
+			\label{eq:cxy_g_f}
+			\end{equation}
+			\begin{proof}
 			\begin{align*}
-				\inner{\muYx}{g} &= \inner{\expect{\psiY | \rv{X} = x}}{g} \tag{\cref{def:conditional_embedding}} \\
-				&= \expect{\inner{\psiY}{g} | \rv{X} = x} \tag{bilinearity of $\inner{\cdot}{\cdot}$} \\
-				&= \expect{g(\rv{Y}) | \rv{X} = x} \tag{\cref{thm:reproducing_property}} \\
-				&= (\expect{g(\rv{Y}) | \rv{X} = \cdot})(x) \tag{notation: $f \equiv f(\cdot)$} \\
-				&= (\Cxx^{-1} \Cxy g)(x) \tag{\cref{thm:cxx_f_cxy_g}}
+				\inner{\Cxy \cdot g}{f} &= \inner{\expect{g(\rv{Y}) \phiX}}{f} \tag{\cref{thm:cxy_g}}\\
+				&= \expect{g(\rv{Y}) \inner{\phiX}{f}} \tag{bilinearity of $\inner{\cdot}{\cdot}$} \\
+				&= \expect{f(\rv{X}) g(\rv{Y})} \tag{\cref{thm:reproducing_property}}
 			\end{align*}
-		\end{proof}
-	\end{theorem}
+			\end{proof}
+		\end{lemma}
+			
 	
-	\begin{definition} \label{def:conditional_operator}
-		(Conditional Operator)
-		The conditional operator $\Cylx$ is defined by the operator that satisfies the following equality \eqref{eq:conditional_operator}.
-		\begin{equation}
-			\muYx = \Cylx \cdot \phi_{x} \equiv \Cylx \phi_{x}
-		\label{eq:conditional_operator}
-		\end{equation}
-	\end{definition}
-
-	\begin{theorem} \label{thm:conditional_operator}
-		(Conditional Operator)
-		The conditional operator $\Cylx$ can be expressed in terms of cross-covariance operators as follows \eqref{eq:conditional_operator_cross_cov}, provided that $\Cxx^{-1}$ exists.
-		\begin{equation}
-			\Cylx = \Cyx \Cxx^{-1}
-		\label{eq:conditional_operator_cross_cov}
-		\end{equation}
-		
-		\begin{proof}
+		\begin{lemma} \label{thm:cxy_f_g}
+			Alternatively, since $\Cxy \in \mathcal{H}_{k} \otimes \mathcal{H}_{l}$, the inner product of $\Cxy$ and a function $f \otimes g \in \mathcal{H}_{k} \otimes \mathcal{H}_{l}$ in the same space results in another identity \eqref{eq:cxy_f_g}.
+			\begin{equation}
+				\inner{\Cxy}{f \otimes g} = \expect{f(X) g(Y)}
+			\label{eq:cxy_f_g}
+			\end{equation}
+			
+			\begin{proof}
 			\begin{align*}
-			\Cyx :=& \expect{\psiY \otimes \phiX} \tag{\cref{def:cross_cov}}\\
-			=& \expect{\expect{\psiY \otimes \phiX | \rv{X}}} \tag{tower property} \\
-			=& \expect{\expect{\psiY| \rv{X}} \otimes \phiX} \tag{\rv{X} is given} \\
-			=& \expect{\mu_{\rv{Y} | \rv{X}} \otimes \phiX} \tag{\cref{def:conditional_embedding}}\\
-			=& \expect{(\Cylx \cdot \phiX) \otimes \phiX} \tag{\cref{def:conditional_operator}} \\
-			=& \expect{\Cylx \cdot (\phiX \otimes \phiX)} \tag{tensor associativity} \\
-			=& \Cylx \cdot \expect{\phiX \otimes \phiX} \tag{linearity of $\expect{\cdot}$} \\
-			=& \Cylx \cdot \Cxx \equiv \Cylx \Cxx \tag{\cref{def:cross_cov}}
+				\inner{\Cxy}{f \otimes g} &= \inner{\expect{\phiX \otimes \psiY}}{f \otimes g} \tag{\cref{def:cross_cov}} \\
+				&= \expect{\inner{\phiX \otimes \psiY}{f \otimes g}} \tag{bilinearity} \\
+				&= \expect{\inner{\phiX}{f} \inner{\psiY}{g}} \tag{\cref{def:inner_of_tensor}}\\
+				&= \expect{f(\rv{X}) g(\rv{Y})} \tag{\cref{thm:reproducing_property}}
+			\end{align*}
+			\end{proof}			
+		\end{lemma}
+		
+		\begin{theorem}
+			Together, \cref{thm:cxy_g_f} and \cref{thm:cxy_f_g} reveals an important identity for the cross-covariance operator $\Cxy$ \eqref{eq:cxy}.
+			
+			\begin{equation}
+			\begin{aligned}
+				 \inner{\Cxy g}{f} &= \inner{\Cxy}{f \otimes g} = \inner{\Cyx f}{g} \\
+				 &= \expect{f(\rv{X}) g(\rv{Y})}
+				 \label{eq:cxy}			
+			\end{aligned}
+			\end{equation}
+			
+			where the second equality is obtained through symmetry. \\
+		\end{theorem}
+	
+		\begin{theorem} \label{thm:cxx_f_cxy_g}
+			Define $f$ in relation to $g$ as follows \eqref{eq:f_def_by_g}.
+			\begin{equation}
+				f := \expect{g(Y) | X = \cdot}
+			\label{eq:f_def_by_g}
+			\end{equation}
+			
+			Then, the following result hold \eqref{eq:cxx_f_cxy_g}.
+			\begin{equation}
+				\Cxx \cdot f = \Cxy \cdot g
+			\label{eq:cxx_f_cxy_g}
+			\end{equation}
+			
+			Further, if the inverse of the operator $\Cxx \equiv \Cxx \cdot$ exists, then $f$ is uniquely defined by \eqref{eq:f_cxxinv_cxy_g}.
+			
+			\begin{equation}
+				f := \expect{g(\rv{Y}) | \rv{X} = \cdot} = \Cxx^{-1} \Cxy g
+			\label{eq:f_cxxinv_cxy_g}
+			\end{equation}
+	
+			\begin{proof}
+			Notice that $f$ is a function in $\mathcal{H}_{k}$ and the domain of $f$ is $\mathcal{X}$ such that $f(x) = \expect{g(\rv{Y}) | \rv{X} = x}$.
+			
+			\begin{align*}
+				\Cxx \cdot f &= \expect{\phiX \otimes \phiX} \cdot f \tag{\cref{def:cross_cov}} \\
+				&= \expect{(\phiX \otimes \phiX) \cdot f} \tag{linearity of $\expect{\cdot}$} \\
+				&= \expect{\phiX \inner{\phiX}{f}} \tag{\cref{def:tensor_operator}} \\
+				&= \expect{\phiX f(\rv{X})} \tag{\cref{thm:reproducing_property}} \\
+				&= \expect{\phiX \expect{g(\rv{Y}) | \rv{X}}} \tag{equation \eqref{eq:f_def_by_g}} \\
+				&= \expect{\expect{\phiX g(\rv{Y}) | \rv{X}}} \tag{$\rv{X}$ is given} \\
+				&= \expect{\phiX g(\rv{Y})} \tag{tower property} \\
+				&= \Cxy \cdot g \tag{\cref{thm:cxy_g}}
 			\end{align*}
 			
-			Therefore, if $\Cxx^{-1}$ exists, then \eqref{eq:conditional_operator_cross_cov} holds.
-		\end{proof}
-	\end{theorem}
+			If the inverse of the operator $\Cxx \equiv \Cxx \cdot$ exists, then we can write the following.
+			
+			\begin{align*}
+				\Cxx f &= \Cxy g \tag{equation \eqref{eq:cxx_f_cxy_g}} \\
+				f &= \Cxx^{-1} \Cxy g \tag{$\Cxx^{-1}$ exists} \\
+				\expect{g(\rv{Y}) | \rv{X} = \cdot} &= \Cxx^{-1} \Cxy g \tag{equation \eqref{eq:f_def_by_g}}
+			\end{align*}
+			
+			\end{proof}
+		\end{theorem}
 	
-	\subsection{Kernel Sum Rule}
+		\begin{definition} \label{def:conditional_embedding}
+			(Conditional Embedding)
+			The conditional embedding of $\rv{Y}$ given $\{\rv{X} = x\}$ is the kernel embedding of the distribution $\mathbb{P}_{\rv{Y} | \rv{X} = x}$ \eqref{eq:conditional_embedding}. Symmetrically, the conditional embedding of $\rv{X}$ given $\{\rv{Y} = y\}$ is the kernel embedding of the distribution $\mathbb{P}_{\rv{X} | \rv{Y} = y}$ \eqref{eq:conditional_embedding}.
+			
+			\begin{equation}
+			\begin{aligned}
+				\muYx &:= \expect{\psiY | \rv{X} = x} = \expect{l(\rv{Y}, \cdot) | \rv{X} = x} \\
+				\muXy &:= \expect{\phiX | \rv{Y} = y} = \expect{k(\rv{X}, \cdot) | \rv{Y} = y}
+			\label{eq:conditional_embedding}
+			\end{aligned}
+			\end{equation}
+		\end{definition}
+		
+		\begin{theorem} \label{thm:conditional_function_expectation}
+			(Conditional Function Expectation)
+			The conditional expectation of a function can be evaluated as the inner product between the corresponding conditional embedding and the function \eqref{eq:conditional_function_expectation}.
+			\begin{equation}
+				\inner{\muYx}{g} = \expect{g(\rv{Y}) | \rv{X} = x}
+			\label{eq:conditional_function_expectation}
+			\end{equation}
+			
+			Furthermore, the conditional expectation of a function can also be obtained from applying cross-covariance operators to the function and then evaluating that function \eqref{eq:conditional_function_expectation_alt}.
+			
+			\begin{equation}
+				\expect{g(\rv{Y}) | \rv{X} = x} = (\Cxx^{-1} \Cxy g)(x)
+			\label{eq:conditional_function_expectation_alt}
+			\end{equation}
+			
+			Thus, the following identity holds \eqref{eq:conditional_function_expectation_identity}
+			
+			\begin{equation}
+				\inner{\muYx}{g} = \expect{g(\rv{Y}) | \rv{X} = x} = (\Cxx^{-1} \Cxy g)(x)
+			\label{eq:conditional_function_expectation_identity}	
+			\end{equation}
 	
-	\subsection{Kernel Chain Rule}
+			\begin{proof}
+				\begin{align*}
+					\inner{\muYx}{g} &= \inner{\expect{\psiY | \rv{X} = x}}{g} \tag{\cref{def:conditional_embedding}} \\
+					&= \expect{\inner{\psiY}{g} | \rv{X} = x} \tag{bilinearity of $\inner{\cdot}{\cdot}$} \\
+					&= \expect{g(\rv{Y}) | \rv{X} = x} \tag{\cref{thm:reproducing_property}} \\
+					&= (\expect{g(\rv{Y}) | \rv{X} = \cdot})(x) \tag{notation: $f \equiv f(\cdot)$} \\
+					&= (\Cxx^{-1} \Cxy g)(x) \tag{\cref{thm:cxx_f_cxy_g}}
+				\end{align*}
+			\end{proof}
+		\end{theorem}
+		
+		\begin{definition} \label{def:conditional_operator}
+			(Conditional Operator)
+			The conditional operator $\Cylx$ is defined by the operator that satisfies the following equality \eqref{eq:conditional_operator}.
+			\begin{equation}
+				\muYx = \Cylx \cdot \phi_{x} \equiv \Cylx \phi_{x}
+			\label{eq:conditional_operator}
+			\end{equation}
+		\end{definition}
 	
+		\begin{theorem} \label{thm:conditional_operator}
+			(Conditional Operator)
+			The conditional operator $\Cylx$ can be expressed in terms of cross-covariance operators \eqref{eq:conditional_operator_cross_cov}, provided that $\Cxx^{-1}$ exists.
+			\begin{equation}
+				\Cylx = \Cyx \Cxx^{-1}
+			\label{eq:conditional_operator_cross_cov}
+			\end{equation}
+			
+			\begin{proof}
+				\begin{align*}
+				\Cyx :=& \expect{\psiY \otimes \phiX} \tag{\cref{def:cross_cov}}\\
+				=& \expect{\expect{\psiY \otimes \phiX | \rv{X}}} \tag{tower property} \\
+				=& \expect{\expect{\psiY| \rv{X}} \otimes \phiX} \tag{\rv{X} is given} \\
+				=& \expect{\mu_{\rv{Y} | \rv{X}} \otimes \phiX} \tag{\cref{def:conditional_embedding}}\\
+				=& \expect{(\Cylx \cdot \phiX) \otimes \phiX} \tag{\cref{def:conditional_operator}} \\
+				=& \expect{\Cylx \cdot (\phiX \otimes \phiX)} \tag{tensor associativity} \\
+				=& \Cylx \cdot \expect{\phiX \otimes \phiX} \tag{linearity of $\expect{\cdot}$} \\
+				=& \Cylx \cdot \Cxx \equiv \Cylx \Cxx \tag{\cref{def:cross_cov}}
+				\end{align*}
+				
+				Therefore, if $\Cxx^{-1}$ exists, then \eqref{eq:conditional_operator_cross_cov} holds.
+			\end{proof}
+		\end{theorem}
+		
+		\begin{theorem} \label{thm:kernel_sum_rule}
+			(Kernel Sum Rule)
+			\begin{equation}
+				\muY = \Cylx \muX
+			\label{equation:kernel_sum_rule}
+			\end{equation}
+			
+			\begin{proof}
+			\begin{align*}
+				\Cylx \muX &= \Cylx \expect{\phiX} \tag{\cref{def:kernel_embedding}} \\
+	  			&= \expect{\Cylx \phiX} \tag{linearity of $\expect{\cdot}$} \\
+	  			&= \expect{\mu_{\rv{Y} | \rv{X}}} \tag{\cref{def:conditional_operator}} \\
+	  			&= \expect{\expect{\psiY | \rv{X}}} \tag{\cref{def:conditional_embedding}} \\
+	  			&= \expect{\psiY} \tag{tower property} \\
+	  			&= \muY \tag{\cref{def:conditional_embedding}}
+			\end{align*}
+			\end{proof}
+		\end{theorem}
+		
+		\begin{theorem} \label{thm:kernel_chain_rule}
+			(Kernel Chain Rule)
+			
+			\begin{proof}
+			\begin{align*}
+				x
+			\end{align*}
+			\end{proof}
+		\end{theorem}
+
+	\subsection{Empirical Representation}
+	\label{sec:kernel_embeddings:empirical_representation}
+	
+		In practice, the actual probability distributions of interest are not available in closed form. Instead, independent and identically distributed (\textit{iid}) samples from such probability distributions are available. Suppose that joint samples $\{x_{i}, y_{i}\}_{i = 1}^{n}$ are observed and collected in an \textit{iid} fashion from the joint distribution $\mathbb{P}_{\rv{X} \rv{Y}}$. Again, let $\ds{X} := \{x_{i}\}_{i = 1}^{n}$ and $\ds{Y} := \{y_{i}\}_{i = 1}^{n}$. It is possible to represent kernel embeddings empirically such that in the limit of infinite data, the empirical representations would converge to the true representations at an appropriate rate. Most significant, however, is the fact that important results for manipulating kernel embeddings also hold for their empirical representations.
+
+		\begin{theorem} \label{thm:empirical_embedding}
+			(Empirical Kernel Embedding)
+			The empirical representation of a kernel embedding is obtained by simply replacing the expectation with an empirical average \eqref{eq:empirical_embedding}.
+			\begin{equation}
+			\begin{aligned}
+				\hatmuX &= \frac{1}{n} \sum_{i = 1}^{n} \phi_{x_{i}} \\
+				\hatmuY &= \frac{1}{n} \sum_{i = 1}^{n} \psi_{y_{i}} \\
+			\label{eq:empirical_embedding}
+			\end{aligned}
+			\end{equation}
+		\end{theorem}
+	
+		\begin{theorem} \label{thm:empirical_function_expectation}
+			(Empirical Function Expectation)
+			The empirical representation of a function expectation is simply the empirical average of the function, and can be obtained by the inner product of the function with the empirical embedding \eqref{eq:empirical_function_expectation}.
+			\begin{equation}
+				\inner{\hatmuX}{f} = \frac{1}{n} \sum_{i = 1}^{n} f(x_{i})
+				\label{eq:empirical_function_expectation}
+			\end{equation}
+			
+%			\begin{proof}
+%				\begin{align*}
+%					\inner{\muX}{f} &= \inner{\expect{\phiX}}{f} \tag{\cref{def:kernel_embedding}} \\
+%					&= \expect{\inner{\phiX}{f}} \tag{bilinearity of $\inner{\cdot}{\cdot}$} \\
+%					&= \expect{f(\rv{X})} \tag{\cref{thm:reproducing_property}}
+%				\end{align*}
+%			\end{proof}
+		\end{theorem}
+		
+%		\begin{theorem} \label{thm:empirical_cross_cov}
+%			(Empirical Kernel Embedding)
+%			The empirical representation of a kernel embedding is obtained by simply replacing the expectation with an empirical average \eqref{eq:empirical_embedding}.
+%			\begin{equation}
+%			\begin{aligned}
+%				\hatmuX &= \frac{1}{n} \sum_{i = 1}^{n} \phi_{x_{i}} \otimes \phi_{x_{i}} \\
+%				\hatmuY &= \frac{1}{n} \sum_{i = 1}^{n} \psi_{y_{i}} \otimes \psi_{y_{i}} \\
+%			\label{eq:empirical_cross_cov}
+%			\end{aligned}
+%			\end{equation}
+%		\end{theorem}
+		
+		The feature functions can be viewed as an feature vector of the same dimension as the cardinality of the its domain. For example, if the domain $\mathcal{X} = \mathbb{R}^{d}$ is the $d$ dimensional euclidean space whose cardinality is uncountably infinite, then the feature function can be viewed as an uncountably infinite dimensional feature vector, indexed by the elements of $\mathcal{X} = \mathbb{R}^{d}$. Denote the cardinality of $\mathcal{X}$ as $\cardX$, and similarly the cardinality of $\mathcal{Y}$ as $\cardY$. 
+		
+		With the observations $\{x_{i}, y_{i}\}_{i = 1}^{n}$ sampled from $\mathbb{P}_{\rv{X} \rv{Y}}$, there are $n$ feature vectors for each RKHS, $\{\phi_{x_{i}}\}_{i}^{n}$ for $\Hk$ and $\{\psi_{y_{i}}\}_{i}^{n}$ for $\Hl$. As elements within their respective RKHS for which Hilbert-Schmidt operators can operate on, $\phi_{x_{i}}$ has an effective dimension of $\cardX \times 1$ and $\psi_{y_{i}}$ has an effective dimension of $\cardY \times 1$.
+		
+		Recall that a matrix $A := \begin{bmatrix} \bvec{a}_{1} & \cdots & \bvec{a}_{n} \in \mathbb{R}^{n \times n}$, $\bvec{a}_{1} \in \mathbb{R}^{n} \; \forall i \in \{1, \cdots, n\}$, operated on a vector $\bvec{v} \in \mathbb{R}^{n}$ results in a vector that is the linear combination of the columns of $A$ with coefficients given by the components of $\bvec{v}$ \eqref{eq:matrix_operation}.
+		
+		\begin{equation}
+			A \bvec{v} = \begin{bmatrix} \bvec{a}_{1} & \cdots & \bvec{a}_{n} \end{bmatrix} \begin{bmatrix} v_{1} \\ \vdots \\ v_{n} \end{bmatrix} = \sum_{i = 1}^{n} v_{i} \bvec{a}_{i}
+		\label{eq:matrix_operation}
+		\end{equation}
+		
+		Similarly, a feature matrix can be defined in the same way such that empirical representations of kernel embeddings can be reduced down to linear algebraic operations.
+		
+		\begin{definition} \label{def:feature_matrix}
+			(Feature Matrix)
+			A feature matrix is formed by stacking the corresponding feature vectors \textit{horizontally}, where each feature vector represents a column of that matrix.
+			
+			\begin{equation}
+			\begin{aligned}
+				\Phi \equiv \Phi_{\ds{X}} &:= \begin{bmatrix} \phi_{x_{1}} & \cdots & \phi_{x_{n}} \end{bmatrix}
+				\Psi \equiv \Phi_{\ds{Y}} &:= \begin{bmatrix} \psi_{y_{1}} & \cdots & \psi_{y_{n}} \end{bmatrix}
+			\label{eq:feature_matrix}
+			\end{aligned}
+			\end{equation}
+			
+			Here, the subscript of $\Phi$ and $\Psi$ is dropped whenever it is clear from context what dataset the feature matrix is representing.
+			
+			In this way, it is clear that 
+			
+		\end{definition}
+		
 \section{Optimal Approximate Embedding Derivations}
 
 		\begin{equation}
