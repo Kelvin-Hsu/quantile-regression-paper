@@ -21,6 +21,7 @@
 
 \theoremstyle{definition}
 \newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{identity}[theorem]{Identity}
@@ -184,7 +185,7 @@
 	\subsection{Theoretical Representations}
 	\label{sec:kernel_embeddings:theoretical_representation}
 	
-		As always, let $\rv{X} : \Omega \mapsto \mathcal{X}$ be a random variable taking values in $\mathcal{X}$. Similarly, let $\rv{Y} : \Omega \mapsto \mathcal{Y}$ be a random variable taking values in $\mathcal{Y}$. Let $k$ and $l$ be characteristic positive definite kernels defined on $\mathcal{X}$ and $\mathcal{Y}$ respectively. Let $f \in \Hk$ and $g \in \Hl$.
+		As always, let $\rv{X} : \Omega \mapsto \mathcal{X}$ be a random variable taking values in $\mathcal{X}$. Similarly, let $\rv{Y} : \Omega \mapsto \mathcal{Y}$ be a random variable taking values in $\mathcal{Y}$. Let $k$ and $l$ be characteristic positive definite kernels defined on $\mathcal{X}$ and $\mathcal{Y}$ respectively. Let $f \in \Hk$ and $g \in \Hl$ be real-valued functions.
 			
 		\begin{theorem} \label{thm:feature_functions}
 			(Feature Functions)
@@ -207,7 +208,16 @@
 				\inner{\psi_{y}}{g} &= g(y)
 			\label{eq:reproducing_property}
 			\end{aligned}
-			\end{equation}	
+			\end{equation}
+			
+			In particular, the kernel value between two points can be evaluated as the inner product between the feature functions at those points \eqref{eq:kernel_reproducing_property}.
+			\begin{equation}
+			\begin{aligned}
+				\inner{\phi_{x}}{\phi_{x'}} &= k(x, x') \\
+				\inner{\psi_{y}}{\psi_{y'}} &= l(y, y') \\
+			\label{eq:kernel_reproducing_property}
+			\end{aligned}
+			\end{equation}
 		\end{theorem}
 	
 		\begin{definition} \label{def:kernel_embedding}
@@ -462,6 +472,15 @@
 		
 		\begin{theorem} \label{thm:kernel_sum_rule}
 			(Kernel Sum Rule)
+			The Kernel Sum Rule \eqref{equation:kernel_sum_rule} is the kernelised and non-parametric version of the basic sum rule of probability \eqref{eq:sum_rule}.
+			\begin{equation}
+			\begin{aligned}
+				p_{\rv{Y}}(y) &= \int_{\mathcal{X}} p_{\rv{Y} | \rv{X}}(y | \cdot) d\mathbb{P}_{\rv{X}} \quad & \mathrm{(Lebesgue)} \\
+				&= \int_{\mathcal{X}} p_{\rv{Y} | \rv{X}}(y | x) p_{\rv{X}}(x)dx \quad & \mathrm{(Riemann)}
+			\label{eq:sum_rule}
+			\end{aligned}
+			\end{equation}
+
 			\begin{equation}
 				\muY = \Cylx \muX
 			\label{equation:kernel_sum_rule}
@@ -478,6 +497,8 @@
 			\end{align*}
 			\end{proof}
 		\end{theorem}
+		
+		\warn{Finish Later. Not important right now.}
 		
 		\begin{theorem} \label{thm:kernel_chain_rule}
 			(Kernel Chain Rule)
@@ -514,32 +535,53 @@
 				\label{eq:empirical_function_expectation}
 			\end{equation}
 			
-%			\begin{proof}
-%				\begin{align*}
-%					\inner{\muX}{f} &= \inner{\expect{\phiX}}{f} \tag{\cref{def:kernel_embedding}} \\
-%					&= \expect{\inner{\phiX}{f}} \tag{bilinearity of $\inner{\cdot}{\cdot}$} \\
-%					&= \expect{f(\rv{X})} \tag{\cref{thm:reproducing_property}}
-%				\end{align*}
-%			\end{proof}
+			\begin{proof}
+				\begin{align*}
+					\inner{\hatmuX}{f} &= \inner{\frac{1}{n} \sum_{i = 1}^{n} \phi_{x_{i}}}{f} \tag{\cref{thm:empirical_embedding}} \\
+					&= \frac{1}{n} \sum_{i = 1}^{n} \inner{\phi_{x_{i}}}{f} \tag{bilinearity of $\inner{\cdot}{\cdot}$} \\
+					&= \frac{1}{n} \sum_{i = 1}^{n} f(x_{i}) \tag{\cref{thm:reproducing_property}}
+				\end{align*}
+			\end{proof}
 		\end{theorem}
 		
-%		\begin{theorem} \label{thm:empirical_cross_cov}
-%			(Empirical Kernel Embedding)
-%			The empirical representation of a kernel embedding is obtained by simply replacing the expectation with an empirical average \eqref{eq:empirical_embedding}.
-%			\begin{equation}
-%			\begin{aligned}
-%				\hatmuX &= \frac{1}{n} \sum_{i = 1}^{n} \phi_{x_{i}} \otimes \phi_{x_{i}} \\
-%				\hatmuY &= \frac{1}{n} \sum_{i = 1}^{n} \psi_{y_{i}} \otimes \psi_{y_{i}} \\
-%			\label{eq:empirical_cross_cov}
-%			\end{aligned}
-%			\end{equation}
-%		\end{theorem}
+		\begin{theorem} \label{thm:empirical_cross_cov}
+			(Empirical Uncentred Cross-Covariance Operators)
+			The empirical representation of a kernel embedding is obtained by simply replacing the expectation with an empirical average \eqref{eq:empirical_cross_cov}.
+			\begin{equation}
+			\begin{aligned}
+				\hatCxx &= \frac{1}{n} \sum_{i = 1}^{n} \phi_{x_{i}} \otimes \phi_{x_{i}} \\
+				\hatCyy &= \frac{1}{n} \sum_{i = 1}^{n} \psi_{y_{i}} \otimes \psi_{y_{i}} \\
+			\label{eq:empirical_cross_cov}
+			\end{aligned}
+			\end{equation}
+		\end{theorem}
 		
-		The feature functions can be viewed as an feature vector of the same dimension as the cardinality of the its domain. For example, if the domain $\mathcal{X} = \mathbb{R}^{d}$ is the $d$ dimensional euclidean space whose cardinality is uncountably infinite, then the feature function can be viewed as an uncountably infinite dimensional feature vector, indexed by the elements of $\mathcal{X} = \mathbb{R}^{d}$. Denote the cardinality of $\mathcal{X}$ as $\cardX$, and similarly the cardinality of $\mathcal{Y}$ as $\cardY$. 
+		Since the samples $\ds{X} := \{x_{i}\}_{i = 1}^{n}$ and $\ds{Y} := \{y_{i}\}_{i = 1}^{n}$ are sampled from the joint distribution $\mathbb{P}_{\rv{X} \rv{Y}}$ such that marginal samples are simply $\ds{X}$ and $\ds{Y}$ themselves, the empirical representations for regular embeddings $\muX$ and $\muY$ are easy to obtain, as per \cref{thm:empirical_embedding}.
 		
-		With the observations $\{x_{i}, y_{i}\}_{i = 1}^{n}$ sampled from $\mathbb{P}_{\rv{X} \rv{Y}}$, there are $n$ feature vectors for each RKHS, $\{\phi_{x_{i}}\}_{i}^{n}$ for $\Hk$ and $\{\psi_{y_{i}}\}_{i}^{n}$ for $\Hl$. As elements within their respective RKHS for which Hilbert-Schmidt operators can operate on, $\phi_{x_{i}}$ has an effective dimension of $\cardX \times 1$ and $\psi_{y_{i}}$ has an effective dimension of $\cardY \times 1$.
+		However, instead of a uniform average, a empirical representations of the conditional embedding would require a weighted average instead of the form \eqref{eq:empirical_conditional_embedding_form}.
 		
-		Recall that a matrix $A := \begin{bmatrix} \bvec{a}_{1} & \cdots & \bvec{a}_{n} \in \mathbb{R}^{n \times n}$, $\bvec{a}_{1} \in \mathbb{R}^{n} \; \forall i \in \{1, \cdots, n\}$, operated on a vector $\bvec{v} \in \mathbb{R}^{n}$ results in a vector that is the linear combination of the columns of $A$ with coefficients given by the components of $\bvec{v}$ \eqref{eq:matrix_operation}.
+		\begin{equation}
+		\begin{aligned}
+			\hatmuYx &= \sum_{i = 1}^{n} \alpha_{i} \psi_{y_{i}} \\
+			\hatmuXy &= \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}} \\
+		\label{eq:empirical_conditional_embedding_form}
+		\end{aligned}
+		\end{equation}
+		
+		where $\bm{\alpha} := \{\alpha_{i}\}_{i = 1}^{n}$ is to be determined from the samples $\ds{X}$ and $\bm{\beta} := \{\beta_{i}\}_{i = 1}^{n}$ is to be determined from the samples $\ds{Y}$.
+		
+		Before deriving the expressions for $\bm{\alpha}$ and $\bm{\beta}$ however, it is useful to introduce matrix notation for representing empirical embeddings.
+		
+		The feature functions can be viewed as an feature vector of the same dimension as the cardinality of the its domain. For example, if the domain $\mathcal{X} = \mathbb{R}^{d}$ is the $d$ dimensional euclidean space whose cardinality is uncountably infinite, then the feature function can be viewed as an uncountably infinite dimensional feature vector, indexed by the elements of $\mathcal{X} = \mathbb{R}^{d}$.
+		
+		Denote the cardinality of $\mathcal{X}$ as $\cardX$, and similarly the cardinality of $\mathcal{Y}$ as $\cardY$. With the observations $\{x_{i}, y_{i}\}_{i = 1}^{n}$ sampled from $\mathbb{P}_{\rv{X} \rv{Y}}$, there are $n$ feature vectors for each RKHS, $\{\phi_{x_{i}}\}_{i = 1}^{n}$ for $\Hk$ and $\{\psi_{y_{i}}\}_{i = 1}^{n}$ for $\Hl$. As elements within their respective RKHS for which Hilbert-Schmidt operators can operate on, $\phi_{x_{i}}$ has an effective dimension of $\cardX \times 1$ and $\psi_{y_{i}}$ has an effective dimension of $\cardY \times 1$. Since this can be said about the feature functions, which form the basis for the RKHS, this is the same for general functions within the RKHS as well. As such, the inner product between functions $f_{1}, f_{2} \in \Hk$ can also be written in matrix notation \eqref{eq:inner_dot_notation}.
+		
+		\begin{equation}
+			\inner{f_{1}}{f_{2}} = f_{1}^{T} f_{2}
+		\label{eq:inner_dot_notation}
+		\end{equation}
+		
+		Recall that a matrix $A := \begin{bmatrix} \bvec{a}_{1} & \cdots & \bvec{a}_{n} \end{bmatrix} \in \mathbb{R}^{n \times n}$, $\bvec{a}_{i} \in \mathbb{R}^{n} \; \forall i \in \{1, \cdots, n\}$, operated on a vector $\bvec{v} \in \mathbb{R}^{n}$ results in a vector that is the linear combination of the columns of $A$ with coefficients given by the components of $\bvec{v}$ \eqref{eq:matrix_operation}.
 		
 		\begin{equation}
 			A \bvec{v} = \begin{bmatrix} \bvec{a}_{1} & \cdots & \bvec{a}_{n} \end{bmatrix} \begin{bmatrix} v_{1} \\ \vdots \\ v_{n} \end{bmatrix} = \sum_{i = 1}^{n} v_{i} \bvec{a}_{i}
@@ -554,18 +596,51 @@
 			
 			\begin{equation}
 			\begin{aligned}
-				\Phi \equiv \Phi_{\ds{X}} &:= \begin{bmatrix} \phi_{x_{1}} & \cdots & \phi_{x_{n}} \end{bmatrix}
-				\Psi \equiv \Phi_{\ds{Y}} &:= \begin{bmatrix} \psi_{y_{1}} & \cdots & \psi_{y_{n}} \end{bmatrix}
+				\Phi \equiv \Phi_{\ds{X}} &:= \begin{bmatrix} \phi_{x_{1}} & \cdots & \phi_{x_{n}} \end{bmatrix} \\
+				\Psi \equiv \Psi_{\ds{Y}} &:= \begin{bmatrix} \psi_{y_{1}} & \cdots & \psi_{y_{n}} \end{bmatrix}
 			\label{eq:feature_matrix}
 			\end{aligned}
 			\end{equation}
 			
-			Here, the subscript of $\Phi$ and $\Psi$ is dropped whenever it is clear from context what dataset the feature matrix is representing.
+			Here, the subscripts of $\Phi$ and $\Psi$ are dropped whenever it is clear from context what dataset the feature matrix is representing.
 			
-			In this way, it is clear that 
-			
+			In this way, $\Phi$ has effective size $\cardX \times n$ and $\Psi$ has effective size $\cardY \times n$.			
 		\end{definition}
 		
+		\begin{theorem} \label{def:kernel_matrix}
+			(Kernel Gram Matrix)
+			The gram matrix for a dataset can be found by its corresponding feature matrix \eqref{eq:kernel_matrix}.
+			\begin{equation}
+			\begin{aligned}
+				\Phi_{\ds{X}}^{T} \Phi_{\ds{X}} = K_{\ds{X} \ds{X}} &\leftrightarrows \Phi^{T} \Phi = K \\
+				\Psi_{\ds{Y}}^{T} \Psi_{\ds{Y}} = L_{\ds{Y} \ds{Y}} &\leftrightarrows \Psi^{T} \Psi = L
+			\label{eq:kernel_matrix}
+			\end{aligned}
+			\end{equation}
+			
+			\begin{proof}
+				Below is an informal proof for the case for the kernel $k$. The proof for the kernel $l$ is exactly the same.
+				\begin{align*}
+					\Phi^{T} \Phi &= \begin{bmatrix} \phi_{x_{1}}^{T} \\ \vdots \\ \phi_{x_{n}}^{T} \end{bmatrix} \begin{bmatrix} \phi_{x_{1}} & \cdots & \phi_{x_{n}} \end{bmatrix} \tag{\cref{def:feature_matrix}}\\ 
+					&= 	\begin{bmatrix}
+							\phi_{x_{1}}^{T} \phi_{x_{1}} & \phi_{x_{1}}^{T} \phi_{x_{2}} & \cdots & \phi_{x_{1}}^{T} \phi_{x_{n}} \\
+							\phi_{x_{2}}^{T} \phi_{x_{1}} & \phi_{x_{2}}^{T} \phi_{x_{2}} & \cdots & \phi_{x_{2}}^{T} \phi_{x_{n}} \\
+							\vdots & \vdots & \ddots & \vdots \\
+							\phi_{x_{n}}^{T} \phi_{x_{1}} & \phi_{x_{n}}^{T} \phi_{x_{2}} & \cdots & \phi_{x_{n}}^{T} \phi_{x_{n}} \\
+						\end{bmatrix} \\
+					&= 	\begin{bmatrix}
+							k(x_{1}, x_{1}) & k(x_{1}, x_{2}) & \cdots & k(x_{1}, x_{n}) \\
+							k(x_{2}, x_{1}) & k(x_{2}, x_{2}) & \cdots & k(x_{2}, x_{n}) \\
+							\vdots & \vdots & \ddots & \vdots \\
+							k(x_{n}, x_{1}) & k(x_{n}, x_{2}) & \cdots & k(x_{n}, x_{n}) \\
+						\end{bmatrix} \tag{\cref{thm:reproducing_property}} \\
+					&=: K
+				\end{align*}
+			\end{proof}
+		\end{theorem}
+		
+		\warn{Finish Later. Not important right now.}
+
 \section{Optimal Approximate Embedding Derivations}
 
 		\begin{equation}
