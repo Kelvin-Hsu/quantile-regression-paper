@@ -25,6 +25,7 @@
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{identity}[theorem]{Identity}
+\newtheorem{example}[theorem]{Example}
 
 \newcommand{\eq}[1]{\begin{equation} \begin{aligned} #1 \end{aligned} \end{equation}}
 
@@ -542,6 +543,8 @@
 			\begin{equation}
 			\begin{aligned}
 				\hatCxx &= \frac{1}{n} \sum_{i = 1}^{n} \phi_{x_{i}} \otimes \phi_{x_{i}} \\
+				\hatCxy &= \frac{1}{n} \sum_{i = 1}^{n} \phi_{x_{i}} \otimes \psi_{y_{i}} \\
+				\hatCyx &= \frac{1}{n} \sum_{i = 1}^{n} \psi_{y_{i}} \otimes \phi_{x_{i}} \\
 				\hatCyy &= \frac{1}{n} \sum_{i = 1}^{n} \psi_{y_{i}} \otimes \psi_{y_{i}} \\
 			\label{eq:empirical_cross_cov}
 			\end{aligned}
@@ -573,7 +576,7 @@
 		\label{eq:inner_dot_notation}
 		\end{equation}
 		
-		Recall that a matrix $A := \begin{bmatrix} \bvec{a}_{1} & \cdots & \bvec{a}_{n} \end{bmatrix} \in \mathbb{R}^{n \times n}$, $\bvec{a}_{i} \in \mathbb{R}^{n} \; \forall i \in \{1, \cdots, n\}$, operated on a vector $\bvec{v} \in \mathbb{R}^{n}$ results in a vector that is the linear combination of the columns of $A$ with coefficients given by the components of $\bvec{v}$ \eqref{eq:matrix_operation}.
+		Recall that a matrix $A := \begin{bmatrix} \bvec{a}_{1} & \cdots & \bvec{a}_{n} \end{bmatrix} \in \mathbb{R}^{n \times n}$, $\bvec{a}_{i} \in \mathbb{R}^{n} \; \forall i \in \{1, \dots, n\}$, operated on a vector $\bvec{v} \in \mathbb{R}^{n}$ results in a vector that is the linear combination of the columns of $A$ with coefficients given by the components of $\bvec{v}$ \eqref{eq:matrix_operation}.
 		
 		\begin{equation}
 			A \bvec{v} = \begin{bmatrix} \bvec{a}_{1} & \cdots & \bvec{a}_{n} \end{bmatrix} \begin{bmatrix} v_{1} \\ \vdots \\ v_{n} \end{bmatrix} = \sum_{i = 1}^{n} v_{i} \bvec{a}_{i}
@@ -597,11 +600,26 @@
 			Here, the subscripts of $\Phi$ and $\Psi$ are dropped whenever it is clear from context what dataset the feature matrix is representing.
 			
 			In this way, $\Phi$ has effective size $\cardX \times n$ and $\Psi$ has effective size $\cardY \times n$.			
-		\end{definition}
+		\end{definition} 
 		
-		\begin{theorem} \label{def:kernel_matrix}
+		\begin{definition}
+		\label{def:gram_matrix}
 			(Kernel Gram Matrix)
-			The gram matrix for a dataset can be found by its corresponding feature matrix \eqref{eq:kernel_matrix}.
+			The gram matrix $K_{\ds{X} \ds{X}}$ of a kernel $k$ for some dataset $\ds{X}$ is the matrix of all paired kernel evaluations between the data points \eqref{eq:gram_matrix}.
+			\begin{equation}
+			\begin{aligned}
+				K \equiv K_{\ds{X} \ds{X}} &:= \{k(x_{i}, x_{j})\}_{i = 1, j = 1}^{n, n} \\
+				L \equiv L_{\ds{Y} \ds{Y}} &:= \{l(y_{i}, y_{j})\}_{i = 1, j = 1}^{n, n}
+			\label{eq:gram_matrix}
+			\end{aligned}
+			\end{equation}
+			
+			Similarly, the subscripts of $K$ and $L$ are dropped whenever it is clear from context what dataset the feature matrix is representing.
+		\end{definition}
+			
+		\begin{theorem} \label{thm:kernel_matrix}
+			(Kernel Gram Matrix)
+			The gram matrices $K$ and $L$ for datasets $\ds{X}$ and $\ds{Y}$ can be found by their corresponding feature matrices \eqref{eq:kernel_matrix}.
 			\begin{equation}
 			\begin{aligned}
 				\Phi_{\ds{X}}^{T} \Phi_{\ds{X}} = K_{\ds{X} \ds{X}} &\leftrightarrows \Phi^{T} \Phi = K \\
@@ -610,8 +628,10 @@
 			\end{aligned}
 			\end{equation}
 			
+
+
 			\begin{proof}
-				Below is an informal proof for the case for the kernel $k$. The proof for the kernel $l$ is exactly the same.
+				Below is an informal but illustrative proof for the case for the kernel $k$. The proof for the kernel $l$ is exactly the same.
 				\begin{align*}
 					\Phi^{T} \Phi &= \begin{bmatrix} \phi_{x_{1}}^{T} \\ \vdots \\ \phi_{x_{n}}^{T} \end{bmatrix} \begin{bmatrix} \phi_{x_{1}} & \cdots & \phi_{x_{n}} \end{bmatrix} \tag{\cref{def:feature_matrix}}\\ 
 					&= 	\begin{bmatrix}
@@ -631,6 +651,131 @@
 			\end{proof}
 		\end{theorem}
 		
+		In this way, the embeddings can be written with the following notation.
+		
+		\begin{theorem} \label{thm:empirical_embedding_matrices}
+		(Matrix Notation for Empirical Embeddings)
+		Empirical embeddings can be written with matrix notation as the following \eqref{eq:empirical_conditional_embedding_matrices}.
+		\begin{equation}
+		\begin{aligned}
+			\hatmuYx &= \sum_{i = 1}^{n} \alpha_{i} \psi_{y_{i}} = \Psi \bm{\alpha} \\
+			\hatmuXy &= \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}} = \Phi \bm{\beta} \\
+		\label{eq:empirical_conditional_embedding_matrices}
+		\end{aligned}
+		\end{equation}
+		
+		Note that for non-conditional, straight embeddings where the available samples are sampled from the corresponding distribution, the weights become uniform such that $\alpha_{i} = \frac{1}{n}$ and $\beta_{i} = \frac{1}{n}$ for $i \in \{1, \dots, n\}$ so that $\bm{\alpha} = \frac{1}{n} \bvec{1}$ and $\bm{\beta} = \frac{1}{n} \bvec{1}$, where $\bvec{1} := \{1\}_{i = 1}^{n}$ is a vector of ones \eqref{eq:empirical_embedding_matrices}.
+		
+		\begin{equation}
+		\begin{aligned}
+			\hatmuY &= \sum_{i = 1}^{n} \alpha_{i} \psi_{y_{i}} = \Psi \bm{\alpha} = \frac{1}{n} \Psi \bvec{1} \\
+			\hatmuX &= \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}} = \Phi \bm{\beta} = \frac{1}{n} \Phi \bvec{1} \\
+		\label{eq:empirical_embedding_matrices}
+		\end{aligned}
+		\end{equation}
+		
+		\begin{proof}
+			Below is an informal but illustrative proof for $\hatmuXy$. The proof for $\hatmuYx$ is exactly the same.
+			\begin{align*}
+				\Phi \bm{\beta} &= \begin{bmatrix} \phi_{x_{1}} & \cdots & \phi_{x_{n}} \end{bmatrix} \begin{bmatrix} \beta_{1} \\ \vdots \\ \beta_{n} \end{bmatrix} \tag{\cref{def:feature_matrix}} \\
+				&= \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}}
+			\end{align*}
+		\end{proof}
+		\end{theorem}
+		
+		\begin{example} \label{ex:embedding_evaluation}
+			(Embedding Evaluation)
+			As an example of why this notation is useful, consider the evaluation of the conditional embedding of $\hatmuXy$ at $x$ directly.
+			\begin{align*}
+				\hatmuXy(x) &= \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}}(x) \tag{\cref{eq:empirical_conditional_embedding_form}} \\
+				&= \sum_{i = 1}^{n} \beta_{i} k(x_{i}, x) \tag{\cref{thm:feature_functions}} \\
+				&= K_{x \ds{X}} \bm{\beta} \tag{matrix multiplication}
+			\end{align*}
+			where $K_{x \ds{X}} := \{k(x, x_{i})\}_{i}^{n}$ is a row vector of size $1 \times n$.
+			
+			By the reproducing property from \cref{thm:reproducing_property}, this evaluation can also be written in the form of an inner product.
+			\begin{align*}
+				\hatmuXy(x) &= \inner{\phi_{x}}{\hatmuXy} \tag{\cref{thm:reproducing_property}}\\
+				&= \inner{\phi_{x}}{\Phi \bm{\beta}} \tag{\cref{thm:empirical_embedding_matrices}}\\
+				&= \phi_{x}^{T} \Phi \bm{\beta} \tag{matrix notation} \\
+				&= K_{x \ds{X}} \bm{\beta} \tag{\cref{thm:kernel_matrix}}
+			\end{align*}
+			
+			As such, empirical embeddings can be purely manipulated through linear algebra.
+		\end{example}
+		
+		\begin{theorem} \label{thm:empirical_cross_cov_matrices}
+			(Matrix Notation for Empirical Uncentred Cross-Covariance Operators)
+			By writing tensor products of vectors as outer products, the uncentred cross-covariance operators can be written as follows.
+			\begin{equation}
+			\begin{aligned}
+				\hatCxx &= \frac{1}{n} \Phi \Phi^{T} \\
+				\hatCxy &= \frac{1}{n} \Phi \Psi^{T} \\
+				\hatCyx &= \frac{1}{n} \Psi \Phi^{T} \\
+				\hatCyy &= \frac{1}{n} \Psi \Psi^{T} \\
+			\label{eq:empirical_cross_cov_matrices}
+			\end{aligned}
+			\end{equation}
+		\end{theorem}
+		
+		\begin{definition} \label{def:empirical_conditional_operator}
+			(Empirical Conditional Operator)
+			The empirical conditional operator is defined by the same structure as that of the full conditional operator.
+			\begin{equation}
+				\hatCylx := \hatCyx (\hatCxx + \frac{1}{n} \lambda I_{\cardX})^{-1}
+			\label{eq:empirical_conditional_operator_cross_cov}
+			\end{equation}
+			where $\lambda$ is a regularisation parameter and $I_{\cardX}$ is the identity operator, with the same effective size $\cardX \times \cardX$ as $\hatCxx$. There are multiple theoretical reasons for the introduction of this regularisation parameter in the literature. In practice, however, it is used to prevent overfitting on the dataset.
+		\end{definition}
+		
+		\begin{theorem} \label{thm:woodbury}
+			(Woodbury Theorem)
+			A special case of the Woodbury Theorem states that for any linear operators $B \in \mathbb{R}^{n \times m}$ and $C \in \mathbb{R}^{m \times n}$ and identity operators $I_{n}$ and $I_{m}$, the following identity holds
+			\begin{equation}
+				B (CB + I_{m})^{-1} = (BC + I_{n})^{-1} B
+			\label{eq:woodbury}
+			\end{equation}
+			Informally, this results also holds if one of $n$ and $m$ is not finite.
+		\end{theorem}
+		
+		\begin{theorem} \label{thm:empirical_conditional_operator}
+			(Empirical Conditional Operator)
+			The empirical conditional operator is given by the following form \eqref{eq:empirical_conditional_operator}.
+			\begin{equation}
+				\hatCylx = \Psi (K + \lambda I_{n})^{-1} \Phi^{T}
+			\label{eq:empirical_conditional_operator}
+			\end{equation}
+			
+			It can be conceptually helpful to note that $\Psi$ has size $\cardY \times n$, $(K + \lambda I_{n})^{-1}$ has size $n \times n$, and $\Phi^{T}$ has size $n \times \cardX$, resulting in the appropriate size $\cardY \times \cardX$ for $\hatCylx$.
+
+			\begin{proof}
+				\begin{align*}
+					\hatCylx &= \hatCyx \hatCxx^{-1} \tag{\cref{def:empirical_conditional_operator}}\\
+					&= \frac{1}{n} \Psi \Phi^{T} (\frac{1}{n} \Phi \Phi^{T} + \frac{1}{n} \lambda I_{\cardX})^{-1} \tag{\cref{{thm:empirical_cross_cov_matrices}}} \\
+					&= \Psi \Phi^{T} (\Phi \Phi^{T} + \lambda I_{\cardX})^{-1} \tag{$\frac{1}{n}$ cancels} \\
+					&= \Psi (\Phi^{T} \Phi + \lambda I_{n})^{-1} \Phi^{T} \tag{\cref{thm:woodbury}} \\
+					&= \Psi (K + \lambda I_{n})^{-1} \Phi^{T} \tag{\cref{thm:kernel_matrix}} \\
+				\end{align*}
+			\end{proof}
+		\end{theorem}
+		
+		It can be helpful to view $\hatCylx$ as a representation of the conditional field. 
+		
+		\begin{theorem} \label{thm:empirical_conditional_embedding}
+			(Empirical Conditional Embedding)
+			To fix the conditioned variable to $x$, the empirical analogue of \cref{def:conditional_operator} is used.
+			\begin{equation}
+				\hatmuYx = \hatCylx \phi_{x} = \Psi (K + \lambda I_{n})^{-1} K_{\ds{X} x}
+			\label{eq:empirical_conditional_embedding}
+			\end{equation}
+			where $K_{\ds{X} x} := \{k(x_{i}, x)\}_{i = 1}^{n}$ is a column vector of size $n \times 1$.
+			To evaluate the empirical conditional embedding, the reproducing property is used once again.
+			\begin{equation}
+				\hatmuYx(y) = \psi_{y}^{T} \hatCylx \phi_{x} = L_{y \ds{Y}} (K + \lambda I_{n})^{-1} K_{\ds{X} x}
+			\label{eq:empirical_conditional_embedding_evaluated}
+			\end{equation}
+			where $L_{y \ds{Y}} := \{l(y, y_{i})\}_{i = 1}^{n}$ is a row vector of size $1 \times n$.
+		\end{theorem}
 		\warn{Finish Later. Not important right now.}
 
 \section{Optimal Approximate Embedding Derivations}
