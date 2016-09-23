@@ -490,17 +490,14 @@
 	
 	However, clearly this requires the PDF to be estimated first, even though discriminative approaches do not require them. Thus, this method is more natural in the generative approach. Nevertheless, this is only required during the learning stage. Once the optimal hyperparameters are obtained, one can choose to use the resulting hyperparameters in the discriminative approach for inference.
 	
-	\warn{We want to put in the Bayesian learning algorithm with the joint embedding and then the conditional embedding if we get results for that.}
-	
 \section{Quantile Regression Algorithms}
 \label{sec:quantile_regression_algorithms}
-
-	\warn{First summarise all the algorithms contributed by this paper. Then go into the experiments.}
 	
 	Suppose some data $\{(\bvec{y}_{i}, x_{i})\}_{i = 1}^{n}$ is collected from a joint distribution $\mathbb{P}_{\rv{Y} \rv{X}}$. We can either find the standard empirical embedding $\hat{\mu}_{\rv{X}}$ or empirical conditional embedding $\hat{\mu}_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}$, both of which is of the form $\Phi_{\ds{X}} \bm{\beta}$ for some weights. This is also true for posterior embeddings obtained from KBR. In this paper we present four main methods for quantile regression. 	Table \ref{table:quantile_regression_methods} lists the properties of each of these algorithms.
 
 	\theoremstyle{definition}
-	\begin{definition}{Direct Embedding Quantile Estimator.}
+	\begin{definition}
+		(Direct Embedding Quantile Estimator)
 		The direct embedding $\tau$-quantile estimate is
 		\begin{equation}
 			q_{\rv{X}}(\tau) = \min\{x \in \mathbb{R} : \frac{1}{\Vert \bm{\beta} \Vert} \sum_{i : x_{i} \leq x} \beta_{i} \geq \tau\}
@@ -509,7 +506,8 @@
 	\end{definition}
 	
 	\theoremstyle{definition}
-	\begin{definition}{Smooth Embedding Quantile Estimator.}
+	\begin{definition}
+		(Smooth Embedding Quantile Estimator)
 		The smooth embedding $\tau$-quantile estimate is
 		\begin{equation}
 			q_{\rv{X}}(\tau) = x : \frac{1}{\Vert \bm{\beta} \Vert} \bm{\beta}^{T} \bvec{k}_{\ds{X}} = \tau
@@ -518,7 +516,8 @@
 	\end{definition}
 	
 	\theoremstyle{definition}
-	\begin{definition}{Pre-Image Quantile Estimator.}
+	\begin{definition}
+		(Pre-Image Quantile Estimator)
 		The pre-image $\tau$-quantile estimate is
 		\begin{equation}
 			q_{\rv{X}}(\tau) = x : \bvec{w}^{T} \bvec{k}_{\ds{X}} = \tau
@@ -528,7 +527,8 @@
 	\end{definition}
 	
 	\theoremstyle{definition}
-	\begin{definition}{Normed Weights Quantile Estimator.}
+	\begin{definition}
+		(Normed Weights Quantile Estimator)
 		The pre-image $\tau$-quantile estimate is
 		\begin{equation}
 		q_{\rv{X}}(\tau) = x : \bvec{\tilde{w}}^{T} \bvec{k}_{\ds{X}} = \tau
@@ -576,6 +576,7 @@
 	We place a Gaussian kernel for both the input variable $y$ and the output variable $x$. For the input variable $y$, we whiten the data to decorrelate each dimension using a form of automatic relevance determination \citep{Rasmussen2006} such that an anisotropic but diagonal Gaussian kernel can be used. All our algorithms were trained with (nested) five-fold cross-validation.
 	
 	\subsection{Comparisons}
+	\label{sec:experiments:comparison}
 	
 		Below we summarise the algorithms we are comparing our algorithms with \cite{Quadrianto2009}.
 		
@@ -590,188 +591,143 @@
 		\textbf{Heteroskedastic Quantile GP}. (Algorithm E) This algorithm is the same as the Quantile GP, except that the kernel is a heteroskedastic RBF with 10 latent pseudo-observations controlling the bandwidth along the length of the input dimension \citep{Quadrianto2009}. 
 		
 	\subsection{Results}
+	\label{sec:experiments:results}
+	
+		\begin{figure*}[!htbp]
+			\centering
+			\begin{subfigure}[b]{0.32\textwidth}
+				\includegraphics[width=\textwidth]{figures/Antigen_results}
+			\end{subfigure}
+			\begin{subfigure}[b]{0.32\textwidth}
+				\includegraphics[width=\textwidth]{figures/Bone_Mass_Density_results}
+			\end{subfigure}
+			\begin{subfigure}[b]{0.32\textwidth}
+				\includegraphics[width=\textwidth]{figures/Weather_results}
+			\end{subfigure}
+			\caption{Results from the three quantile experiments. The error bars in these
+				figures represent $\pm 1$ standard deviation of the pinball loss over the testing set.}
+			\label{fig:qfull}
+		\end{figure*}
 
-		The average pinball loss for each algorithm in the three experiments is given in \cref{fig:qfull}. Overall, all algorithms that obtain a quantile
-estimate through PDF estimation performed as well if not better than the
-algorithms from the literature.  The two best performing algorithms were $NB$
-and $JB$, which are the normed-weights and pre-image methods, both using the
-pinball loss cost function for training. The fact that this cost function
-performed better than the NLP is unsurprising, given that the training was
-optimising the same function that would evaluate the algorithm's performance.
+		\begin{figure}[!htbp]
+			\begin{center}
+				\includegraphics[width=\columnwidth]{figures/mcquantilesall}\\
+			\end{center}
+			\caption{Examples of 0.1 (red), 0.5 (green) and 0.9 (blue) quantile estimates
+				for the Motorcycle dataset, for the DR (left), JB (centre) and NL (right) algorithms.}
+			\label{fig:motorcycleresults} 
+		\end{figure}
+		
+		\begin{table}
+			\begin{center}
+				\begin{tabular}{l|ccc}
+					Alg. & $\tau = 0.1$     & $\tau = 0.5$  & $\tau = 0.9$      \\ \hline
+					DR & $0.125 \pm 0.033$ & $0.270 \pm 0.063$ & $0.152 \pm 0.022$ \\
+					DS & $\mathbf{0.109 \pm 0.022}$ & $0.267 \pm 0.059$ & $0.141 \pm 0.031$ \\
+					NB & $0.117 \pm 0.021$ & $0.275 \pm 0.065$ & $0.139 \pm 0.017$ \\
+					JB & $0.118 \pm 0.031$ & $0.256 \pm 0.044$ & $0.142 \pm 0.039$ \\
+					NL & $0.136 \pm 0.035$ & $0.294 \pm 0.030$ & $0.141 \pm 0.014$ \\
+					JL & $0.124 \pm 0.017$ & $0.260 \pm 0.033$ & $0.132 \pm 0.022$ \\
+					A & $0.239 \pm 0.105$ & $0.264 \pm 0.050$ & $0.292 \pm 0.087$ \\
+					B & $0.123 \pm 0.033$ & $\mathbf{0.249 \pm 0.033}$ & $0.128 \pm 0.018$ \\
+					C & $0.122 \pm 0.031$ & $0.266 \pm 0.021$ & $0.131 \pm 0.015$ \\
+					D & $0.166 \pm 0.021$ & $0.255 \pm 0.028$ & $\mathbf{0.126 \pm 0.015}$
+				\end{tabular}
+			\end{center}
+			\caption{Antigen results.}
+			\label{table:antigen}
+		\end{table}
+		
+		\begin{table}
+			\begin{center}
+				\begin{tabular}{l|ccc}
+					Alg. & $\tau = 0.1$     & $\tau = 0.5$  & $\tau = 0.9$      \\ \hline
+					DR & $0.169 \pm 0.098$ & $0.353 \pm 0.117$ & $0.086 \pm 0.015$ \\
+					DS & $0.106 \pm 0.064$ & $0.169 \pm 0.129$ & $0.073 \pm 0.009$ \\
+					NB & $\mathbf{0.062 \pm 0.012}$ & $0.115 \pm 0.010$ & $0.076 \pm 0.016$ \\
+					JB & $0.055 \pm 0.008$ & $0.112 \pm 0.020$ & $0.072 \pm 0.009$ \\
+					NL & $0.063 \pm 0.008$ & $0.143 \pm 0.029$ & $0.087 \pm 0.016$ \\
+					JL & $0.077 \pm 0.012$ & $0.136 \pm 0.034$ & $0.094 \pm 0.016$ \\
+					A & $0.291 \pm 0.034$ & $0.293 \pm 0.024$ & $0.301 \pm 0.045$ \\
+					B & $0.067 \pm 0.015$ & $0.218 \pm 0.034$ & $0.118 \pm 0.013$ \\
+					C & $0.075 \pm 0.011$ & $0.176 \pm 0.028$ & $0.123 \pm 0.011$ \\
+					D & $0.057 \pm 0.010$ & $\mathbf{0.097 \pm 0.015}$ & $\mathbf{0.068 \pm 0.017}$
+				\end{tabular}
+			\end{center}
+			\caption{Weather results.}
+			\label{table:weather}
+		\end{table}
+		
+		
+		\begin{table}
+			\begin{center}
+				\begin{tabular}{l|ccc}
+					Alg. & $\tau = 0.1$     & $\tau = 0.5$  & $\tau = 0.9$      \\ \hline
+					DR & $0.163 \pm 0.060$ & $0.240 \pm 0.037$ & $0.096 \pm 0.024$ \\
+					DS & $0.180 \pm 0.075$ & $0.465 \pm 0.181$ & $0.120 \pm 0.022$ \\
+					NB & $0.096 \pm 0.019$ & $0.194 \pm 0.033$ & $0.092 \pm 0.015$ \\
+					JB & $0.101 \pm 0.030$ & $0.204 \pm 0.022$ & $0.107 \pm 0.041$ \\
+					NL & $0.097 \pm 0.016$ & $0.210 \pm 0.034$ & $0.092 \pm 0.016$ \\
+					JL & $0.091 \pm 0.007$ & $0.199 \pm 0.032$ & $0.091 \pm 0.010$ \\
+					A & $0.396 \pm 0.080$ & $0.389 \pm 0.019$ & $0.387 \pm 0.056$ \\
+					B & $0.090 \pm 0.012$ & $0.202 \pm 0.019$ & $0.085 \pm 0.008$ \\
+					C & $0.094 \pm 0.011$ & $0.190 \pm 0.015$ & $0.083 \pm 0.010$ \\
+					D & $0.092 \pm 0.025$ & $\mathbf{0.186 \pm 0.018}$ & $0.089 \pm 0.010$ \\
+					E & $\mathbf{0.079 \pm 0.019}$ & $0.187 \pm 0.021$ & $\mathbf{0.070 \pm
+						0.016}$
+				\end{tabular}
+			\end{center}
+			\caption{Motorcycle results.}
+			\label{table:motorcycle}
+		\end{table}
+		
+		
+		\begin{table}
+			\begin{center}
+				\begin{tabular}{l|ccc}
+					Alg. & $\tau = 0.1$     & $\tau = 0.5$  & $\tau = 0.9$      \\ \hline
+					DR & $0.125 \pm 0.008$ & $0.308 \pm 0.013$ & $0.162 \pm 0.028$ \\
+					DS & $\mathbf{0.120 \pm 0.007}$ & $0.307 \pm 0.014$ & $0.157 \pm 0.011$ \\
+					NB & $0.122 \pm 0.007$ & $\mathbf{0.306 \pm 0.017}$ & $\mathbf{0.151 \pm
+						0.014}$ \\
+					JB & $0.121 \pm 0.006$ & $0.307 \pm 0.016$ & $0.152 \pm 0.014$ \\
+					NL & $0.121 \pm 0.016$ & $0.308 \pm 0.013$ & $0.153 \pm 0.011$ \\
+					JL & $0.123 \pm 0.014$ & $\mathbf{0.306 \pm 0.012}$ & $0.153 \pm 0.013$ \\
+					A & $0.328 \pm 0.028$ & $0.325 \pm 0.034$ & $0.324 \pm 0.073$ \\
+					B & $0.122 \pm 0.017$ & $\mathbf{0.306 \pm 0.039}$ & $0.152 \pm 0.025$ \\
+					C & $0.121 \pm 0.020$ & $0.311 \pm 0.041$ & $0.154 \pm 0.027$ \\
+					D & $0.135 \pm 0.014$ & $0.310 \pm 0.045$ & $0.168 \pm 0.030$ \\
+					E & $0.123 \pm 0.017$ & $0.309 \pm 0.045$ & $0.153 \pm 0.027$
+				\end{tabular}
+			\end{center}
+			\caption{Bone Mineral Density results.}
+			\label{table:bmd}
+		\end{table}
+		
+		The average pinball loss for each algorithm in the three experiments is given in \cref{fig:qfull}. Overall, generative algorithms performed as well if not better than the algorithms from the literature. The two best performing algorithms were NB and JB, which are the normed-weights and \qpi methods, trained under the pinball loss. It is unsurprising that pinball learning performed better than evidence learning, given that the training was optimising the same function that would evaluate the algorithm's performance.
 
-This demonstrates a trade-off between using pinball loss and receiving slightly
-better performance, or using negative log-probability (NL and JL) and ensuring
-the non-crossing constraint holds. The NL and JL algorithms were still
-competitive, but also beaten out by the kernel conditional quantile (D). 
+		This demonstrates a trade-off between using pinball loss and receiving slightly better performance, or using negative log evidence probability (NL and JL) and ensuring the non-crossing constraint holds. The NL and JL algorithms were still competitive, but also beaten out by the kernel conditional quantile (D).
 
-With both the NLP and pinball loss functions, there was little
-difference on average between the pre-image estimator and the normed-weights
-estimator. This fact in particular is worth noting when considering a real-time
-application of these algorithms, as the pre-image estimator has a much greater
-computational cost. 
+		With both the pinball learning and evidence learning, there was little difference on average between the pre-image estimator and the normed-weights estimator. This fact in particular is worth noting when considering a real-time application of these algorithms, as the pre-image estimator has a much greater computational cost.
+		
+		Over the three experiments, we see that extremal quantiles 0.1 and 0.9 have significantly lower pinball loss compared to the median (0.5). There appear to be no algorithm that is especially capable at a particular quantile, although two direct methods (DR and DS) are much more competitive with the extrema than the median. The likely explanation is that, in general, an accurate (empirical) estimate of the median is affected by nearby points both above and below it. These direct methods however only sum contributions from points lying below the median. The pre-image methods on the other hand, sum contributions from mixture components centred at all training points. Far away from the median, there are fewer points nearby and so the effect is reduced.
+		
+		The full results for each individual experiment and quantile are also tabulated. For Antigen, this information is given in \cref{table:antigen}. Curiously, the three top performers for the quantiles were each from a totally different family of algorithms. Our smooth direct embedding estimator (DS), the quantile SVM (B), and the quantile GP (D). The full results for the Weather, and Bone Mineral Density tests are given in \cref{table:weather} and \cref{table:bmd}.
+		
+		From \cref{table:motorcycle} and \cref{table:bmd}, we can see that algorithm E matched or exceeded all other algorithms in Motorcycle dataset, and was competitive but did not beat our algorithms in the Bone Mineral Density dataset. The likely explanation is the strong heteroskedasicity of the Motorcycle dataset benefited from a modelling approach that explicitly took it into account. This raises a possible avenue of future work--- including heteroskedastic kernel in our methods to improve performance.
+		
+		Figure \ref{fig:motorcycleresults} plots the quantiles estimated for the Motorcycle dataset for three of the algorithms. The piecewise-constant quantile estimates are clearly visible in the DR plot. The JB plot has each quantile trained separately, and as a result the 0.1 and 0.9 quantile both fit the boundary of the data very closely. The NL plot shows a much smoother representation, in line with the fact that these are quantiles for a single underlying cumulative distribution (trained with the negative log evidence probability).
 
-Over the three experiments, we see that extremal quantiles 0.1 and 0.9 are
-significantly lower pinball loss compared to the median (0.5). There appear to
-be no algorithm that is especially capable at a particular quantile, although
-two direct methods (DR and DS) are much more competitive with the extrema
-than the median. The likely explanation is that, in general, an accurate (empirical)
-estimate of the median is affected by nearby points both above and below it.
-These direct methods however only sum contributions from points lying below the
-median. The posterior methods on the other hand, sum contributions from
-mixture components centred at all training points. Far away from the median,
-there are fewer points nearby and so the effect is reduced.
-
-The full results for each individual experiment and quantile are also
-tabulated. For Antigen, this information is given in table~\ref{table:antigen}.
-Curiously, the three top performers for the quantiles were each from a totally
-different family of algorithms; our smooth direct embedding estimator (DS), the
-quantile SVM (B), and the quantile GP (D). The full results for the Weather,
-and Bone Mineral Density tests are given in tables~\ref{table:weather}
-and~\ref{table:bmd}.
-
-From the tabulated results in tables~\ref{table:motorcycle}
-and~\ref{table:bmd}, we can see that algorithm E matched or exceeded all other
-algorithms in Motorcycle dataset, and was competitive but did not beat our
-algorithms in the Bone Mineral Density dataset. The likely explanation is the
-strong heteroskedasicity of the Motorcycle dataset benefited from a modelling
-approach that explicitly took it into account. This raises a possible avenue of
-future work--- including heteroskedastic kernel in our KBR based methods to
-improve performance.
-
-Figure \ref{fig:motorcycleresults} plots the quantiles estimated for the
-Motorcycle dataset for three of the algorithms. The piecewise-constant quantile
-estimates are clearly visible in the DR plot. The JB plot has each quantile
-trained separately, and as a result the 0.1 and 0.9 quantile both fit the
-boundary of the data very closely. The NL plot shows a much smoother
-representation, in line with the fact that these are quantiles for a single
-underlying cumulative distribution (trained on the NLP).
-
-\begin{figure*}[t]
-	\centering
-	\begin{subfigure}[b]{0.32\textwidth}
-		\includegraphics[width=\textwidth]{figures/Antigen_results}
-	\end{subfigure}
-	\begin{subfigure}[b]{0.32\textwidth}
-		\includegraphics[width=\textwidth]{figures/Bone_Mass_Density_results}
-	\end{subfigure}
-	\begin{subfigure}[b]{0.32\textwidth}
-		\includegraphics[width=\textwidth]{figures/Weather_results}
-	\end{subfigure}
-	\caption{Results from the three quantile experiments. The error bars in these
-		figures represent $\pm 1$ standard deviation of the pinball loss over the testing set.}
-	\label{fig:qfull}
-\end{figure*}
-
-
-\begin{figure}
-	\begin{center}
-		\includegraphics[width=\columnwidth]{figures/mcquantilesall}\\
-	\end{center}
-	\caption{Examples of 0.1 (red), 0.5 (green) and 0.9 (blue) quantile estimates
-		for the Motorcycle dataset, for the DR (left), JB (centre) and NL (right) algorithms.}
-	\label{fig:motorcycleresults} 
-\end{figure}
-
-% \begin{figure}
-% \begin{center}
-% \includegraphics[width=\columnwidth]{../images/bmdquantilesall}\\
-% \end{center}
-% \caption{here be caption}
-% \label{fig:motorcycleresults} 
-% \end{figure}
-
-\begin{table}
-	\begin{center}
-		\begin{tabular}{l|ccc}
-			Method & $\tau = 0.1$     & $\tau = 0.5$  & $\tau = 0.9$      \\ \hline
-			DR& $0.125 \pm 0.033$ & $0.270 \pm 0.063$ & $0.152 \pm 0.022$ \\
-			DS& $\mathbf{0.109 \pm 0.022}$ & $0.267 \pm 0.059$ & $0.141 \pm 0.031$ \\
-			% NR-B& $0.121 \pm 0.022$ & $0.273 \pm 0.060$ & $0.143 \pm 0.025$ \\
-			NB& $0.117 \pm 0.021$ & $0.275 \pm 0.065$ & $0.139 \pm 0.017$ \\
-			% JR-B& $\mathbf{0.108 \pm 0.023}$ & $0.264 \pm 0.047$ & $0.153 \pm 0.043$ \\
-			JB& $0.118 \pm 0.031$ & $0.256 \pm 0.044$ & $0.142 \pm 0.039$ \\
-			NL& $0.136 \pm 0.035$ & $0.294 \pm 0.030$ & $0.141 \pm 0.014$ \\
-			JL& $0.124 \pm 0.017$ & $0.260 \pm 0.033$ & $0.132 \pm 0.022$ \\
-			A& $0.239 \pm 0.105$ & $0.264 \pm 0.050$ & $0.292 \pm 0.087$ \\
-			B& $0.123 \pm 0.033$ & $\mathbf{0.249 \pm 0.033}$ & $0.128 \pm 0.018$ \\
-			C& $0.122 \pm 0.031$ & $0.266 \pm 0.021$ & $0.131 \pm 0.015$ \\
-			D& $0.166 \pm 0.021$ & $0.255 \pm 0.028$ & $\mathbf{0.126 \pm 0.015}$
-		\end{tabular}
-	\end{center}
-	\caption{Antigen results.}
-	\label{table:antigen}
-\end{table}
-
-\begin{table}
-	\begin{center}
-		\begin{tabular}{l|ccc}
-			Method & $\tau = 0.1$     & $\tau = 0.5$  & $\tau = 0.9$      \\ \hline
-			DR& $0.169 \pm 0.098$ & $0.353 \pm 0.117$ & $0.086 \pm 0.015$ \\
-			DS& $0.106 \pm 0.064$ & $0.169 \pm 0.129$ & $0.073 \pm 0.009$ \\
-			NB& $\mathbf{0.062 \pm 0.012}$ & $0.115 \pm 0.010$ & $0.076 \pm 0.016$ \\
-			JB& $0.055 \pm 0.008$ & $0.112 \pm 0.020$ & $0.072 \pm 0.009$ \\
-			NL& $0.063 \pm 0.008$ & $0.143 \pm 0.029$ & $0.087 \pm 0.016$ \\
-			JL& $0.077 \pm 0.012$ & $0.136 \pm 0.034$ & $0.094 \pm 0.016$ \\
-			A& $0.291 \pm 0.034$ & $0.293 \pm 0.024$ & $0.301 \pm 0.045$ \\
-			B& $0.067 \pm 0.015$ & $0.218 \pm 0.034$ & $0.118 \pm 0.013$ \\
-			C& $0.075 \pm 0.011$ & $0.176 \pm 0.028$ & $0.123 \pm 0.011$ \\
-			D& $0.057 \pm 0.010$ & $\mathbf{0.097 \pm 0.015}$ & $\mathbf{0.068 \pm 0.017}$
-		\end{tabular}
-	\end{center}
-	\caption{Weather results.}
-	\label{table:weather}
-\end{table}
-
-
-\begin{table}
-	\begin{center}
-		\begin{tabular}{l|ccc}
-			Method & $\tau = 0.1$     & $\tau = 0.5$  & $\tau = 0.9$      \\ \hline
-			DR& $0.163 \pm 0.060$ & $0.240 \pm 0.037$ & $0.096 \pm 0.024$ \\
-			DS& $0.180 \pm 0.075$ & $0.465 \pm 0.181$ & $0.120 \pm 0.022$ \\
-			NB& $0.096 \pm 0.019$ & $0.194 \pm 0.033$ & $0.092 \pm 0.015$ \\
-			JB& $0.101 \pm 0.030$ & $0.204 \pm 0.022$ & $0.107 \pm 0.041$ \\
-			NL& $0.097 \pm 0.016$ & $0.210 \pm 0.034$ & $0.092 \pm 0.016$ \\
-			JL& $0.091 \pm 0.007$ & $0.199 \pm 0.032$ & $0.091 \pm 0.010$ \\
-			A& $0.396 \pm 0.080$ & $0.389 \pm 0.019$ & $0.387 \pm 0.056$ \\
-			B& $0.090 \pm 0.012$ & $0.202 \pm 0.019$ & $0.085 \pm 0.008$ \\
-			C& $0.094 \pm 0.011$ & $0.190 \pm 0.015$ & $0.083 \pm 0.010$ \\
-			D& $0.092 \pm 0.025$ & $\mathbf{0.186 \pm 0.018}$ & $0.089 \pm 0.010$ \\
-			E& $\mathbf{0.079 \pm 0.019}$ & $0.187 \pm 0.021$ & $\mathbf{0.070 \pm
-				0.016}$
-		\end{tabular}
-	\end{center}
-	\caption{Motorcycle results.}
-	\label{table:motorcycle}
-\end{table}
-
-
-\begin{table}
-	\begin{center}
-		\begin{tabular}{l|ccc}
-			Method & $\tau = 0.1$     & $\tau = 0.5$  & $\tau = 0.9$      \\ \hline
-			DR& $0.125 \pm 0.008$ & $0.308 \pm 0.013$ & $0.162 \pm 0.028$ \\
-			DS& $\mathbf{0.120 \pm 0.007}$ & $0.307 \pm 0.014$ & $0.157 \pm 0.011$ \\
-			NB& $0.122 \pm 0.007$ & $\mathbf{0.306 \pm 0.017}$ & $\mathbf{0.151 \pm
-				0.014}$ \\
-			JB& $0.121 \pm 0.006$ & $0.307 \pm 0.016$ & $0.152 \pm 0.014$ \\
-			NL& $0.121 \pm 0.016$ & $0.308 \pm 0.013$ & $0.153 \pm 0.011$ \\
-			JL& $0.123 \pm 0.014$ & $\mathbf{0.306 \pm 0.012}$ & $0.153 \pm 0.013$ \\
-			A& $0.328 \pm 0.028$ & $0.325 \pm 0.034$ & $0.324 \pm 0.073$ \\
-			B& $0.122 \pm 0.017$ & $\mathbf{0.306 \pm 0.039}$ & $0.152 \pm 0.025$ \\
-			C& $0.121 \pm 0.020$ & $0.311 \pm 0.041$ & $0.154 \pm 0.027$ \\
-			D& $0.135 \pm 0.014$ & $0.310 \pm 0.045$ & $0.168 \pm 0.030$ \\
-			E& $0.123 \pm 0.017$ & $0.309 \pm 0.045$ & $0.153 \pm 0.027$
-		\end{tabular}
-	\end{center}
-	\caption{Bone Mineral Density results.}
-	\label{table:bmd}
-\end{table}
 \section{Conclusion}
 \label{sec:conclusion}
 
 	\warn{Future work would include a better learning method for the hyperparameters, and also a better density recovery method for the generative approach besides \qpi.}
 	
+	This paper presented six new algorithms for estimating quantiles non-parametrically from kernel embeddings of probability distributions given only samples. By projecting the indicator function into the RKHS, we first present a discriminative approach where the empirical CDF can be computed directly, but lack the the desired smoothness and non-decreasing property. We then impose smoothness by instead projecting a smooth function within the full RKHS that becomes the projected indicator function in the limit of vanishing bandwidth. At a trade off with computational complexity, the non-decreasing constraint is guaranteed by a generative approach, where the embeddings weights of a PDF is to be recovered from a quadratic program first, before it is integrated to a CDF.
+	
+	We then constructed quantile estimators from these CDF estimators using simple numerical root-finding, and considered training on both the pinball loss function, and the negative log evidence probability. We then evaluated the resulting algorithms using a set of well-known machine learning datasets.
+	
+	Our generative quantile estimators in particular were comparable to, or better than, the state-of-the-art algorithms in the literature. These algorithms can be trained either using pinball loss, for a slight increase in performance, or with negative log evidence probability, to guarantee the non-crossing constraint. Additionally, all our algorithms explicitly represent multi-modal distributions, and can model datasets with strong heteroskedasticty.
 
 \section*{Acknowledgements}
 
