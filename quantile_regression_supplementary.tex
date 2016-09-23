@@ -16,7 +16,7 @@
 \usepackage{mathrsfs}
 \usepackage{bm}
 \usepackage{vector}
-\usepackage{color}
+\usepackage[usenames, dvipsnames]{color}
 \usepackage{cleveref}
 
 \theoremstyle{definition}
@@ -26,22 +26,14 @@
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{identity}[theorem]{Identity}
 
-%\theoremstyle{definition}
-%\newtheorem{definition}{Definition}[section]
-%\theoremstyle{definition}
-%\newtheorem{theorem}{Theorem}[section]
-%\theoremstyle{definition}
-%\newtheorem{lemma}{Lemma}[section]
-%\theoremstyle{remark}
-%\newtheorem*{remark}{Remark}
-
 \newcommand{\eq}[1]{\begin{equation} \begin{aligned} #1 \end{aligned} \end{equation}}
 
 \newcommand{\argmin}{\operatornamewithlimits{argmin}}
-%\newcommand{\rv}[1]{\underline{\overline{#1}}}
-\newcommand{\rv}[1]{\underline{#1}}
-\newcommand{\ds}[1]{{#1}}
+\newcommand{\rv}[1]{{#1}}
+\newcommand{\ds}[1]{\tilde{#1}}
 \newcommand{\warn}[1]{{\color{red} #1}}
+\newcommand{\extra}[1]{{\color{ForestGreen} #1}}
+\newcommand{\qpi}{QPI }
 
 \newcommand{\expect}[1]{{\mathbb{E}[#1]}}
 \newcommand{\inner}[2]{{\langle #1, #2 \rangle}}
@@ -112,9 +104,9 @@
 		\bvec{v} = {\begin{bmatrix} v_{1} & \dots & v_{n} \end{bmatrix}}^{T} = \begin{bmatrix} v_{1} \\ \vdots \\ v_{n} \end{bmatrix} = \{v_{i}\}_{i = 1}^{n}
 	\end{equation}
 	
-	\textbf{Indices.} The $j$-th element of a vector $\bvec{x}$ is denoted as $x_{j}$. The $(i, j)$-th element of a matrix $X$ is denoted as $x_{i, j}$.
+	\textbf{Indices.} The $j$-th element of a vector $\bvec{a}$ is denoted as $a_{j}$. The $(i, j)$-th element of a matrix $A$ is denoted as $a_{i, j}$.
 	
-	\textbf{Random Variables and Vectors.} A random variable (RV) is denoted with an upper case letter with an underline, as in $\rv{X}$. A random vector (also RV) is then denoted in bold, as in $\bvec{\rv{X}}$. Semantically, while random variables and vectors are so named, they are formally a mapping from the sample space $\Omega$ to some other Borel measurable space, such as $\mathcal{X} = \mathbb{R}$ or $\mathcal{X} = \mathbb{R}^{d}$. This is where the notations in probability theory and statistics differ slightly from those in measure theory. In general, while the notations in measure theory are more precise (making clear that RVs are mappings), the notations in probability theory and statistics are easier to read and interpret (treating RVs as what it sounds like - random variables and vectors).
+	\textbf{Random Variables and Vectors.} A random variable (RV) is denoted with an upper case letter, as in $\rv{X}$. A random vector (also RV) is then denoted in bold, as in $\bvec{\rv{X}}$. Semantically, while random variables and vectors are so named, they are formally a mapping from the sample space $\Omega$ to some other Borel measurable space, such as $\mathcal{X} = \mathbb{R}$ or $\mathcal{X} = \mathbb{R}^{d}$. This is where the notations in probability theory and statistics differ slightly from those in measure theory. In general, while the notations in measure theory are more precise (making clear that RVs are mappings), the notations in probability theory and statistics are easier to read and interpret (treating RVs as what it sounds like - random variables and vectors).
 	
 	For events, a common shorthand used in both probability theory and measure theory is
 	
@@ -142,7 +134,7 @@
 	\label{eq:indicator_function}
 	\end{equation}
 	
-	\textbf{Datasets.} A dataset consisting of $n$ observations of $d$-dimensional vector quantities will be denoted using an upper case, such as $\ds{X}$, as it is also a matrix of size $n \times d$ so that $\ds{X} \in \mathbb{R}^{n \times d}$. We call the dimension from $1$ to $n$ the observation dimension, and the dimension from $1$ to $d$ the covariate dimension, noting that the covariates themselves are not always the same as the features. As such, we have $\ds{X} = \{x_{i, j}\}_{i = 1, j = 1}^{n, d}$, where $x_{i, j}$ is the $j$-th covariate of the $i$-th observation. We also denote those observations equivalently by
+	\textbf{Datasets.} A dataset consisting of $n$ observations of $d$-dimensional vector quantities will be denoted using an upper case with a curly tilde on top, such as $\ds{X}$, as it is also a matrix of size $n \times d$ so that $\ds{X} \in \mathbb{R}^{n \times d}$. We call the dimension from $1$ to $n$ the observation dimension, and the dimension from $1$ to $d$ the covariate dimension, noting that the covariates themselves are not always the same as the features. As such, we have $\ds{X} = \{x_{i, j}\}_{i = 1, j = 1}^{n, d}$, where $x_{i, j}$ is the $j$-th covariate of the $i$-th observation. We also denote those observations equivalently by
 
 	\begin{equation}
 	\bvec{x}_{i} = \{x_{i, j}\}_{j = 1}^{d} \equiv \{x_{i, 1}, \dots, x_{i, d}\} \equiv \begin{bmatrix}
