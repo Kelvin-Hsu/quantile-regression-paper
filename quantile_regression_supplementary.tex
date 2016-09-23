@@ -465,44 +465,102 @@
 		
 		\begin{theorem} \label{thm:kernel_sum_rule}
 			(Kernel Sum Rule)
-			The Kernel Sum Rule \eqref{equation:kernel_sum_rule} is the kernelised and non-parametric version of the basic sum rule of probability \eqref{eq:sum_rule}.
+			The Kernel Sum Rule \eqref{eq:kernel_sum_rule} is the kernelised and non-parametric version of the basic sum rule of probability \eqref{eq:sum_rule}.
 			\begin{equation}
 			\begin{aligned}
-				p_{\rv{Y}}(y) &= \int_{\mathcal{X}} p_{\rv{Y} | \rv{X}}(y | \cdot) d\mathbb{P}_{\rv{X}} \quad & \mathrm{(Lebesgue)} \\
-				&= \int_{\mathcal{X}} p_{\rv{Y} | \rv{X}}(y | x) p_{\rv{X}}(x)dx \quad & \mathrm{(Riemann)}
+				p_{\rv{X}}(x) &= \int_{\mathcal{Y}} p_{\rv{X} | \rv{Y}}(x | \cdot) d\mathbb{P}_{\rv{Y}} \quad & \mathrm{(Lebesgue)} \\
+				&= \int_{\mathcal{Y}} p_{\rv{X} | \rv{Y}}(x | y) p_{\rv{Y}}(y)dy \quad & \mathrm{(Riemann)}
 			\label{eq:sum_rule}
 			\end{aligned}
 			\end{equation}
-
+			
 			\begin{equation}
-				\muY = \Cylx \muX
-			\label{equation:kernel_sum_rule}
+				\muX = \Cxly \muY
+			\label{eq:kernel_sum_rule}
 			\end{equation}
 			
 			\begin{proof}
-			\begin{align*}
-				\Cylx \muX &= \Cylx \expect{\phiX} \tag{\cref{def:kernel_embedding}} \\
-	  			&= \expect{\Cylx \phiX} \tag{linearity of $\expect{\cdot}$} \\
-	  			&= \expect{\mu_{\rv{Y} | \rv{X}}} \tag{\cref{def:conditional_operator}} \\
-	  			&= \expect{\expect{\psiY | \rv{X}}} \tag{\cref{def:conditional_embedding}} \\
-	  			&= \expect{\psiY} \tag{tower property} \\
-	  			&= \muY \tag{\cref{def:conditional_embedding}}
-			\end{align*}
+				\begin{align*}
+				\Cxly \muY &= \Cxly \expect{\psiY} \tag{\cref{def:kernel_embedding}} \\
+				&= \expect{\Cxly \psiY} \tag{linearitX of $\expect{\cdot}$} \\
+				&= \expect{\mu_{\rv{X} | \rv{Y}}} \tag{\cref{def:conditional_operator}} \\
+				&= \expect{\expect{\phiX | \rv{Y}}} \tag{\cref{def:conditional_embedding}} \\
+				&= \expect{\phiX} \tag{tower property} \\
+				&= \muX \tag{\cref{def:conditional_embedding}}
+				\end{align*}
 			\end{proof}
 		\end{theorem}
 		
-		\warn{Finish Later. Not important right now.}
+		Another useful version of the kernel sum rule is the following \eqref{eq:kernel_sum_rule_2}, by simply replacing the distribution for $\rv{X}$ by the joint distribution of $\rv{X}$ and $\rv{X}$.
+		
+		\begin{equation}
+			\Cxx = C_{\rv{X} \rv{X} | \rv{Y}} \muY
+		\label{eq:kernel_sum_rule_2}
+		\end{equation}
+		
+		This represents the following sum rule in usual probability space \eqref{eq:sum_rule_2}.
+		
+		\begin{equation}
+			p_{\rv{X} \rv{X}}(x, x') = \int_{\mathcal{Y}} p_{\rv{X} \rv{X} | \rv{Y}}((x, x') | y) p_{\rv{y}}(y) dy
+		\label{eq:sum_rule_2}
+		\end{equation}
+		
+		where the joint probability of $\rv{X}$ with itself, conditioned or not, is degenerate in the sense that
+		
+		\begin{equation}
+		\begin{aligned}
+			p_{\rv{X} \rv{X}}(x, x') &= p_{\rv{X}}(x) \delta_{x}(x') \\
+			p_{\rv{X} \rv{X} | \rv{Y}}((x, x') | y) &= p_{\rv{X} | \rv{Y}}(x | y) \delta_{x}(x')
+		\end{aligned}
+		\end{equation}
+		
+		where $\delta_{x}$ is the Dirac delta function centred at $x$. While this is essentially the same probability relation, the extra dimension allows one dimension to be kept even after marginalisation through a cross-covariance operator later.
+		
+		Yet another useful version of the kernel sum rule is the following \eqref{eq:kernel_sum_rule_3}, by simply replacing the distribution for $\rv{X}$ by the joint distribution of $\rv{X}$ and $\rv{Y}$.
+		
+		\begin{equation}
+			\Cxy = C_{\rv{X} \rv{Y} | \rv{Y}} \muY
+		\label{eq:kernel_sum_rule_3}
+		\end{equation}
+		
+		This represents the following sum rule in usual probability space \eqref{eq:sum_rule_3}.
+		
+		\begin{equation}
+			p_{\rv{X} \rv{Y}}(x, y) = \int_{\mathcal{Y}} p_{\rv{X} \rv{Y} | \rv{Y}}((x, y) | y') p_{\rv{y}}(y') dy'
+		\label{eq:sum_rule_3}
+		\end{equation}
+		
+		where
+		
+		\begin{equation}
+		p_{\rv{X} \rv{Y} | \rv{Y}}((x, y) | y') = p_{\rv{X} | \rv{Y}}(x| y) \delta_{y}(y')
+		\end{equation}
 		
 		\begin{theorem} \label{thm:kernel_chain_rule}
 			(Kernel Chain Rule)
+			The Kernel Chain Rule \eqref{eq:kernel_chain_rule} is the kernelised and non-parametric version of the basic sum rule of probability \eqref{eq:chain_rule}.
+			\begin{equation}
+			\begin{aligned}
+				p_{\rv{X} \rv{Y}}(x, y) &= p_{\rv{X} | \rv{Y}}(x | y) p_{\rv{Y}}(y)
+			\label{eq:chain_rule}
+			\end{aligned}
+			\end{equation}
+			
+			\begin{equation}
+				\Cxy = \Cxly \Cyy
+			\label{eq:kernel_chain_rule}
+			\end{equation}
 			
 			\begin{proof}
-			\begin{align*}
-				x
-			\end{align*}
+				After switching the roles of $\rv{X}$ and $\rv{Y}$ in \cref{thm:conditional_operator}, left apply $\Cyy$ on both sides.
 			\end{proof}
 		\end{theorem}
 
+
+		\begin{theorem} \label{thm:kernel_bayes_rule}
+			(Kernel Bayes Rule)
+			
+		\end{theorem}
 	\subsection{Empirical Representation}
 	\label{sec:kernel_embeddings:empirical_representation}
 	
@@ -725,7 +783,7 @@
 				\hatCylx := \hatCyx (\hatCxx + \frac{1}{n} \lambda I_{\cardX})^{-1}
 			\label{eq:empirical_conditional_operator_cross_cov}
 			\end{equation}
-			where $\lambda$ is a regularisation parameter and $I_{\cardX}$ is the identity operator, with the same effective size $\cardX \times \cardX$ as $\hatCxx$. There are multiple theoretical reasons for the introduction of this regularisation parameter in the literature. In practice, however, it is used to prevent overfitting on the dataset.
+			where $\lambda$ is a regularisation parameter and $I_{\cardX}$ is the identity operator, with the same effective size $\cardX \times \cardX$ as $\hatCxx$. There are multiple theoretical reasons for the introduction of this regularisation parameter in the literature. It is also unclear what type of regularisation technique is best suited in this case. In practice, however, this regularisation form is chosen to prevent overfitting on the dataset.
 		\end{definition}
 		
 		\begin{theorem} \label{thm:woodbury}
