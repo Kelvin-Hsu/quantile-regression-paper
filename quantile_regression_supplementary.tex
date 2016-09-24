@@ -96,6 +96,7 @@
 \end{abstract}
 
 \section{Notation}
+\label{sec:notation}
 
 	\textbf{Vectors.} The only quantities that are bold in notation are vectors. Scalars, matrices, and functions are not denoted in bold. Keep in mind that this convention is chosen even after considering the fact that functions operate as uncountably infinite dimensional vectors in many settings within this paper.
 	
@@ -162,9 +163,9 @@
 	\label{eq:function_vectorisation}
 	\end{equation}
 	
-	\textbf{Kernel Embeddings.} In the kernel embeddings setting, the partially applied kernel function, $k(x, \cdot)$, acts like a feature vector for the RKHS it spans over $x \in \mathcal{X}$. However, instead of an usual finite dimensional vector, this is an (usually uncountably, depending on the cardinality of $\mathcal{X}$) infinite dimensional vector as it is a function of one variable in $\mathcal{X}$. In many literature, the notation $\phi(x) := k(x, \cdot)$ is used. However, the author prefers $\phi_{x} := k(x, \cdot)$ so that it is clearer that $\phi_{x}$ is a function of one variable such that $\phi_{x}(x') = k(x, x')$. It would be awkward to write $\phi(x)(x')$ otherwise. Also, as an infinite dimensional vector, when an appropriate Hilbert-Schmidt operator comes, say $C_{\rv{Y} | \rv{X}}$, it would look less awkward if we write $C_{\rv{Y} | \rv{X}} \phi_{x}$ as in $\phi_{x}$ is an element of some vector space where linear operations can be applied onto, instead of $C_{\rv{Y} | \rv{X}} \phi(x)$ where it looks like this is $C_{\rv{Y} | \rv{X}}$ multiples of some functional value $\phi(x)$.
+	\textbf{Kernel Embeddings.} In the kernel embeddings setting, the partially applied kernel function, $k(x, \cdot)$, acts like a feature vector for the RKHS it spans over $x \in \mathcal{X}$. However, instead of an usual finite dimensional vector, this is an (usually uncountably, depending on the cardinality of $\mathcal{X}$) infinite dimensional vector as it is a function of one variable in $\mathcal{X}$. In many literature, the notation $\phi(x) := k(x, \cdot)$ is used. This is because in most kernel based algorithms, such as support vector machines, the feature vector is a finite dimensional vector so that $\phi(x) \in \mathbb{R}^{p}$. However, in the kernel embedding context, the dimensionality of the feature vector is the cardinality of the domain of interest $\mathcal{X}$. In many cases, $\mathcal{X}$ is the euclidean space $\mathbb{R}^{d}$ such that the dimensionality of the feature vector is uncountably infinite. As such, the feature vector represents an enumerated function, indexed by its inputs. To emphasise this, this paper will use $\phi_{x} := k(x, \cdot)$ so that it is clearer that $\phi_{x}$ is a function of one variable such that $\phi_{x}(x') = k(x, x')$. It would be awkward to write $\phi(x)(x')$ otherwise. Also, as an uncountably infinite dimensional vector, when an appropriate Hilbert-Schmidt operator comes, say $C_{\rv{Y} | \rv{X}}$, it would look less awkward if we write $C_{\rv{Y} | \rv{X}} \phi_{x}$ as in $\phi_{x}$ is an element of some vector space where linear operations can be applied onto, instead of $C_{\rv{Y} | \rv{X}} \phi(x)$ where it looks like this is $C_{\rv{Y} | \rv{X}}$ multiples of some functional value $\phi(x)$.
 	
-	In this way, we emphasise that $\phi_{x}$ is akin to an infinite dimensional vector, or a matrix with size $\infty \times 1$. We can then write tensor products and inner products with matrix notation as usual.
+	In this way, we emphasise that, for continuous euclidean spaces $\mathcal{X}$, $\phi_{x}$ is an uncountably infinite dimensional vector, or a matrix with size $\cardX \times 1$. We can then write tensor products and inner products with matrix notation as usual, as outlined in \cref{sec:kernel_embeddings:empirical_representation}.
 	
 \section{Kernel Embeddings}
 \label{sec:kernel_embeddings}
@@ -482,7 +483,7 @@
 			\begin{proof}
 				\begin{align*}
 				\Cxly \muY &= \Cxly \expect{\psiY} \tag{\cref{def:kernel_embedding}} \\
-				&= \expect{\Cxly \psiY} \tag{linearitX of $\expect{\cdot}$} \\
+				&= \expect{\Cxly \psiY} \tag{linearity of $\expect{\cdot}$} \\
 				&= \expect{\mu_{\rv{X} | \rv{Y}}} \tag{\cref{def:conditional_operator}} \\
 				&= \expect{\expect{\phiX | \rv{Y}}} \tag{\cref{def:conditional_embedding}} \\
 				&= \expect{\phiX} \tag{tower property} \\
@@ -491,61 +492,70 @@
 			\end{proof}
 		\end{theorem}
 		
-		Another useful version of the kernel sum rule is the following \eqref{eq:kernel_sum_rule_2}, by simply replacing the distribution for $\rv{X}$ by the joint distribution of $\rv{X}$ and $\rv{X}$.
+		\begin{corollary} \label{thm:kernel_sum_rule_2}
+			(Kernel Sum Rule Version 2)
+			Another useful version of the kernel sum rule is the following \eqref{eq:kernel_sum_rule_2}, by simply replacing the distribution for $\rv{X}$ by the joint distribution of $\rv{X}$ and $\rv{X}$.
+			
+			\begin{equation}
+				\Cxx = C_{\rv{X} \rv{X} | \rv{Y}} \muY
+			\label{eq:kernel_sum_rule_2}
+			\end{equation}
+			
+			This represents the following sum rule in usual probability space \eqref{eq:sum_rule_2}.
+			
+			\begin{equation}
+				p_{\rv{X} \rv{X}}(x, x') = \int_{\mathcal{Y}} p_{\rv{X} \rv{X} | \rv{Y}}((x, x') | y) p_{\rv{y}}(y) dy
+			\label{eq:sum_rule_2}
+			\end{equation}
+			
+			where the joint probability of $\rv{X}$ with itself, conditioned or not, is degenerate in the sense that
+			
+			\begin{equation}
+			\begin{aligned}
+				p_{\rv{X} \rv{X}}(x, x') &= p_{\rv{X}}(x) \delta_{x}(x') \\
+				p_{\rv{X} \rv{X} | \rv{Y}}((x, x') | y) &= p_{\rv{X} | \rv{Y}}(x | y) \delta_{x}(x')
+			\end{aligned}
+			\end{equation}
+			
+			where $\delta_{x}$ is the Dirac delta function centred at $x$. While this is essentially the same probability relation, the extra dimension allows one dimension to be kept even after marginalisation through a cross-covariance operator later.
 		
-		\begin{equation}
-			\Cxx = C_{\rv{X} \rv{X} | \rv{Y}} \muY
-		\label{eq:kernel_sum_rule_2}
-		\end{equation}
+		\end{corollary}
 		
-		This represents the following sum rule in usual probability space \eqref{eq:sum_rule_2}.
+		\begin{corollary} \label{thm:kernel_sum_rule_3}
+			(Kernel Sum Rule Version 3)
+			Yet another useful version of the kernel sum rule is the following \eqref{eq:kernel_sum_rule_3}, by simply replacing the distribution for $\rv{X}$ by the joint distribution of $\rv{X}$ and $\rv{Y}$.
 		
-		\begin{equation}
-			p_{\rv{X} \rv{X}}(x, x') = \int_{\mathcal{Y}} p_{\rv{X} \rv{X} | \rv{Y}}((x, x') | y) p_{\rv{y}}(y) dy
-		\label{eq:sum_rule_2}
-		\end{equation}
+			\begin{equation}
+				\Cxy = C_{\rv{X} \rv{Y} | \rv{Y}} \muY
+			\label{eq:kernel_sum_rule_3}
+			\end{equation}
+			
+			This represents the following sum rule in usual probability space \eqref{eq:sum_rule_3}.
+			
+			\begin{equation}
+				p_{\rv{X} \rv{Y}}(x, y) = \int_{\mathcal{Y}} p_{\rv{X} \rv{Y} | \rv{Y}}((x, y) | y') p_{\rv{y}}(y') dy'
+			\label{eq:sum_rule_3}
+			\end{equation}
+			
+			where
+			
+			\begin{equation}
+			p_{\rv{X} \rv{Y} | \rv{Y}}((x, y) | y') = p_{\rv{X} | \rv{Y}}(x| y) \delta_{y}(y')
+			\end{equation}
+		\end{corollary}
 		
-		where the joint probability of $\rv{X}$ with itself, conditioned or not, is degenerate in the sense that
-		
-		\begin{equation}
-		\begin{aligned}
-			p_{\rv{X} \rv{X}}(x, x') &= p_{\rv{X}}(x) \delta_{x}(x') \\
-			p_{\rv{X} \rv{X} | \rv{Y}}((x, x') | y) &= p_{\rv{X} | \rv{Y}}(x | y) \delta_{x}(x')
-		\end{aligned}
-		\end{equation}
-		
-		where $\delta_{x}$ is the Dirac delta function centred at $x$. While this is essentially the same probability relation, the extra dimension allows one dimension to be kept even after marginalisation through a cross-covariance operator later.
-		
-		Yet another useful version of the kernel sum rule is the following \eqref{eq:kernel_sum_rule_3}, by simply replacing the distribution for $\rv{X}$ by the joint distribution of $\rv{X}$ and $\rv{Y}$.
-		
-		\begin{equation}
-			\Cxy = C_{\rv{X} \rv{Y} | \rv{Y}} \muY
-		\label{eq:kernel_sum_rule_3}
-		\end{equation}
-		
-		This represents the following sum rule in usual probability space \eqref{eq:sum_rule_3}.
-		
-		\begin{equation}
-			p_{\rv{X} \rv{Y}}(x, y) = \int_{\mathcal{Y}} p_{\rv{X} \rv{Y} | \rv{Y}}((x, y) | y') p_{\rv{y}}(y') dy'
-		\label{eq:sum_rule_3}
-		\end{equation}
-		
-		where
-		
-		\begin{equation}
-		p_{\rv{X} \rv{Y} | \rv{Y}}((x, y) | y') = p_{\rv{X} | \rv{Y}}(x| y) \delta_{y}(y')
-		\end{equation}
-		
+		This last operation \eqref{eq:kernel_sum_rule_3} represents a way to obtain joint distribution $p_{\rv{X} \rv{Y}}$ from a conditional distribution $p_{\rv{X} \rv{Y} | \rv{Y}}$, which contains the same information as $p_{\rv{X} | \rv{Y}}$, and a marginal distribution $p_{\rv{y}}$. This is in fact very close to what the chain rule of probability intends to do, which motivates the following.
+	
 		\begin{theorem} \label{thm:kernel_chain_rule}
 			(Kernel Chain Rule)
-			The Kernel Chain Rule \eqref{eq:kernel_chain_rule} is the kernelised and non-parametric version of the basic sum rule of probability \eqref{eq:chain_rule}.
+			The Kernel Chain Rule \eqref{eq:kernel_chain_rule} is the kernelised and non-parametric version of the basic chain rule of probability \eqref{eq:chain_rule}.
 			\begin{equation}
 			\begin{aligned}
 				p_{\rv{X} \rv{Y}}(x, y) &= p_{\rv{X} | \rv{Y}}(x | y) p_{\rv{Y}}(y)
 			\label{eq:chain_rule}
 			\end{aligned}
-			\end{equation}
-			
+			\end{equation}	
+
 			\begin{equation}
 				\Cxy = \Cxly \Cyy
 			\label{eq:kernel_chain_rule}
@@ -556,11 +566,21 @@
 			\end{proof}
 		\end{theorem}
 
+		While the probability chain rule \eqref{eq:chain_rule} is the usual intended interpretation of kernel chain rule \eqref{eq:kernel_chain_rule}, in actuality the kernel chain rule \eqref{eq:kernel_chain_rule} stands for the following probability rule \eqref{eq:chain_rule_actual}, which is another application of the sum rule.
 
-		\begin{theorem} \label{thm:kernel_bayes_rule}
-			(Kernel Bayes Rule)
-			
-		\end{theorem}
+		\begin{equation}
+		\begin{aligned}
+			p_{\rv{X} \rv{Y}}(x, y) &= \int_{\mathcal{Y}} p_{\rv{X} | \rv{Y}}(x | y') p_{\rv{Y} \rv{Y}}(y', y) dy' \\
+		\label{eq:chain_rule_actual}
+		\end{aligned}
+		\end{equation}	
+					
+		Notice that this is the case because cross-covariance operators necessarily marginalise away their last dimension (together with the first dimension of its operand) as an inner product due to how tensor product operators are defined in \cref{def:tensor_operator}. Therefore, the only effective rule of probability that can be represented through cross-covariance operations are the sum rules. The chain rule is only represented indirectly by the sum rule through introducing extra dimensions that stay after the marginalisation.
+
+%		\begin{theorem} \label{thm:kernel_bayes_rule}
+%			(Kernel Bayes Rule)
+%			
+%		\end{theorem}
 	\subsection{Empirical Representation}
 	\label{sec:kernel_embeddings:empirical_representation}
 	
@@ -611,7 +631,7 @@
 		
 		Since the samples $\ds{X} := \{x_{i}\}_{i = 1}^{n}$ and $\ds{Y} := \{y_{i}\}_{i = 1}^{n}$ are sampled from the joint distribution $\mathbb{P}_{\rv{X} \rv{Y}}$ such that marginal samples are simply $\ds{X}$ and $\ds{Y}$ themselves, the empirical representations for regular embeddings $\muX$ and $\muY$ are easy to obtain, as per \cref{thm:empirical_embedding}.
 		
-		However, instead of a uniform average, a empirical representations of the conditional embedding would require a weighted average instead of the form \eqref{eq:empirical_conditional_embedding_form}.
+		However, instead of a uniform average, a empirical representations of the conditional embedding would require a weighted average of the following sform \eqref{eq:empirical_conditional_embedding_form} instead.
 		
 		\begin{equation}
 		\begin{aligned}
@@ -627,13 +647,15 @@
 		
 		The feature functions can be viewed as an feature vector of the same dimension as the cardinality of the its domain. For example, if the domain $\mathcal{X} = \mathbb{R}^{d}$ is the $d$ dimensional euclidean space whose cardinality is uncountably infinite, then the feature function can be viewed as an uncountably infinite dimensional feature vector, indexed by the elements of $\mathcal{X} = \mathbb{R}^{d}$.
 		
-		Denote the cardinality of $\mathcal{X}$ as $\cardX$, and similarly the cardinality of $\mathcal{Y}$ as $\cardY$. With the observations $\{x_{i}, y_{i}\}_{i = 1}^{n}$ sampled from $\mathbb{P}_{\rv{X} \rv{Y}}$, there are $n$ feature vectors for each RKHS, $\{\phi_{x_{i}}\}_{i = 1}^{n}$ for $\Hk$ and $\{\psi_{y_{i}}\}_{i = 1}^{n}$ for $\Hl$. As elements within their respective RKHS for which Hilbert-Schmidt operators can operate on, $\phi_{x_{i}}$ has an effective dimension of $\cardX \times 1$ and $\psi_{y_{i}}$ has an effective dimension of $\cardY \times 1$. Since this can be said about the feature functions, which form the basis for the RKHS, this is the same for general functions within the RKHS as well. As such, the inner product between functions $f_{1}, f_{2} \in \Hk$ can also be written in matrix notation \eqref{eq:inner_dot_notation}.
+		Denote the cardinality of $\mathcal{X}$ as $\cardX$, and similarly the cardinality of $\mathcal{Y}$ as $\cardY$. With the observations $\{x_{i}, y_{i}\}_{i = 1}^{n}$ sampled from $\mathbb{P}_{\rv{X} \rv{Y}}$, there are $n$ feature vectors for each RKHS, $\{\phi_{x_{i}}\}_{i = 1}^{n}$ for $\Hk$ and $\{\psi_{y_{i}}\}_{i = 1}^{n}$ for $\Hl$. As elements within their respective RKHS for which Hilbert-Schmidt operators can operate on, $\phi_{x_{i}}$ has an effective dimension of $\cardX \times 1$ and $\psi_{y_{i}}$ has an effective dimension of $\cardY \times 1$. Since this can be said about the feature functions, which form the basis for the RKHS, this also applies to general functions within the RKHS. As such, the inner product between functions $f_{1}, f_{2} \in \Hk$ can also be written in matrix notation \eqref{eq:inner_dot_notation}.
 		
 		\begin{equation}
 			\inner{f_{1}}{f_{2}} = f_{1}^{T} f_{2}
 		\label{eq:inner_dot_notation}
 		\end{equation}
 		
+		It can be conceptually helpful to check that $f_{1}^{T}$ is of size $1 \times \cardX$ and $f_{2}$ is of size $\cardX \times 1$ so that the result is a scalar of size $1 \times 1$.
+
 		Recall that a matrix $A := \begin{bmatrix} \bvec{a}_{1} & \cdots & \bvec{a}_{n} \end{bmatrix} \in \mathbb{R}^{n \times n}$, $\bvec{a}_{i} \in \mathbb{R}^{n} \; \forall i \in \{1, \dots, n\}$, operated on a vector $\bvec{v} \in \mathbb{R}^{n}$ results in a vector that is the linear combination of the columns of $A$ with coefficients given by the components of $\bvec{v}$ \eqref{eq:matrix_operation}.
 		
 		\begin{equation}
@@ -673,6 +695,25 @@
 			\end{equation}
 			
 			Similarly, the subscripts of $K$ and $L$ are dropped whenever it is clear from context what dataset the feature matrix is representing.
+			
+			Notationally, the subscripts can be very helpful when the kernel evaluations are not taken between all data points. Suppose there are two sets of collection of of points $\ds{X}^{1} := \{x_{i}^{1}\}_{i = 1}^{n}$ and $\ds{X}^{2} := \{x_{j}^{2}\}_{i = 1}^{m}$, where the superscripts differentiates between the datasets instead of the denoting the usual exponentiation. Then the kernel matrix between the two datasets is written as follows \eqref{eq:kernel_matrix_general}.
+			
+			\begin{equation}
+				K_{\ds{X}^{1} \ds{X}^{2}} := \{k(x_{i}^{1}, x_{j}^{2})\}_{i = 1, j = 1}^{n, m} \in \mathbb{R}^{n \times m}
+			\label{eq:kernel_matrix_general}
+			\end{equation}
+			
+			If instead one of the datasets only contain one element, then the matrix reduces to either a column or row vector \eqref{eq:kernel_vector}.
+	
+			\begin{equation}
+			\begin{aligned}
+				K_{\ds{X}^{1} x} &:= \{k(x_{i}^{1}, x)\}_{i = 1}^{n} \in \mathbb{R}^{n \times 1} \\
+				K_{x \ds{X}^{2}} &:= (\{k(x, x_{j}^{2})\}_{j = 1}^{m})^{T} \in \mathbb{R}^{1 \times m}
+			\label{eq:kernel_vector}
+			\end{aligned}
+			\end{equation}
+					
+			
 		\end{definition}
 			
 		\begin{theorem} \label{thm:kernel_matrix}
@@ -834,7 +875,32 @@
 			\end{equation}
 			where $L_{y \ds{Y}} := \{l(y, y_{i})\}_{i = 1}^{n}$ is a row vector of size $1 \times n$.
 		\end{theorem}
-		\warn{Finish Later. Not important right now.}
+		
+		\begin{theorem} \label{thm:empirical_kernel_sum_rule}
+			(Empirical Kernel Sum Rule)
+			The Empirical Kernel Sum Rule holds in an analogous form to the full Kernel Sum Rule in \cref{thm:kernel_sum_rule}.
+			
+			\begin{equation}
+				\hatmuX = \hatCxly \hatmuY
+			\label{eq:empirical_kernel_sum_rule}
+			\end{equation}
+			
+			\begin{proof}
+				For this proof, the regularisation parameter $\lambda$ from \cref{thm:empirical_conditional_operator} is omitted as it was mainly introduced for numerical and practical reasons.
+				\begin{align*}
+					\hatCxly \hatmuY &= \Phi L^{-1} \Psi^{T} \hatmuY \tag{\cref{thm:empirical_conditional_operator}} \\
+					&= \hatCxly \hatmuY = \Phi L^{-1} \Psi^{T} \frac{1}{n} \Psi \bvec{1} \tag{\cref{thm:empirical_embedding}} \\
+					&= \hatCxly \hatmuY =  \frac{1}{n} \Phi L^{-1} L \bvec{1} \tag{\cref{thm:kernel_matrix}} \\
+					&=  \frac{1}{n} \Phi \bvec{1} \\
+					&= \hatmuX \tag{\cref{thm:empirical_embedding}}
+				\end{align*}
+			\end{proof}
+		\end{theorem}
+		
+		\begin{theorem} \label{thm:empirical_kernel_sum_rule_2}
+			(Empirical Kernel Sume Rule Version 2) The empirical version of \cref{thm:kernel_sum_rule_2} is important for deriving kernel Bayes rule later on.
+		\end{theorem}
+		\warn{Finish Later.}
 
 \section{Optimal Approximate Embedding Derivations}
 
@@ -849,5 +915,7 @@
 			\end{aligned}
 		\label{eq:approximate_embedding_derivation}
 		\end{equation}
+		
+		\warn{Finish Later.}
 
 \end{document}
