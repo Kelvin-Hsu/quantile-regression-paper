@@ -296,11 +296,11 @@
 				(Matrix Notation for General Empirical Embeddings)
 				Empirical embeddings can be written with matrix notation as the following \eqref{eq:empirical_conditional_embedding_matrices}.
 				\begin{equation}
-					\hatmuYx = \sum_{i = 1}^{n} \alpha_{i} \psi_{y_{i}} = \Psi \bm{\alpha} ;\quad \hatmuXy = \Phi \bm{\beta}
+					\hatmuXy = \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}} = \Phi \bm{\beta} ;\quad \hatmuYx = \Psi \bm{\alpha}
 				\label{eq:empirical_conditional_embedding_matrices}
 				\end{equation}
 				
-				Note that for non-conditional, straight embeddings where the available samples are sampled from the corresponding distribution, the weights become uniform such that $\alpha_{i} = \frac{1}{n}$ and $\beta_{i} = \frac{1}{n}$ for $i \in \{1, \dots, n\}$ so that $\bm{\alpha} = \frac{1}{n} \bvec{1}$ and $\bm{\beta} = \frac{1}{n} \bvec{1}$, where $\bvec{1} := \{1\}_{i = 1}^{n}$ is a vector of ones.
+				where $\bm{\alpha} := \{\alpha_{i}\}_{i = 1}^{n}$ is to be determined from the samples $\ds{X}$ and $\bm{\beta} := \{\beta_{i}\}_{i = 1}^{n}$ is to be determined from the samples $\ds{Y}$. Note that for non-conditional, straight embeddings where the available samples are sampled from the corresponding distribution, the weights become uniform such that $\alpha_{i} = \frac{1}{n}$ and $\beta_{i} = \frac{1}{n}$ for $i \in \{1, \dots, n\}$ so that $\bm{\alpha} = \frac{1}{n} \bvec{1}$ and $\bm{\beta} = \frac{1}{n} \bvec{1}$, where $\bvec{1} := \{1\}_{i = 1}^{n}$ is a vector of ones.
 			\end{theorem}
 			
 			\begin{theorem} \label{thm:kernel_matrix}
@@ -345,23 +345,27 @@
 
 	The discriminative approach to quantile regression refers to techniques which computes an estimate of the CDF directly, without needing to compute the PDF first.
 	
-	The central idea here revolves around the fact that the probability measure of a set is the expected indicator value of that set for a given random vector $\bvec{\rv{X}}$, and the expected value of a function can be written as the inner product between the kernel embedding and the function \eqref{eq:distribution_inner}.
+	\begin{theorem} \label{thm:distribution_inner}
+		Using \cref{thm:reproducing_property} and the fact that the probability measure of a set is the expected indicator value of that set, the distribution can be written as an inner product with the kernel embedding \eqref{eq:distribution_inner}.
+		
+		\begin{equation}
+			\mathbb{P}_{\bvec{\rv{X}}}[A] = \mathbb{E}[\mathbb{1}_{A}(\bvec{\rv{X}})] = \langle \mu_{\rv{X}}, \mathbb{1}_{A} \rangle
+		\label{eq:distribution_inner}
+		\end{equation}
+	\end{theorem}
 	
-	\begin{equation}
-		\mathbb{P}_{\bvec{\rv{X}}}[A] = \mathbb{E}[\mathbb{1}_{A}(\bvec{\rv{X}})] = \langle \mu_{\rv{X}}, \mathbb{1}_{A} \rangle
-	\label{eq:distribution_inner}
-	\end{equation}
-	
-	As the CDF $P_{\rv{X}}$ is defined through the distribution $\mathbb{P}_{\rv{X}}$ \eqref{eq:cdf}, it becomes straightforward to obtain the CDF as an inner product between the kernel embedding and the corresponding indicator function. \eqref{eq:cdf_inner}.
-	
-	\begin{equation}
-		P_{\bvec{\rv{X}}}(\bvec{x}) = \mathbb{P}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \langle \mu_{\bvec{\rv{X}}}, \mathbb{1}_{(-\bvec{\infty}, \bvec{x}]} \rangle
-	\label{eq:cdf_inner}
-	\end{equation}
-	
+	\begin{corollary} \label{thm:cdf_inner}
+		As the CDF $P_{\rv{X}}$ is defined through the distribution $\mathbb{P}_{\rv{X}}$ in \cref{def:cdf}, the CDF reveals a similar structure \eqref{eq:cdf_inner}.
+			
+		\begin{equation}
+			P_{\bvec{\rv{X}}}(\bvec{x}) = \mathbb{P}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \langle \mu_{\bvec{\rv{X}}}, \mathbb{1}_{(-\bvec{\infty}, \bvec{x}]} \rangle
+		\label{eq:cdf_inner}
+		\end{equation}
+	\end{corollary}
+
 	We will now focus our attention on how to estimate the distribution and CDF from a given dataset.
 	
-	\subsection{Optimal Empirical Projection for Function Approximation}
+	\subsection{Optimal Function Projection}
 	\label{sec:discriminative_quantile_regression:optimal_function_approximation}
 	
 		In order to estimate the distribution and CDF empirically, we would need both the empirical kernel embedding $\hat{\mu}_{\rv{X}}$ and a projection $\hat{\mathbb{1}}_{A}$ of the indicator function $\mathbb{1}_{A}$ into the same RKHS as $\hat{\mu}_{\rv{X}}$ so that a proper inner product within that RKHS can be evaluated.
@@ -380,24 +384,14 @@
 		\label{eq:function_projection_optimisation}
 		\end{equation}
 		
-		This optimisation problem has a closed form solution \eqref{eq:function_projection_solution}, where $K \equiv K_{\ds{X} \ds{X}} := \{k(\bvec{x}_{i}, \bvec{x}_{j})\}_{i = 1, j = 1}^{n, n}$ is the gram matrix and $\bvec{f} := f\{\ds{X}\} := \{f(\bvec{x}_{i})\}_{i = 1}^{n}$ is the function evaluated at the observed points.
-		
-%		\begin{equation}
-%			\begin{aligned}
-%				\bm{\alpha}^{\star} &= K_{\ds{X} \ds{X}}^{-1} f\{\ds{X}\} \\
-%				\hat{f} = \Phi_{\ds{X}} \bm{\alpha}^{\star} &= \Phi_{\ds{X}} K_{\ds{X} \ds{X}}^{-1} f\{\ds{X}\}
-%			\end{aligned}
-%		\label{eq:function_projection_solution}
-%		\end{equation}
-		
-		\begin{equation}
-		\begin{aligned}
-			\bm{\alpha}^{\star} &= K^{-1} \bvec{f} \\
-			\hat{f} = \Phi \bm{\alpha}^{\star} &= \Phi K^{-1} \bvec{f}
-		\end{aligned}
-		\label{eq:function_projection_solution}
-		\end{equation}
-		
+		\begin{theorem} \label{thm:function_projection_solution}
+			This optimisation problem \eqref{eq:function_projection_optimisation} has a closed form solution $\bm{\alpha}^{\star} = K^{-1} \bvec{f}$, where $K \equiv K_{\ds{X} \ds{X}} := \{k(\bvec{x}_{i}, \bvec{x}_{j})\}_{i = 1, j = 1}^{n, n}$ is the gram matrix and $\bvec{f} := f\{\ds{X}\} := \{f(\bvec{x}_{i})\}_{i = 1}^{n}$ is the function evaluated at the observed points \eqref{eq:function_projection_solution}. See supplementary for proof.
+			
+			\begin{equation}
+				\hat{f} = \Phi \bm{\alpha}^{\star} = \Phi K^{-1} \bvec{f}
+			\label{eq:function_projection_solution}
+			\end{equation}
+		\end{theorem}
 		
 	\subsection{Optimal Empirical Distribution}
 	\label{sec:discriminative_quantile_regression:optimal_empirical_distribution}
