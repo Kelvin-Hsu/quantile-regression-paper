@@ -396,28 +396,30 @@
 	\subsection{Optimal Empirical Distribution}
 	\label{sec:discriminative_quantile_regression:optimal_empirical_distribution}
 	
-		Letting $f = \mathbb{1}_{A}$, we can find the projection of an indicator function into $\mathcal{H}_{k, \ds{X}}$ \eqref{eq:indicator_projection}.
-		
-		\begin{equation}
-			\hat{\mathbb{1}}_{A} = \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\}
-		\label{eq:indicator_projection}
-		\end{equation}
-		
-		The empirical distribution \eqref{eq:empirical_distribution} and CDF \eqref{eq:empirical_cdf} can then be derived.
-
-		\begin{equation}
-		\begin{aligned}
-			\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{\mathbb{1}}_{A} \rangle = \hat{\mu}_{\bvec{\rv{X}}}^{T}\hat{\mathbb{1}}_{A} = (\Phi \bm{\beta})^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
-			&= \bm{\beta}^{T} \Phi^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} = \bm{\beta}^{T} K K^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
-			&= \bm{\beta}^{T} \mathbb{1}_{A}\{\ds{X}\} = \sum_{i = 1}^{n} \beta_{i} \mathbb{1}_{A}(\bvec{x}_{i}) = \sum_{\bvec{x}_{i} \in A} \beta_{i}
-		\end{aligned}
-		\label{eq:empirical_distribution}
-		\end{equation}
-
-		\begin{equation}
-			\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \sum_{\bvec{x}_{i} \in (-\bvec{\infty}, \bvec{x}]} \beta_{i} = \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}
-		\label{eq:empirical_cdf}
-		\end{equation}
+%		\begin{theorem} \label{thm:optimal_empirical_distribution}
+			By \cref{thm:function_projection_solution} and letting $f = \mathbb{1}_{A}$, we can find the projection of an indicator function into $\mathcal{H}_{k, \ds{X}}$ \eqref{eq:indicator_projection}.
+			
+			\begin{equation}
+				\hat{\mathbb{1}}_{A} = \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\}
+			\label{eq:indicator_projection}
+			\end{equation}
+			
+			The empirical distribution \eqref{eq:empirical_distribution} and CDF \eqref{eq:empirical_cdf} can then be derived.
+	
+			\begin{equation}
+			\begin{aligned}
+				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{\mathbb{1}}_{A} \rangle = \hat{\mu}_{\bvec{\rv{X}}}^{T}\hat{\mathbb{1}}_{A} = (\Phi \bm{\beta})^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
+				&= \bm{\beta}^{T} \Phi^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} = \bm{\beta}^{T} K K^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
+				&= \bm{\beta}^{T} \mathbb{1}_{A}\{\ds{X}\} = \sum_{i = 1}^{n} \beta_{i} \mathbb{1}_{A}(\bvec{x}_{i}) = \sum_{\bvec{x}_{i} \in A} \beta_{i}
+			\end{aligned}
+			\label{eq:empirical_distribution}
+			\end{equation}
+	
+			\begin{equation}
+				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \sum_{\bvec{x}_{i} \in (-\bvec{\infty}, \bvec{x}]} \beta_{i} = \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}
+			\label{eq:empirical_cdf}
+			\end{equation}
+%		\end{theorem}
 
 		There is however a subtlety in this derivation. It is not guaranteed that the indicator function is an element of the full RKHS $\mathcal{H}_{k}$. Nevertheless, \cite{Kanagawa:RecoveringDistributions} showed that the estimator $\langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{f} \rangle$ is consistent for $\mathbb{E}[f(\bvec{\rv{X}})]$ if $f$ is in the Besov space, which is a superset of the full RKHS $\mathcal{H}_{k}$. While indicator functions are included in the Besov space only under certain assumptions, the estimators we derived for its expectation, by assuming that it is contained in the RKHS, empirically converges to the actual expectation.
 
@@ -425,7 +427,7 @@
 			\begin{center}
 				\includegraphics[width=\columnwidth]{figures/cumulativeexampleragged}
 			\end{center}
-			\caption{\small (Left) A MKBR estimate of the PDF from the Motorcycle dataset. The blue line indicates the PDF, and the red bars indicate the weights of training points at those $X$ locations. (Right) The resulting CDF estimate using \eqref{eq:empirical_cdf}. Note that the estimate jumps at locations corresponding to training points. \warn{Figure not referenced in text. Caption not updated.}}
+			\caption{\small (Left) The PDF obtained through the pre-image method from the Motorcycle dataset. The blue line indicates the PDF, and the red bars indicate the embedding weights at the training points. (Right) The resulting CDF estimate using \eqref{eq:empirical_cdf}. Note that the estimate jumps at locations corresponding to training points.}
 			\label{fig:cumulativeragged} 
 		\end{figure}
 
