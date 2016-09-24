@@ -167,10 +167,64 @@
 	
 	In this way, we emphasise that, for continuous euclidean spaces $\mathcal{X}$, $\phi_{x}$ is an uncountably infinite dimensional vector, or a matrix with size $\cardX \times 1$. We can then write tensor products and inner products with matrix notation as usual, as outlined in \cref{sec:kernel_embeddings:empirical_representation}.
 	
+\section{Probability Theory and Measure Theory}
+\label{sec:probability_theory}
+
+	Let $(\Omega, \mathcal{W}, \mathbb{P})$ be a probability space, where $\Omega$ is the sample space, $\mathcal{W}$ is a $\sigma$-algebra on $\Omega$, and $\mathbb{P} : \mathcal{W} \mapsto [0, 1]$ a probability measure. The elements $W$ of $\mathcal{W}$, that is, the measurable sets, are called events, which are by definition subsets of $\Omega$.
+	
+	\begin{definition} \label{def:distribution}
+		(Distribution)
+		The \textit{distribution} of a random variable $\rv{X} : \Omega \mapsto \mathcal{X}$ is the Borel measure $\mathbb{P}_{\rv{X}} : \mathcal{A} \mapsto [0, 1]$ defined by
+		\begin{equation}
+		\mathbb{P}_{\rv{X}}[A] := \mathbb{P}[\rv{X} \in A]
+		\label{eq:distribution}
+		\end{equation}
+		where the event $\{\rv{X} \in A\} := \rv{X}^{-1}[A] := \{\omega \in \Omega : \rv{X}(\omega) \in A\} \in \mathcal{W}$ is the inverse image (pre-image) of $A \subseteq \mathcal{X}$ under the random variable $\rv{X}$, and $\mathcal{A}$ is a $\sigma$-algebra of subsets on $\mathcal{X}$.
+		
+		Recall that a random variable (in this case, $\rv{X}$) is formally a map from the sample space (in this case, $\Omega$) to some Borel measurable domain (in this case, $\mathcal{X}$) of interest. The \textit{distribution} is also a probability measure itself, as it satisfies the defining properties of a probability measure, such that $(\mathcal{X}, \mathcal{A}, \mathbb{P}_{\rv{X}})$ is also a probability space. It differs from $\mathbb{P}$ in that it operates in a different domain - not directly on the events, but on the values the random variable takes for those events.
+	\end{definition}
+	
+	\begin{definition} \label{def:cdf}
+		(Cumulative Distribution Function)
+		The \textit{cumulative distribution function} (CDF) $P_{\rv{X}} : \mathbb{R} \mapsto [0, 1]$ of a \textit{real-valued} random variable $\rv{X} : \Omega \mapsto \mathbb{R}$ (that is, take $\mathcal{X}$ to be $\mathbb{R}$) is defined by
+		\begin{equation}
+		P_{\rv{X}}(x) := \mathbb{P}_{\rv{X}}[(-\infty, x]] = \mathbb{P}[\rv{X} \leq x]
+		\label{eq:cdf}
+		\end{equation}
+		where $\{\rv{X} \leq x\} := \{\rv{X} \in (-\infty, x]\}$ is a shorthand.
+		
+		Similarly, if we take a \textit{vectored-valued} random variable $\bvec{\rv{X}} : \Omega \mapsto \mathbb{R}^{d}$, then 
+		\begin{equation}
+		P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\infty, x_{1}] \times \dots \times (-\infty, x_{d}]] = \mathbb{P}[\bvec{\rv{X}} \leq \bvec{x}]
+		\label{eq:cdf_vector}
+		\end{equation}
+		where $\{\bvec{\rv{X}} \leq \bvec{x}\} := \bigcap\limits_{j = 1}^{d} \{\rv{X}_{j} \in (-\infty, x_{j}]\} \in \mathcal{W}$ is a shorthand. From here on we also define a shorthand $(-\bvec{\infty}, \bvec{x}] := (-\infty, x_{1}] \times \dots \times (-\infty, x_{d}]$ for conciseness.
+	\end{definition}
+	
+	\begin{theorem} \label{thm:radon_nikodym}
+		(Radon-Nikodym)
+		If the distribution $\mathbb{P}_{\rv{X}}$ is absolutely continuous with respect to the Lebesgue measure on $\mathcal{X} = \mathbb{R}^{d}$, then the Radon-Nikodym theorem implies the existence of a density for $\mathbb{P}_{\rv{X}}$. We call this the distribution density of $\rv{X}$, or more commonly known as the \textit{probability density function} (PDF), denoted by $p_{\rv{X}}: \mathcal{X} \mapsto [0, \infty)$.
+	\end{theorem}
+	
+	Let $f : \mathcal{X} \mapsto \mathbb{R}$ be some arbitrary function over the domain, then we have
+	\begin{equation}
+	\mathbb{E}[f(\rv{X})] = \int_{\Omega} f \circ \rv{X} d \mathbb{P} = \int_{\mathcal{X}} f d \mathbb{P}_{\rv{X}}
+	\label{eq:functional_expectation}
+	\end{equation}
+	
+	Recall that $\mathbb{P}[W] = \mathbb{E}[\mathbb{1}[W]] \;\; \forall W \in \mathcal{W}$, so that the CDF for a vector-valued random variable $\bvec{\rv{X}}$ is
+	\begin{equation}
+	\begin{aligned}
+	P_{\bvec{\rv{X}}}(\bvec{x}) &= \mathbb{P}[\bvec{\rv{X}} \leq \bvec{x}] = \mathbb{E}[\mathbb{1}[\bvec{\rv{X}} \leq \bvec{x}]] = \mathbb{E}[\mathbb{1}_{(-\bvec{\infty}, \bvec{x}]}(\bvec{X})] \\
+	&= \int_{\Omega} \mathbb{1}_{(-\bvec{\infty}, \bvec{x}]} \circ \bvec{\rv{X}} d \mathbb{P} = \int_{\mathbb{R}^{D}} \mathbb{1}_{(-\bvec{\infty}, \bvec{x}]} d \mathbb{P}_{\bvec{\rv{X}}} \\
+	&= \int_{(-\bvec{\infty}, \bvec{x}]} d \mathbb{P}_{\bvec{\rv{X}}}
+	\end{aligned}
+	\label{eq:cdf_integral}
+	\end{equation}
+	where we use the common notation $\mathbb{1}_{A}(x) := \mathbb{1}[x \in A]$.
+		
 \section{Kernel Embeddings}
 \label{sec:kernel_embeddings}
-	% If you want to remove the underline for random variables, use the following command
-	% \renewcommand{\rv}[1]{#1}
 	
 	This section summarises fundamental and important results in the field of kernel embeddings. The purpose is to present relevant results and theorems that form the basis for understanding works that involve kernel embeddings, as well as to provide a reference for its literature in both notation and concept. 
 	
@@ -179,11 +233,13 @@
 	\subsection{Theoretical Representations}
 	\label{sec:kernel_embeddings:theoretical_representation}
 	
+		In this paper we assume all kernels we deal with are positive definite and characteristic. That is, the kernel $k : \mathcal{X} \times \mathcal{X} \mapsto \mathbb{R}$ defines a unique reproducing kernel Hilbert space (RKHS), which we will denote by $\mathcal{H}_{k}$. Note that in some literature, since $k$ takes elements $x$ of $\mathcal{X}$ as arguments, the corresponding reproducing kernel Hilbert space is denoted as $\mathcal{H}_{\mathcal{X}}$ instead. However, since the kernel $k$ also includes information about the space $\mathcal{X}$ it operates on, the notation $\mathcal{H}_{k}$ will be preferred.
+		
 		As always, let $\rv{X} : \Omega \mapsto \mathcal{X}$ be a random variable taking values in $\mathcal{X}$. Similarly, let $\rv{Y} : \Omega \mapsto \mathcal{Y}$ be a random variable taking values in $\mathcal{Y}$. Let $k$ and $l$ be characteristic positive definite kernels defined on $\mathcal{X}$ and $\mathcal{Y}$ respectively. Let $f \in \Hk$ and $g \in \Hl$ be real-valued functions.
 			
 		\begin{theorem} \label{thm:feature_functions}
 			(Feature Functions)
-			The feature functions that form the basis for the full RKHS are obtained by partially applying the respective kernel of that RKHS. \eqref{eq:feature_functions}.
+			The feature functions that form the basis for the full RKHS are obtained by partially applying the respective kernel of that RKHS \eqref{eq:feature_functions}.
 			\begin{equation}
 			\begin{aligned}
 				\phi_{x} &:= k(x, \cdot) \in \Hk \\
@@ -208,7 +264,7 @@
 			\begin{equation}
 			\begin{aligned}
 				\inner{\phi_{x}}{\phi_{x'}} &= k(x, x') \\
-				\inner{\psi_{y}}{\psi_{y'}} &= l(y, y') \\
+				\inner{\psi_{y}}{\psi_{y'}} &= l(y, y')
 			\label{eq:kernel_reproducing_property}
 			\end{aligned}
 			\end{equation}
@@ -220,11 +276,28 @@
 			
 			\begin{equation}
 			\begin{aligned}
-				\muX &:= \expect{\phiX} = \expect{k(\rv{X}, \cdot)} \in \Hk \\
-				\muY &:= \expect{\psiY} = \expect{l(\rv{Y}, \cdot)} \in \Hl
+				\muX \equiv \muX(\cdot) &:= \expect{\phiX} = \expect{k(\rv{X}, \cdot)} \in \Hk \\
+				\muY \equiv \muY(\cdot) &:= \expect{\psiY} = \expect{l(\rv{Y}, \cdot)} \in \Hl
 			\label{eq:kernel_embedding}
 			\end{aligned}
 			\end{equation}	
+			where it is understood that the $\cdot$ is a place-holder for an argument such that $\muX(\cdot) : \mathcal{X} \mapsto \mathbb{R}$ is a function and not just a value.
+
+			Alternatively, this definition can be written as follows.
+			\begin{equation}
+			\begin{aligned}
+				\muX(x) &:= \expect{k(\rv{X}, x)} = \int_{\mathcal{X}} k(\cdot, x) d \mathbb{P}_{\rv{X}} \\
+				\muY(y) &:= \expect{l(\rv{Y}, y)} = \int_{\mathcal{Y}} l(\cdot, y) d \mathbb{P}_{\rv{Y}}
+			\label{eq:kernel_embedding_alternative}
+			\end{aligned}
+			\end{equation}
+			where it is understood that the $\cdot$ here in the last equation is for a different argument than the previous equations.
+
+			In some literature, to make explicit of the fact that the kernel embedding is an embedding of a distribution measure $\mathbb{P}_{\rv{X}}$, the kernel embedding is instead denoted by $\mu_{\mathbb{P}_{\rv{X}}}$. Nevertheless, since the specification of a random variable $\rv{X}$ and its distribution $\mathbb{P}_{\rv{X}}$ must come together, either notation is equally informative.
+
+			Usually, the kernel $k$ comes from a family of kernel functions with a set of hyperparameters $\bm{\theta}$. To make this relationship explicit, a subscript to the notation may be attached as $k_{\bm{\theta}}$. Correspondingly, the kernel embedding would then be denoted as $\mu_{\rv{X}, \bm{\theta}}$.
+
+			It would indeed be more precise to put a subscript $k$ on the kernel embedding, as $\mu_{\rv{X}, k}$ or $\mu_{\rv{X}, k_{\bm{\theta}}}$, to make clear that it was embedded with kernel $k$. However, as the kernel would not be changing much except up to some hyperparameter tuning, this will just be implicitly assumed.
 		\end{definition}
 	
 		\begin{theorem} \label{thm:function_expectation}
@@ -592,7 +665,7 @@
 			\begin{equation}
 			\begin{aligned}
 				\hatmuX &= \frac{1}{n} \sum_{i = 1}^{n} \phi_{x_{i}} \\
-				\hatmuY &= \frac{1}{n} \sum_{i = 1}^{n} \psi_{y_{i}} \\
+				\hatmuY &= \frac{1}{n} \sum_{i = 1}^{n} \psi_{y_{i}}
 			\label{eq:empirical_embedding}
 			\end{aligned}
 			\end{equation}
@@ -623,7 +696,7 @@
 				\hatCxx &= \frac{1}{n} \sum_{i = 1}^{n} \phi_{x_{i}} \otimes \phi_{x_{i}} \\
 				\hatCxy &= \frac{1}{n} \sum_{i = 1}^{n} \phi_{x_{i}} \otimes \psi_{y_{i}} \\
 				\hatCyx &= \frac{1}{n} \sum_{i = 1}^{n} \psi_{y_{i}} \otimes \phi_{x_{i}} \\
-				\hatCyy &= \frac{1}{n} \sum_{i = 1}^{n} \psi_{y_{i}} \otimes \psi_{y_{i}} \\
+				\hatCyy &= \frac{1}{n} \sum_{i = 1}^{n} \psi_{y_{i}} \otimes \psi_{y_{i}}
 			\label{eq:empirical_cross_cov}
 			\end{aligned}
 			\end{equation}
@@ -636,7 +709,7 @@
 		\begin{equation}
 		\begin{aligned}
 			\hatmuYx &= \sum_{i = 1}^{n} \alpha_{i} \psi_{y_{i}} \\
-			\hatmuXy &= \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}} \\
+			\hatmuXy &= \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}}
 		\label{eq:empirical_conditional_embedding_form}
 		\end{aligned}
 		\end{equation}
@@ -712,8 +785,6 @@
 			\label{eq:kernel_vector}
 			\end{aligned}
 			\end{equation}
-					
-			
 		\end{definition}
 			
 		\begin{theorem} \label{thm:kernel_matrix}
@@ -768,7 +839,7 @@
 		\begin{equation}
 		\begin{aligned}
 			\hatmuY &= \sum_{i = 1}^{n} \alpha_{i} \psi_{y_{i}} = \Psi \bm{\alpha} = \frac{1}{n} \Psi \bvec{1} \\
-			\hatmuX &= \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}} = \Phi \bm{\beta} = \frac{1}{n} \Phi \bvec{1} \\
+			\hatmuX &= \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}} = \Phi \bm{\beta} = \frac{1}{n} \Phi \bvec{1}
 		\label{eq:empirical_embedding_matrices}
 		\end{aligned}
 		\end{equation}
@@ -811,7 +882,7 @@
 				\hatCxx &= \frac{1}{n} \Phi \Phi^{T} \\
 				\hatCxy &= \frac{1}{n} \Phi \Psi^{T} \\
 				\hatCyx &= \frac{1}{n} \Psi \Phi^{T} \\
-				\hatCyy &= \frac{1}{n} \Psi \Psi^{T} \\
+				\hatCyy &= \frac{1}{n} \Psi \Psi^{T}
 			\label{eq:empirical_cross_cov_matrices}
 			\end{aligned}
 			\end{equation}
