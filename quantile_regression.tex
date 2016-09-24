@@ -186,7 +186,7 @@
 			The feature functions that form the basis for the full RKHS are obtained by partially applying the respective kernel of that RKHS \eqref{eq:feature_functions}.
 			\begin{equation}
 			\begin{aligned}
-			\phi_{x} &:= k(x, \cdot) \in \Hk
+				\phi_{x} := k(x, \cdot) \in \Hk ;\quad \psi_{y} := l(y, \cdot) \in \Hl
 			\label{eq:feature_functions}
 			\end{aligned}
 			\end{equation}
@@ -194,10 +194,10 @@
 		
 		\begin{theorem} \label{thm:reproducing_property}
 			(Reproducing Property)
-			The evaluation operator of a function within the full RKHS is the inner product with the feature function in that RKHS \eqref{eq:reproducing_property}.
+			The function evaluation operator within the full RKHS is the inner product with the feature function in that RKHS \eqref{eq:reproducing_property}.
 			\begin{equation}
 			\begin{aligned}
-			\inner{\phi_{x}}{f} &= f(x)
+				\inner{\phi_{x}}{f} = f(x) ;\quad \inner{\psi_{y}}{g} = g(y)
 			\label{eq:reproducing_property}
 			\end{aligned}
 			\end{equation}
@@ -205,7 +205,7 @@
 			In particular, the kernel value between two points can be evaluated as the inner product between the feature functions at those points \eqref{eq:kernel_reproducing_property}.
 			\begin{equation}
 			\begin{aligned}
-			\inner{\phi_{x}}{\phi_{x'}} &= k(x, x')
+				\inner{\phi_{x}}{\phi_{x'}} = k(x, x') ;\quad \inner{\psi_{y}}{\psi_{y'}} = l(y, y')
 			\label{eq:kernel_reproducing_property}
 			\end{aligned}
 			\end{equation}
@@ -217,7 +217,7 @@
 			
 			\begin{equation}
 			\begin{aligned}
-			\muX \equiv \muX(\cdot) &:= \expect{\phiX} = \expect{k(\rv{X}, \cdot)} \in \Hk
+				\muX \equiv \muX(\cdot) := \expect{\phiX} = \expect{k(\rv{X}, \cdot)} \in \Hk
 			\label{eq:kernel_embedding}
 			\end{aligned}
 			\end{equation}	
@@ -284,7 +284,7 @@
 %			
 			\begin{definition} \label{def:feature_matrix}
 				(Feature Matrix)
-				A feature matrix is formed by stacking the corresponding feature vectors \textit{horizontally}, where each feature vector represents a column of that matrix \eqref{eq:feature_matrix}.
+				A feature matrix $\Phi \equiv \Phi_{\ds{X}}$ is formed by stacking the corresponding feature vectors \textit{horizontally}, where each feature vector represents a column of that matrix \eqref{eq:feature_matrix}. Here, the subscripts of $\Phi$ and $\Psi$ are dropped whenever it is clear from context the dataset involved.
 				
 				\begin{equation}
 				\begin{aligned}
@@ -416,7 +416,7 @@
 		Letting $f = \mathbb{1}_{A}$, we can find the projection of an indicator function into $\mathcal{H}_{k, \ds{X}}$ \eqref{eq:indicator_projection}.
 		
 		\begin{equation}
-			\hat{\mathbb{1}}_{A} = \Phi_{\ds{X}} K_{\ds{X} \ds{X}}^{-1} \mathbb{1}_{A}\{\ds{X}\}
+			\hat{\mathbb{1}}_{A} = \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\}
 		\label{eq:indicator_projection}
 		\end{equation}
 		
@@ -424,8 +424,8 @@
 
 		\begin{equation}
 		\begin{aligned}
-			\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{\mathbb{1}}_{A} \rangle = \hat{\mu}_{\bvec{\rv{X}}}^{T}\hat{\mathbb{1}}_{A} = (\Phi_{\ds{X}} \bm{\beta})^{T} \Phi_{\ds{X}} K_{\ds{X} \ds{X}}^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
-			&= \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \Phi_{\ds{X}} K_{\ds{X} \ds{X}}^{-1} \mathbb{1}_{A}\{\ds{X}\} = \bm{\beta}^{T} K_{\ds{X} \ds{X}} K_{\ds{X} \ds{X}}^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
+			\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{\mathbb{1}}_{A} \rangle = \hat{\mu}_{\bvec{\rv{X}}}^{T}\hat{\mathbb{1}}_{A} = (\Phi \bm{\beta})^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
+			&= \bm{\beta}^{T} \Phi^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} = \bm{\beta}^{T} K K^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
 			&= \bm{\beta}^{T} \mathbb{1}_{A}\{\ds{X}\} = \sum_{i = 1}^{n} \beta_{i} \mathbb{1}_{A}(\bvec{x}_{i}) = \sum_{\bvec{x}_{i} \in A} \beta_{i}
 		\end{aligned}
 		\label{eq:empirical_distribution}
