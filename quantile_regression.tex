@@ -131,7 +131,7 @@
 \section{Background}
 \label{sec:background}
 	
-	\warn{This section is taken from the supplementary materials. Only the relevant bits are taken. The point is to have an expanded version of the background in the supplementary.}
+	\warn{This section is taken from the supplementary materials. Only the relevant bits are taken. The point is to have an expanded version of the background in the supplementary. We do want this to be at least one page just for kernel embeddings.}
 	
 	Let $(\Omega, \mathcal{W}, \mathbb{P})$ be a probability space, where $\Omega$ is the sample space, $\mathcal{W}$ is a $\sigma$-algebra on $\Omega$, and $\mathbb{P} : \mathcal{W} \mapsto [0, 1]$ a probability measure. The elements $W$ of $\mathcal{W}$, that is, the measurable sets, are called events, which are by definition subsets of $\Omega$.
 	
@@ -147,19 +147,24 @@
 	
 	\begin{definition} \label{def:cdf}
 		(Cumulative Distribution Function)
-		The \textit{cumulative distribution function} (CDF) $P_{\rv{X}} : \mathbb{R} \mapsto [0, 1]$ of a \textit{real-valued} random variable $\rv{X} : \Omega \mapsto \mathbb{R}$ (that is, take $\mathcal{X}$ to be $\mathbb{R}$) is defined by
+		The \textit{cumulative distribution function} (CDF) $P_{\rv{X}} : \mathbb{R} \mapsto [0, 1]$ of a \textit{real-valued} random variable $\rv{X} : \Omega \mapsto \mathbb{R}$ and random vector $\bvec{\rv{X}} : \Omega \mapsto \mathbb{R}^{d}$ is defined as follows \eqref{eq:cdf}.
 		\begin{equation}
-			P_{\rv{X}}(x) := \mathbb{P}_{\rv{X}}[(-\infty, x]] = \mathbb{P}[\rv{X} \leq x]
+			\begin{aligned}
+				P_{\rv{X}}(x) &:= \mathbb{P}_{\rv{X}}[(-\infty, x]] = \mathbb{P}[\rv{X} \leq x] \\
+				P_{\bvec{\rv{X}}}(\bvec{x}) &:= \mathbb{P}_{\bvec{\rv{X}}}[(-\infty, x_{1}] \times \dots \times (-\infty, x_{d}]] = \mathbb{P}[\bvec{\rv{X}} \leq \bvec{x}] \\
+			\end{aligned}
 		\label{eq:cdf}
 		\end{equation}
-		where $\{\rv{X} \leq x\} := \{\rv{X} \in (-\infty, x]\}$ is a shorthand.
 
-		Similarly, if we take a \textit{vectored-valued} random variable $\bvec{\rv{X}} : \Omega \mapsto \mathbb{R}^{d}$, then 
+		For conciseness, we define the following shorthand \eqref{eq:shorthand}. 
 		\begin{equation}
-			P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\infty, x_{1}] \times \dots \times (-\infty, x_{d}]] = \mathbb{P}[\bvec{\rv{X}} \leq \bvec{x}]
-		\label{eq:cdf_vector}
+			\begin{aligned}
+				\{\rv{X} \leq x\} &:= \{\rv{X} \in (-\infty, x]\} \\
+				\{\bvec{\rv{X}} \leq \bvec{x}\} &:= \bigcap\limits_{j = 1}^{d} \{\rv{X}_{j} \in (-\infty, x_{j}]\} \in \mathcal{W} \\
+				(-\bvec{\infty}, \bvec{x}] &:= (-\infty, x_{1}] \times \dots \times (-\infty, x_{d}] \\
+			\end{aligned}
+		\label{eq:shorthand}
 		\end{equation}
-		where $\{\bvec{\rv{X}} \leq \bvec{x}\} := \bigcap\limits_{j = 1}^{d} \{\rv{X}_{j} \in (-\infty, x_{j}]\} \in \mathcal{W}$ is a shorthand. From here on we also define a shorthand $(-\bvec{\infty}, \bvec{x}] := (-\infty, x_{1}] \times \dots \times (-\infty, x_{d}]$ for conciseness.
 	\end{definition}
 	
 	\begin{theorem} \label{thm:radon_nikodym}
@@ -170,25 +175,23 @@
 	\subsection{Kernel Embedding}
 	\label{sec:background:kernel_embedding}
 	
-	This section summarises fundamental and important results in the field of kernel embeddings. The purpose is to present relevant results and theorems that form the basis for understanding works that involve kernel embeddings, as well as to provide a reference for its literature in both notation and concept. 
+	This section summarises fundamental and important results in the field of kernel embeddings that form the background of this paper. For more detail, see the supplementary material.
 	
 %	\Cref{sec:background:kernel_embeddings:theoretical_representation} introduces and summarises the formulation and theory of kernel embeddings. \Cref{sec:background:kernel_embeddings:empirical_representation} then extends the theoretical work to the empirical case, focusing on representations of kernel embeddings and its structure given finite amounts of sample data.
 %	
-		\subsubsection{Theoretical Representations}
-		\label{sec:background:kernel_embeddings:theoretical_representation}
+%		\subsubsection{Theoretical Representation}
+%		\label{sec:background:kernel_embeddings:theoretical_representation}
+%		
+		In this paper we assume all kernels we deal with are positive definite and characteristic. That is, the kernel $k : \mathcal{X} \times \mathcal{X} \mapsto \mathbb{R}$ defines a unique reproducing kernel Hilbert space (RKHS), which we will denote by $\mathcal{H}_{k}$.
 		
-		In this paper we assume all kernels we deal with are positive definite and characteristic. That is, the kernel $k : \mathcal{X} \times \mathcal{X} \mapsto \mathbb{R}$ defines a unique reproducing kernel Hilbert space (RKHS), which we will denote by $\mathcal{H}_{k}$. Note that in some literature, since $k$ takes elements $x$ of $\mathcal{X}$ as arguments, the corresponding reproducing kernel Hilbert space is denoted as $\mathcal{H}_{\mathcal{X}}$ instead. However, since the kernel $k$ also includes information about the space $\mathcal{X}$ it operates on, the notation $\mathcal{H}_{k}$ will be preferred.
-		
-		As always, let $\rv{X} : \Omega \mapsto \mathcal{X}$ be a random variable taking values in $\mathcal{X}$. Similarly, let $\rv{Y} : \Omega \mapsto \mathcal{Y}$ be a random variable taking values in $\mathcal{Y}$. Let $k$ and $l$ be characteristic positive definite kernels defined on $\mathcal{X}$ and $\mathcal{Y}$ respectively. Let $f \in \Hk$ and $g \in \Hl$ be real-valued functions.
+		As always, let $\rv{X} : \Omega \mapsto \mathcal{X}$ and $\rv{Y} : \Omega \mapsto \mathcal{Y}$ be a random variables with distributions $\mathbb{P}_{\rv{X}}$ and $\mathbb{P}_{\rv{Y}}$, and let $k$ and $l$ be characteristic positive definite kernels defined on $\mathcal{X}$ and $\mathcal{Y}$ respectively. Let $f \in \Hk$ and $g \in \Hl$ be real-valued functions.
 		
 		\begin{theorem} \label{thm:feature_functions}
 			(Feature Functions)
-			The feature functions that form the basis for the full RKHS are obtained by partially applying the respective kernel of that RKHS \eqref{eq:feature_functions}.
+			The feature functions that form the basis for the full RKHS are the partially applied kernels of that RKHS \eqref{eq:feature_functions}.
 			\begin{equation}
-			\begin{aligned}
 				\phi_{x} := k(x, \cdot) \in \Hk ;\quad \psi_{y} := l(y, \cdot) \in \Hl
 			\label{eq:feature_functions}
-			\end{aligned}
 			\end{equation}
 		\end{theorem}
 		
@@ -196,39 +199,35 @@
 			(Reproducing Property)
 			The function evaluation operator within the full RKHS is the inner product with the feature function in that RKHS \eqref{eq:reproducing_property}.
 			\begin{equation}
-			\begin{aligned}
 				\inner{\phi_{x}}{f} = f(x) ;\quad \inner{\psi_{y}}{g} = g(y)
 			\label{eq:reproducing_property}
-			\end{aligned}
 			\end{equation}
-			
+			\extra{
 			In particular, the kernel value between two points can be evaluated as the inner product between the feature functions at those points \eqref{eq:kernel_reproducing_property}.
 			\begin{equation}
-			\begin{aligned}
 				\inner{\phi_{x}}{\phi_{x'}} = k(x, x') ;\quad \inner{\psi_{y}}{\psi_{y'}} = l(y, y')
 			\label{eq:kernel_reproducing_property}
-			\end{aligned}
 			\end{equation}
+			}
 		\end{theorem}
 		
 		\begin{definition} \label{def:kernel_embedding}
 			(Kernel Embedding)
 			The kernel embedding (or mean embedding) of a distribution $\mathbb{P}_{\rv{X}}$ is defined as the expectation of the corresponding feature function in that RKHS \eqref{eq:kernel_embedding}.
-			
 			\begin{equation}
-			\begin{aligned}
 				\muX \equiv \muX(\cdot) := \expect{\phiX} = \expect{k(\rv{X}, \cdot)} \in \Hk
 			\label{eq:kernel_embedding}
-			\end{aligned}
-			\end{equation}	
+			\end{equation}
+			\extra{
 			where it is understood that the $\cdot$ is a place-holder for an argument such that $\muX(\cdot) : \mathcal{X} \mapsto \mathbb{R}$ is a function and not just a value.
+			}
 		\end{definition}
 		
 		\begin{theorem} \label{thm:function_expectation}
 			(Function Expectation)
 			The expectation of a function of a random variable can be evaluated as the inner product between the corresponding kernel embedding and the function \eqref{eq:function_expectation}.
 			\begin{equation}
-			\inner{\muX}{f} = \expect{f(\rv{X})}
+				\inner{\muX}{f} = \expect{f(\rv{X})} ;\quad \inner{\muY}{g} = \expect{g(\rv{Y})}
 			\label{eq:function_expectation}
 			\end{equation}
 		\end{theorem}
@@ -243,10 +242,8 @@
 				(Empirical Kernel Embedding)
 				The empirical representation of a kernel embedding is obtained by simply replacing the expectation with an empirical average \eqref{eq:empirical_embedding}.
 				\begin{equation}
-				\begin{aligned}
-				\hatmuX &= \frac{1}{n} \sum_{i = 1}^{n} \phi_{x_{i}}
+					\hatmuX = \frac{1}{n} \sum_{i = 1}^{n} \phi_{x_{i}} ;\quad \hatmuY = \frac{1}{n} \sum_{i = 1}^{n} \psi_{y_{i}}
 				\label{eq:empirical_embedding}
-				\end{aligned}
 				\end{equation}
 			\end{theorem}
 	
@@ -254,7 +251,7 @@
 				(Empirical Function Expectation)
 				The empirical representation of a function expectation is simply the empirical average of the function, and can be obtained by the inner product of the function with the empirical embedding \eqref{eq:empirical_function_expectation}.
 				\begin{equation}
-				\inner{\hatmuX}{f} = \frac{1}{n} \sum_{i = 1}^{n} f(x_{i})
+					\inner{\hatmuX}{f} = \frac{1}{n} \sum_{i = 1}^{n} f(x_{i}) ;\quad \inner{\hatmuY}{g} = \frac{1}{n} \sum_{i = 1}^{n} g(y_{i})
 				\label{eq:empirical_function_expectation}
 				\end{equation}
 			\end{theorem}
@@ -284,28 +281,23 @@
 %			
 			\begin{definition} \label{def:feature_matrix}
 				(Feature Matrix)
-				A feature matrix $\Phi \equiv \Phi_{\ds{X}}$ is formed by stacking the corresponding feature vectors \textit{horizontally}, where each feature vector represents a column of that matrix \eqref{eq:feature_matrix}. Here, the subscripts of $\Phi$ and $\Psi$ are dropped whenever it is clear from context the dataset involved.
+				A feature matrix $\Phi \equiv \Phi_{\ds{X}}$ is formed by stacking the corresponding feature vectors \textit{horizontally}, where each feature vector represents a column of that matrix \eqref{eq:feature_matrix}. Here, the subscripts of $\Phi$ and $\Psi$ are dropped whenever it is clear from context the dataset involved. In this way, $\Phi$ has effective size $\cardX \times n$ and $\Psi$ has effective size $\cardY \times n$.	
 				
 				\begin{equation}
-				\begin{aligned}
 					\Phi := \begin{bmatrix} \phi_{x_{1}} & \cdots & \phi_{x_{n}} \end{bmatrix}; \quad
 					\Psi := \begin{bmatrix} \psi_{y_{1}} & \cdots & \psi_{y_{n}} \end{bmatrix}
 				\label{eq:feature_matrix}
-				\end{aligned}
 				\end{equation}
 				
-				In this way, $\Phi$ has effective size $\cardX \times n$ and $\Psi$ has effective size $\cardY \times n$.			
+		
 			\end{definition} 
 
-
 			\begin{theorem} \label{thm:empirical_embedding_matrices}
-				(Matrix Notation for Empirical Embeddings)
+				(Matrix Notation for General Empirical Embeddings)
 				Empirical embeddings can be written with matrix notation as the following \eqref{eq:empirical_conditional_embedding_matrices}.
 				\begin{equation}
-				\begin{aligned}
 					\hatmuYx = \sum_{i = 1}^{n} \alpha_{i} \psi_{y_{i}} = \Psi \bm{\alpha} ;\quad \hatmuXy = \Phi \bm{\beta}
 				\label{eq:empirical_conditional_embedding_matrices}
-				\end{aligned}
 				\end{equation}
 				
 				Note that for non-conditional, straight embeddings where the available samples are sampled from the corresponding distribution, the weights become uniform such that $\alpha_{i} = \frac{1}{n}$ and $\beta_{i} = \frac{1}{n}$ for $i \in \{1, \dots, n\}$ so that $\bm{\alpha} = \frac{1}{n} \bvec{1}$ and $\bm{\beta} = \frac{1}{n} \bvec{1}$, where $\bvec{1} := \{1\}_{i = 1}^{n}$ is a vector of ones.
@@ -325,32 +317,29 @@
 	\subsection{Quantiles and Quantile Regression}
 	\label{sec:background:quantiles}
 
-		Consider a real-valued random variable $\rv{X} : \Omega \mapsto \mathbb{R}$ with distribution $\mathbb{P}_{X}$ and cumulative distribution function $P_{\rv{X}}$. The $\tau$-quantile, $\tau \in (0, 1)$, of $\mathbb{P}_{\rv{X}}$ is defined as
-		\begin{equation}
-			q_{\rv{X}}(\tau) = \inf\{x : P_{\rv{X}}(x) \geq \tau\} \equiv \inf_{P_{\rv{X}}(x) \geq \tau} x
-		\label{eq:quantile}
-		\end{equation}
-		
-		A quantile of a conditional distribution $P_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}$ of is defined similarly. This paper considers regression problems with multiple inputs and single output, such that $\mathcal{Y} = \mathbb{R}^{d}$ and $\mathcal{X} = \mathbb{R}$.
-		
-		\begin{equation}
-			q_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(\tau) = \inf\{x : P_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(x) \geq \tau\} \equiv \inf_{P_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(x) \geq \tau} x
-		\label{eq:conditional_quantile}
-		\end{equation}
-		
-		Clearly, finding the conditional quantile is the exact same problem as finding a regular quantile, except with the CDF replaced by a conditional CDF. As such, for brevity and simpleness, in this paper we will present CDF estimation from a general embedding with general weights, whose form both conditional embeddings and regular embeddings share.
+		\begin{definition} \label{def:quantile}
+			(Quantile)
+			Consider a real-valued random variable $\rv{X} : \Omega \mapsto \mathbb{R}$. The $\tau$-quantile, $\tau \in (0, 1)$, of $\mathbb{P}_{\rv{X}}$ and $P_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}$ are defined as follows \eqref{eq:quantile}.
+			\begin{equation}
+				\begin{aligned}
+					q_{\rv{X}}(\tau) &:= \inf\{x : P_{\rv{X}}(x) \geq \tau\} \equiv \inf_{P_{\rv{X}}(x) \geq \tau} x \\
+					q_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(\tau) &:= \inf\{x : P_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(x) \geq \tau\} \equiv \inf_{P_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(x) \geq \tau} x
+				\end{aligned}
+			\label{eq:quantile}
+			\end{equation}
+		\end{definition}
+
+		Finding the conditional quantile is the exact same problem as finding a regular quantile, except with the CDF replaced by a conditional CDF. As such, for brevity and simpleness, in this paper we will present CDF estimation from a general embedding with general weights, whose form both conditional embeddings and regular embeddings share.
 		
 		Quantile regression is then the problem of finding an empirical estimate $\hat{q}_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(\tau)$ for $q_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(\tau)$ given a set of paired observations $\{(\bvec{y}_{i}, x_{i})\}_{i = 1}^{n}$ and a query point $\bvec{y}$.
 		
-		In practice, it is sufficient to replace the infimum with the minimum, as it makes little numerical difference. If the CDF estimate is smooth and always non-decreasing, the inequality becomes an equality, and obtaining quantiles becomes a root finding procedure once an estimate of the CDF is obtained \eqref{eq:quantile_root_finding}. In this paper, we present methods for estimating the CDF from a dataset.
+		In practice, it is sufficient to replace the infimum with the minimum. If the CDF estimate is smooth and always increasing, the inequality becomes an equality, and obtaining quantiles becomes a root finding procedure once an estimate of the CDF is obtained \eqref{eq:quantile_root_finding}. In this paper, we present methods for estimating the CDF from a dataset.
 		
 		\begin{equation}
 			q_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(\tau) = x : P_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(x) = \tau
 		\label{eq:quantile_root_finding}
 		\end{equation}	
 	
-		\warn{Do we need to introduce the pinball loss and the basics of quantile regression? We use them in the hyperparameter learning section anyway.}
-
 \section{Discriminative Quantile Regression}
 \label{sec:discriminative_quantile_regression}
 

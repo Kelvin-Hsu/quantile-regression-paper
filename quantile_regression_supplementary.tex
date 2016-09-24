@@ -186,19 +186,24 @@
 	
 	\begin{definition} \label{def:cdf}
 		(Cumulative Distribution Function)
-		The \textit{cumulative distribution function} (CDF) $P_{\rv{X}} : \mathbb{R} \mapsto [0, 1]$ of a \textit{real-valued} random variable $\rv{X} : \Omega \mapsto \mathbb{R}$ (that is, take $\mathcal{X}$ to be $\mathbb{R}$) is defined by
+		The \textit{cumulative distribution function} (CDF) $P_{\rv{X}} : \mathbb{R} \mapsto [0, 1]$ of a \textit{real-valued} random variable $\rv{X} : \Omega \mapsto \mathbb{R}$ and random vector $\bvec{\rv{X}} : \Omega \mapsto \mathbb{R}^{d}$ is defined as follows \eqref{eq:cdf}.
 		\begin{equation}
-		P_{\rv{X}}(x) := \mathbb{P}_{\rv{X}}[(-\infty, x]] = \mathbb{P}[\rv{X} \leq x]
+		\begin{aligned}
+		P_{\rv{X}}(x) &:= \mathbb{P}_{\rv{X}}[(-\infty, x]] = \mathbb{P}[\rv{X} \leq x] \\
+		P_{\bvec{\rv{X}}}(\bvec{x}) &:= \mathbb{P}_{\bvec{\rv{X}}}[(-\infty, x_{1}] \times \dots \times (-\infty, x_{d}]] = \mathbb{P}[\bvec{\rv{X}} \leq \bvec{x}] \\
+		\end{aligned}
 		\label{eq:cdf}
 		\end{equation}
-		where $\{\rv{X} \leq x\} := \{\rv{X} \in (-\infty, x]\}$ is a shorthand.
 		
-		Similarly, if we take a \textit{vectored-valued} random variable $\bvec{\rv{X}} : \Omega \mapsto \mathbb{R}^{d}$, then 
+		For conciseness, we define the following shorthand \eqref{eq:shorthand}. 
 		\begin{equation}
-		P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\infty, x_{1}] \times \dots \times (-\infty, x_{d}]] = \mathbb{P}[\bvec{\rv{X}} \leq \bvec{x}]
-		\label{eq:cdf_vector}
+		\begin{aligned}
+		\{\rv{X} \leq x\} &:= \{\rv{X} \in (-\infty, x]\} \\
+		\{\bvec{\rv{X}} \leq \bvec{x}\} &:= \bigcap\limits_{j = 1}^{d} \{\rv{X}_{j} \in (-\infty, x_{j}]\} \in \mathcal{W} \\
+		(-\bvec{\infty}, \bvec{x}] &:= (-\infty, x_{1}] \times \dots \times (-\infty, x_{d}] \\
+		\end{aligned}
+		\label{eq:shorthand}
 		\end{equation}
-		where $\{\bvec{\rv{X}} \leq \bvec{x}\} := \bigcap\limits_{j = 1}^{d} \{\rv{X}_{j} \in (-\infty, x_{j}]\} \in \mathcal{W}$ is a shorthand. From here on we also define a shorthand $(-\bvec{\infty}, \bvec{x}] := (-\infty, x_{1}] \times \dots \times (-\infty, x_{d}]$ for conciseness.
 	\end{definition}
 	
 	\begin{theorem} \label{thm:radon_nikodym}
@@ -230,7 +235,7 @@
 	
 	\Cref{sec:kernel_embeddings:theoretical_representation} introduces and summarises the formulation and theory of kernel embeddings. \Cref{sec:kernel_embeddings:empirical_representation} then extends the theoretical work to the empirical case, focusing on representations of kernel embeddings and its structure given finite amounts of sample data.
 	
-	\subsection{Theoretical Representations}
+	\subsection{Theoretical Representation}
 	\label{sec:kernel_embeddings:theoretical_representation}
 	
 		In this paper we assume all kernels we deal with are positive definite and characteristic. That is, the kernel $k : \mathcal{X} \times \mathcal{X} \mapsto \mathbb{R}$ defines a unique reproducing kernel Hilbert space (RKHS), which we will denote by $\mathcal{H}_{k}$. Note that in some literature, since $k$ takes elements $x$ of $\mathcal{X}$ as arguments, the corresponding reproducing kernel Hilbert space is denoted as $\mathcal{H}_{\mathcal{X}}$ instead. However, since the kernel $k$ also includes information about the space $\mathcal{X}$ it operates on, the notation $\mathcal{H}_{k}$ will be preferred.
