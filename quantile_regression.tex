@@ -625,7 +625,7 @@
 				JL  & $\checkmark$ & $\checkmark$   & $\checkmark$   &   $O(n^{3} \log(n))$ 
 			\end{tabular}
 		\end{center}
-		\caption{Comparison of Quantile estimation techniques. S stands for Smooth, ND for Non-Decreasing, and NC for Non-Crossing. For complexity, $n$ is the number of training points.}
+		\caption{\small Comparison of Quantile estimation techniques. S stands for Smooth, ND for Non-Decreasing, NC for Non-Crossing, and $n$ is the number of training points.}
 		\label{table:quantile_regression_methods}
 	\end{table}
 	
@@ -786,7 +786,7 @@
 					\end{tabular}}
 			\end{center}
 			\caption{Top: Antigen and Weather results. Bottom: Motorcycle and Bone Mineral Density results.}
-			\label{table:antigen}
+			\label{table:results}
 		\end{table*}
 		
 %		\begin{table*}
@@ -867,9 +867,9 @@
 		
 		Over the three experiments, we see that extremal quantiles 0.1 and 0.9 have significantly lower pinball loss compared to the median (0.5). There appear to be no algorithm that is especially capable at a particular quantile, although two direct methods (DR and DS) are much more competitive with the extrema than the median. The likely explanation is that, in general, an accurate (empirical) estimate of the median is affected by nearby points both above and below it. These direct methods however only sum contributions from points lying below the median. The pre-image methods on the other hand, sum contributions from mixture components centred at all training points. Far away from the median, there are fewer points nearby and so the effect is reduced.
 		
-		The full results for each individual experiment and quantile are also tabulated. For Antigen, this information is given in \cref{table:antigen}. Curiously, the three top performers for the quantiles were each from a totally different family of algorithms. Our smooth direct embedding estimator (DS), the quantile SVM (B), and the quantile GP (D). The full results for the Weather, and Bone Mineral Density tests are given in \cref{table:weather} and \cref{table:bmd}.
+		The full results for each individual experiment and quantile are also tabulated. For Antigen, this information is given in \cref{table:antigen}. Curiously, the three top performers for the quantiles were each from a totally different family of algorithms. Our smooth direct embedding estimator (DS), the quantile SVM (B), and the quantile GP (D). The full results for the Weather and Bone Mineral Density tests are given in \cref{table:results}.
 		
-		From \cref{table:motorcycle} and \cref{table:bmd}, we can see that algorithm E matched or exceeded all other algorithms in Motorcycle dataset, and was competitive but did not beat our algorithms in the Bone Mineral Density dataset. The likely explanation is the strong heteroskedasicity of the Motorcycle dataset benefited from a modelling approach that explicitly took it into account. This raises a possible avenue of future work--- including heteroskedastic kernel in our methods to improve performance.
+		From \cref{table:results}, we can see that algorithm E matched or exceeded all other algorithms in Motorcycle dataset, and was competitive but did not beat our algorithms in the Bone Mineral Density dataset. The likely explanation is the strong heteroskedasicity of the Motorcycle dataset benefited from a modelling approach that explicitly took it into account. This raises a possible avenue of future work--- including heteroskedastic kernel in our methods to improve performance.
 		
 		Figure \ref{fig:motorcycleresults} plots the quantiles estimated for the Motorcycle dataset for three of the algorithms. The piecewise-constant quantile estimates are clearly visible in the DR plot. The JB plot has each quantile trained separately, and as a result the 0.1 and 0.9 quantile both fit the boundary of the data very closely. The NL plot shows a much smoother representation, in line with the fact that these are quantiles for a single underlying cumulative distribution (trained with the negative log evidence probability).
 
