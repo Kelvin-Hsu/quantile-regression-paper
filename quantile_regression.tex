@@ -116,16 +116,27 @@
 	
 	Understanding risk is critical to making decisions based on uncertain information. Computing uncertainty through the use of probability, and then bounding that uncertainty with quantile estimation is one approach to this problem. Building from our work in chapter three, we now aim to extend our non-parametric, multi-modal techniques for regression to include cumulative and quantile estimation. With these additions, our work can be applied to problems with unknown prior and likelihood and produce not only probabilistic estimations, but also quantify the risk associated with decisions that rely on them.
 	
+%	\begin{figure}
+%		\begin{center}
+%			\includegraphics[width=\columnwidth]{figures/mcquantiles}
+%		\end{center}
+%		\caption{\small Estimate of the cumulative embedding (top),
+%			and the quantiles 0.1, 0.25, 0.5, 0.75, 0.9 overlaying a PDF estimate
+%			(bottom)}
+%		\label{fig:cembedding}
+%	\end{figure}
+
 	\begin{figure}
 		\begin{center}
-			\includegraphics[width=\columnwidth]{figures/mcquantiles}
+			\includegraphics[width=0.48\columnwidth]{figures/mcquantiles_1}
+			\includegraphics[width=0.48\columnwidth]{figures/mcquantiles_2}
 		\end{center}
 		\caption{\small Estimate of the cumulative embedding (top),
 			and the quantiles 0.1, 0.25, 0.5, 0.75, 0.9 overlaying a PDF estimate
 			(bottom)}
 		\label{fig:cembedding}
 	\end{figure}
-
+	
 	\warn{Not done yet. Come back later.}
 	
 \section{Background}
@@ -423,18 +434,19 @@
 
 		There is however a subtlety in this derivation. It is not guaranteed that the indicator function is an element of the full RKHS $\mathcal{H}_{k}$. Nevertheless, \cite{Kanagawa:RecoveringDistributions} showed that the estimator $\langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{f} \rangle$ is consistent for $\mathbb{E}[f(\bvec{\rv{X}})]$ if $f$ is in the Besov space, which is a superset of the full RKHS $\mathcal{H}_{k}$. While indicator functions are included in the Besov space only under certain assumptions, the estimators we derived for its expectation, by assuming that it is contained in the RKHS, empirically converges to the actual expectation.
 
-		\begin{figure}
-			\begin{center}
-				\includegraphics[width=\columnwidth]{figures/cumulativeexampleragged}
-			\end{center}
-			\caption{\small (Left) The PDF obtained through the pre-image method from the Motorcycle dataset. The blue line indicates the PDF, and the red bars indicate the embedding weights at the training points. (Right) The resulting CDF estimate using \eqref{eq:empirical_cdf}. Note that the estimate jumps at locations corresponding to training points.}
-			\label{fig:cumulativeragged} 
-		\end{figure}
-
 	\subsection{Smooth Empirical Distribution}
 	\label{sec:discriminative_quantile_regression:smooth_empirical_distribution}
 
 %		\warn{The good news for this section is that the function we are taking an expectation of is now in the RKHS. The bad news is that it is no longer a proper indicator function. However, empirically, it works well. Also, unlike the previous part where the resulting estimator coincides with the Motonobu's paper, this part is completely novel.}
+		
+		\begin{figure}
+			\begin{center}
+				\includegraphics[width=\columnwidth]{figures/cumulativeexamplesmooth}
+				\includegraphics[width=\columnwidth]{figures/cumulativeexampleerf}
+			\end{center}
+			\caption{\small (Left) The PDF obtained through the pre-image method on the Motorcycle dataset (blue) and The embedding weights at the training points (red). (Right) The resulting CDF estimate using the direct estimate \eqref{eq:empirical_cdf} and smooth estimate \eqref{eq:smooth_empirical_cdf_gaussian_kernel}. (Bottom) The smooth CDF estimate again (green) with its individual error function components (red) overlayed \eqref{eq:qpi_empirical_cdf_gaussian_kernel}.}
+			\label{fig:discriminative_quantile_regression}
+		\end{figure}
 		
 		By embedding indicator functions, the resulting CDF estimate \eqref{eq:empirical_cdf} is discontinuous at the jumps located at each data point. Directly differentiating this would result in a superposition of Dirac deltas for the PDF. However, in many applications, the PDF is rather smooth, and thus so is the CDF. Many characteristic kernels are also smooth, and thus so are the functions within their RKHS. Therefore, instead of taking the inner product between the embedding and the indicator function, we propose to take the inner product with a function $\tilde{\mathbb{1}}_{A}$ \eqref{eq:indicator_smooth} that is within the full RKHS $\mathcal{H}_{k}$ and converges to the indicator function $\mathbb{1}_{A}$ as the kernel bandwidth goes to zero.
 		
@@ -472,15 +484,7 @@
 		\label{eq:kernel_integral}
 		\end{equation}
 			
-		With this approach, CDF estimates are now smooth and can be shown to converge to the true CDF in the limit of $n \rightarrow \infty$ and vanishing kernel bandwidth. However, due to the possibility of negative weights $\beta_{i}$, both discriminative approaches may produce CDF estimates that are not strictly non-decreasing. To rectify this, we propose a generative approach to estimating the CDF.
-
-		\begin{figure}
-			\begin{center}
-				\includegraphics[width=\columnwidth]{figures/cumulativeexamplesmooth}
-			\end{center}
-			\caption{\small (Left) A MKBR estimate of the PDF from the Motorcycle dataset. The blue line indicates the PDF, and the red bars indicate the weights of training points at those $X$ locations. (Right) The resulting smooth CDF estimate using \eqref{eq:smooth_empirical_cdf_gaussian_kernel} overlaid on the previous (non-smooth) estimate. \warn{Figure not referenced in text. Caption not updated.}}
-			\label{fig:cumulativeexamplesmooth}
-		\end{figure}
+		With this approach, CDF estimates are now smooth and can be shown to converge to the true CDF in the limit of $n \rightarrow \infty$ and vanishing kernel bandwidth. However, due to the possibility of negative weights $\beta_{i}$, both discriminative approaches may produce CDF estimates that are not strictly non-decreasing, as shown in \cref{fig:discriminative_quantile_regression}. Notice that the direct non-smooth direct CDF estimate jumps at locations corresponding to training points, and that, due to the negative weights, the smooth CDF estimate contain components that go below zero such that the resultant CDF estimate may not be strictly non-decreasing. Furthermore, the resulting CDF may not be in the range $[0, 1]$. To rectify this, we propose a generative approach to estimating the CDF.
 
 \section{Generative Quantile Regression}
 \label{sec:generative_quantile_regression}
@@ -514,14 +518,6 @@
 	\end{equation}
 	
 	This CDF estimate is essentially of the same form as the smooth discriminative estimate \eqref{eq:smooth_empirical_cdf_gaussian_kernel}, but with the embedding weights $\bm{\beta}$ replaced by the recovered density weights $\bvec{w}$. Since the density weights $\bvec{w}$ are by construction of \qpi always positive, unlike the embedding weights $\bm{\beta}$, the resulting CDF is guaranteed to be non-decreasing. This form equivalence also highlights the fact that the smooth CDF estimate is simply the integral of the normalised embedding.
-	
-		\begin{figure}
-			\begin{center}
-				\includegraphics[width=\columnwidth]{figures/cumulativeexampleerf}
-			\end{center}
-			\caption{\small CDF estimate of the Motorcycle data with a Gaussian kernel. The individual components from equation \eqref{eq:qpi_empirical_cdf_gaussian_kernel} are also plotted. Just as the posterior density is a sum of Gaussians, the posterior cumulative is a sum of error functions. Note, negative weights mean that some of the contributions from the terms in the sum are negative. The resultant CDF estimate may not be strictly non-decreasing. \warn{Figure not referenced in text. Caption not updated.}}
-			\label{fig:cumulativeexampleerf} 
-		\end{figure}
 		
 \section{Hyperparameter Learning}
 \label{sec:hyperparameter_learning}
