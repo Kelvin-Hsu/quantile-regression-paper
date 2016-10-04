@@ -38,7 +38,7 @@
 \newcommand{\ds}[1]{\tilde{#1}}
 \newcommand{\warn}[1]{{\color{red} #1}}
 \newcommand{\extra}[1]{{\color{ForestGreen} #1}}
-\newcommand{\qpi}{QPI }
+\newcommand{\qpi}{QPI}
 
 \newcommand{\expect}[1]{{\mathbb{E}[#1]}}
 \newcommand{\inner}[2]{{\langle #1, #2 \rangle}}
@@ -154,19 +154,15 @@
 	
 	\begin{definition} \label{def:cdf}
 		\citep{bauer1981probability}
-		The \textit{cumulative distribution function} (CDF) $P_{\rv{X}} : \mathbb{R} \to [0, 1]$ of a \textit{real-valued} random variable $\rv{X} : \Omega \to \mathbb{R}$ and random vector $\bvec{\rv{X}} : \Omega \to \mathbb{R}^{d}$ is defined as follows \eqref{eq:cdf}.
+		The \textit{cumulative distribution function} (CDF) $P_{\rv{X}} : \mathbb{R} \to [0, 1]$ of a \textit{real-valued} random vector $\bvec{\rv{X}} : \Omega \to \mathbb{R}^{d}$ is defined as follows \eqref{eq:cdf}.
 		\begin{equation}
-			\begin{aligned}
-				P_{\rv{X}}(x) &:= \mathbb{P}_{\rv{X}}[(-\infty, x]] = \mathbb{P}[\rv{X} \leq x] \\
-				P_{\bvec{\rv{X}}}(\bvec{x}) &:= \mathbb{P}_{\bvec{\rv{X}}}[(-\infty, x_{1}] \times \dots \times (-\infty, x_{d}]] = \mathbb{P}[\bvec{\rv{X}} \leq \bvec{x}] \\
-			\end{aligned}
+				P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \mathbb{P}[\bvec{\rv{X}} \leq \bvec{x}]
 		\label{eq:cdf}
 		\end{equation}
 
 		For conciseness, we define the following shorthand \eqref{eq:shorthand}. 
 		\begin{equation}
 			\begin{aligned}
-				\{\rv{X} \leq x\} &:= \{\rv{X} \in (-\infty, x]\} \\
 				\{\bvec{\rv{X}} \leq \bvec{x}\} &:= \bigcap\limits_{j = 1}^{d} \{\rv{X}_{j} \in (-\infty, x_{j}]\} \in \mathcal{W} \\
 				(-\bvec{\infty}, \bvec{x}] &:= (-\infty, x_{1}] \times \dots \times (-\infty, x_{d}] \\
 			\end{aligned}
@@ -267,7 +263,7 @@
 			With an abuse of notation, a feature matrix $\Phi \equiv \Phi_{\ds{X}}$ is formed by stacking the corresponding feature vectors or functions \textit{horizontally} \eqref{eq:feature_matrix}, where each feature vector represents a column of that matrix  \citep{muandet2016kernel}. Here, the subscripts of $\Phi$ and $\Psi$ are dropped whenever it is clear from context the dataset involved. In this way, $\Phi$ has effective size $\cardX \times n$ and $\Psi$ has effective size $\cardY \times n$, where $\Vert \cdot \Vert$ denotes the cardinality of a set, which is uncountably infinite in the case for continuous Euclidean spaces.
 				
 			\begin{equation}
-				\Phi := \begin{bmatrix} \phi_{x_{1}} & \cdots & \phi_{x_{n}} \end{bmatrix}; \quad \Psi := \begin{bmatrix} \psi_{y_{1}} & \cdots & \psi_{y_{n}} \end{bmatrix}
+				\Phi := \begin{bmatrix} \phi_{x_{1}} & \cdots & \phi_{x_{n}} \end{bmatrix}; \Psi := \begin{bmatrix} \psi_{y_{1}} & \cdots & \psi_{y_{n}} \end{bmatrix}
 			\label{eq:feature_matrix}
 			\end{equation}
 				
@@ -307,7 +303,7 @@
 		
 		Quantile regression is then the problem of finding an empirical estimate $\hat{q}_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(\tau)$ for $q_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(\tau)$ given a set of paired observations $\{(\bvec{y}_{i}, x_{i})\}_{i = 1}^{n}$ and a query point $\bvec{y}$.
 		
-		In practice, it is sufficient to replace the infimum with the minimum. If the CDF estimate is smooth and always increasing, the inequality becomes an equality, and obtaining quantiles becomes a root finding procedure once an estimate of the CDF is obtained \eqref{eq:quantile_root_finding}. In this paper, we present methods for estimating the CDF from a dataset.
+		In practice, the infimum is often replaced with the minimum. If the CDF estimate is smooth and always increasing, the inequality becomes an equality, and obtaining quantiles becomes a root finding procedure once an estimate of the CDF is obtained \eqref{eq:quantile_root_finding}. In this paper, we present methods for estimating the CDF from a dataset.
 		
 		\begin{equation}
 			q_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(\tau) = x : P_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(x) = \tau
@@ -319,7 +315,7 @@
 
 	The direct approach to quantile regression refers to techniques which computes an estimate of the CDF directly, without needing to compute the PDF first.
 	
-	Using \eqref{eq:reproducing_property} and the fact that the probability measure of a set is the expected indicator value of that set, the distribution can be written as an inner product with the kernel embedding \eqref{eq:distribution_inner}.
+	Using \eqref{eq:reproducing_property}, the distribution can be written as an inner product with the kernel embedding \eqref{eq:distribution_inner}.
 		
 	\begin{equation}
 		\mathbb{P}_{\bvec{\rv{X}}}[A] = \mathbb{E}[\mathbb{1}_{A}(\bvec{\rv{X}})] = \langle \mu_{\rv{X}}, \mathbb{1}_{A} \rangle
@@ -340,10 +336,10 @@
 	
 		In order to estimate the distribution and CDF empirically, we would need both the empirical kernel embedding $\hat{\mu}_{\rv{X}}$ and a projection $\hat{\mathbb{1}}_{A}$ of the indicator function $\mathbb{1}_{A}$ into the same RKHS as $\hat{\mu}_{\rv{X}}$ so that a proper inner product within that RKHS can be evaluated.
 
-		Suppose $\ds{X} := \{\bvec{x}_{1}, \dots, \bvec{x}_{n}\} \in \mathbb{R}^{n \times d}$ is set of observations from $\mathbb{P}_{\rv{X}}$. The embeddings that can be represented by these samples are linear combinations of the feature functions $\phi_{\bvec{x}_{i}}$ at the observations \eqref{eq:function_projection}. The span obtained by those basis $\{\phi_{\bvec{x}_{i}}\}_{i = 1}^{n}$ also forms a RKHS, denoted by $\mathcal{H}_{k, \ds{X}}$, and is a finite vector subspace of the full RKHS $\mathcal{H}_{k}$.
+		Suppose $\ds{X} := \{\bvec{x}_{1}, \dots, \bvec{x}_{n}\} \in \mathbb{R}^{n \times d}$ is set of observations from $\mathbb{P}_{\rv{X}}$. Functions that can be represented by these samples are linear combinations of the feature functions $\phi_{\bvec{x}_{i}}$ at the observations \eqref{eq:function_projection} \citep{muandet2016kernel}. The span obtained by those basis $\{\phi_{\bvec{x}_{i}}\}_{i = 1}^{n}$ also forms a RKHS, denoted by $\mathcal{H}_{k, \ds{X}}$, and is a finite vector subspace of the full RKHS $\mathcal{H}_{k}$.
 		
 		\begin{equation}
-			\hat{f} = \sum_{i = 1}^{n} \alpha_{i} k(\bvec{x}_{i}, \cdot) = \sum_{i = 1}^{n} \alpha_{i} \phi_{\bvec{x}_{i}} = \Phi_{\ds{X}} \bm{\alpha}
+			\hat{f} = \sum_{i = 1}^{n} \alpha_{i} k(\bvec{x}_{i}, \cdot) = \sum_{i = 1}^{n} \alpha_{i} \phi_{\bvec{x}_{i}} = \Phi \bm{\alpha}
 		\label{eq:function_projection}
 		\end{equation}
 	
@@ -355,7 +351,7 @@
 		\end{equation}
 		
 		\begin{theorem} \label{thm:function_projection_solution}
-			This optimisation problem \eqref{eq:function_projection_optimisation} has a closed form solution $\bm{\alpha}^{\star} = K^{-1} \bvec{f}$, where $K \equiv K_{\ds{X} \ds{X}} := \{k(\bvec{x}_{i}, \bvec{x}_{j})\}_{i = 1, j = 1}^{n, n}$ is the gram matrix and $\bvec{f} := f\{\ds{X}\} := \{f(\bvec{x}_{i})\}_{i = 1}^{n}$ is the function evaluated at the observed points \eqref{eq:function_projection_solution}. See supplementary for proof.
+			The optimisation problem \eqref{eq:function_projection_optimisation} has a closed form solution $\bm{\alpha}^{\star} = K^{-1} \bvec{f}$ \eqref{eq:function_projection_solution}, where $K \equiv K_{\ds{X} \ds{X}} := \{k(\bvec{x}_{i}, \bvec{x}_{j})\}_{i = 1, j = 1}^{n, n}$ is the gram matrix and $\bvec{f} := f\{\ds{X}\} := \{f(\bvec{x}_{i})\}_{i = 1}^{n}$ is the function evaluated at the observed points \eqref{eq:function_projection_solution}. See supplementary for proof.
 			
 			\begin{equation}
 				\hat{f} = \Phi \bm{\alpha}^{\star} = \Phi K^{-1} \bvec{f}
@@ -363,40 +359,35 @@
 			\end{equation}
 		\end{theorem}
 		
-	\subsection{Optimal Empirical Distribution}
+	\subsection{Direct Empirical Distribution}
 	\label{sec:direct_quantile_regression:optimal_empirical_distribution}
 	
-%		\begin{theorem} \label{thm:optimal_empirical_distribution}
-			By \cref{thm:function_projection_solution} and letting $f = \mathbb{1}_{A}$, we can find the projection of an indicator function into $\mathcal{H}_{k, \ds{X}}$ \eqref{eq:indicator_projection}.
+		By \cref{thm:function_projection_solution} and letting $f = \mathbb{1}_{A}$,  the projection of an indicator function into $\mathcal{H}_{k, \ds{X}}$ \eqref{eq:indicator_projection} can be used to derive the direct empirical distribution.
 			
-			\begin{equation}
-				\hat{\mathbb{1}}_{A} = \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\}
-			\label{eq:indicator_projection}
-			\end{equation}
+		\begin{equation}
+			\hat{\mathbb{1}}_{A} = \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\}
+		\label{eq:indicator_projection}
+		\end{equation}
 			
-			The empirical distribution \eqref{eq:empirical_distribution} and CDF \eqref{eq:empirical_cdf} can then be derived.
-	
+		\begin{theorem} \label{thm:empirical_distribution_and_cdf}
+			Assume that a kernel $k$ is chosen such that the indicator function is in $\mathcal{H}_{k}$. The direct empirical distribution measured on a set is simply the sum of weights on that set \eqref{eq:empirical_distribution}. See supplementary for proof.
 			\begin{equation}
-			\begin{aligned}
-				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{\mathbb{1}}_{A} \rangle = \hat{\mu}_{\bvec{\rv{X}}}^{T}\hat{\mathbb{1}}_{A} = (\Phi \bm{\beta})^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
-				&= \bm{\beta}^{T} \Phi^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} = \bm{\beta}^{T} K K^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
-				&= \bm{\beta}^{T} \mathbb{1}_{A}\{\ds{X}\} = \sum_{i = 1}^{n} \beta_{i} \mathbb{1}_{A}(\bvec{x}_{i}) = \sum_{\bvec{x}_{i} \in A} \beta_{i}
-			\end{aligned}
+				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] = \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} = \sum_{\bvec{x}_{i} \in A} \beta_{i}
 			\label{eq:empirical_distribution}
 			\end{equation}
-	
+			By \cref{def:cdf}, the CDF shows a similar form \eqref{eq:empirical_cdf}.
 			\begin{equation}
-				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \sum_{\bvec{x}_{i} \in (-\bvec{\infty}, \bvec{x}]} \beta_{i} = \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}
+				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}
 			\label{eq:empirical_cdf}
 			\end{equation}
-%		\end{theorem}
+		\end{theorem}
 
-		There is however a subtlety in this derivation. It is not guaranteed that the indicator function is an element of the full RKHS $\mathcal{H}_{k}$. Nevertheless, \cite{kanagawa2014recovering} showed that the estimator $\langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{f} \rangle$ is consistent for $\mathbb{E}[f(\bvec{\rv{X}})]$ if $f$ is in the Besov space, which is a superset of the full RKHS $\mathcal{H}_{k}$. While indicator functions are included in the Besov space only under certain assumptions, the estimators we derived for its expectation, by assuming that it is contained in the RKHS, empirically converges to the actual expectation.
+		There is a subtlety in this derivation. \Cref{thm:empirical_distribution_and_cdf} restricts the class of available kernels further as not all RKHS $\mathcal{H}_{k}$ would contain the indicator function. \cite{kanagawa2014recovering} showed that the estimator $\langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{f} \rangle$ is consistent for $\mathbb{E}[f(\bvec{\rv{X}})]$ if $f$ is in the Besov space, which is a superset of the full RKHS $\mathcal{H}_{k}$. While indicator functions are included in the Besov space only under certain assumptions, the estimators we derived for its expectation, by assuming that it is contained in the RKHS, empirically converges to the actual expectation.
 
 	\subsection{Smooth Empirical Distribution}
 	\label{sec:direct_quantile_regression:smooth_empirical_distribution}
 
-%		\warn{The good news for this section is that the function we are taking an expectation of is now in the RKHS. The bad news is that it is no longer a proper indicator function. However, empirically, it works well. Also, unlike the previous part where the resulting estimator coincides with the Motonobu's paper, this part is completely novel.}
+		% BOAST ABOUT NOVELTY SOMEHOW
 		
 		\begin{figure}
 			\begin{center}
@@ -414,34 +405,31 @@
 		\label{eq:indicator_smooth}
 		\end{equation}
 		
-		This results in a distribution estimate \eqref{eq:smooth_empirical_distribution} and CDF estimate \eqref{eq:smooth_empirical_cdf} that are smooth.
-
-		\begin{equation}
-		\begin{aligned}
-			\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \langle \hat{\mu}_{\bvec{\rv{X}}}, \tilde{\mathbb{1}}_{A} \rangle = \hat{\mu}_{\bvec{\rv{X}}}^{T} \tilde{\mathbb{1}}_{A} = (\Phi_{\ds{X}} \bm{\beta})^{T} \int_{A} \phi_{\bvec{x}} d\bvec{x} \\
-			&= \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \int_{A} \phi_{\bvec{x}} d\bvec{x} = \int_{A} \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \phi_{\bvec{x}} d\bvec{x} \\
-			&= \int_{A} \bm{\beta}^{T} K_{\ds{X} \bvec{x}} d\bvec{x} = \int_{A} \sum_{i = 1}^{n} \beta_{i} k(\bvec{x}_{i}, \bvec{x}) d\bvec{x} \\
-			&= \sum_{i = 1}^{n} \beta_{i} \int_{A}  k(\bvec{x}_{i}, \bvec{x}) d\bvec{x} \\
-		\end{aligned}
-		\label{eq:smooth_empirical_distribution}
-		\end{equation}	
-		
-		\begin{equation}
-			\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \sum_{i = 1}^{n} \beta_{i} \int_{(-\bvec{\infty}, \bvec{x}]}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}'
-		\label{eq:smooth_empirical_cdf}
-		\end{equation}
-		
-		The estimates are expressed as a summation of the kernel integrals, which would need to be analytically derived or otherwise estimated. For a Gaussian kernel, analytical form can be derived \eqref{eq:smooth_empirical_cdf_gaussian_kernel}. Even if analytical form cannot be derived for some kernels $k$, since it is independent of the embedding weights, the integral $\bvec{k}_{\ds{X}}$ \eqref{eq:kernel_integral} can be approximated and pre-computed before inference begins.
+		\begin{theorem} \label{thm:smooth_empirical_distribution}
+			The smooth distribution \eqref{eq:smooth_empirical_distribution} and CDF \eqref{eq:smooth_empirical_cdf} estimate is simply the integral of the normalised embedding.
+			\begin{equation}
+				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] = \inner{\hat{\mu}_{\bvec{\rv{X}}}}{\tilde{\mathbb{1}}_{A}} = \sum_{i = 1}^{n} \beta_{i} \int_{A}  k(\bvec{x}_{i}, \bvec{x}) d\bvec{x}
+			\label{eq:smooth_empirical_distribution}
+			\end{equation}	
+			\begin{equation}
+				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} \beta_{i} \int_{-\bvec{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' = \bm{\beta}^{T} \bvec{K}(\bvec{x})
+			\label{eq:smooth_empirical_cdf}
+			\end{equation}
+			\begin{equation}
+				\bvec{K}(\bvec{x}) := \Bigg\{ \int_{-\bvec{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' \Bigg\}_{i = 1}^{n}
+			\label{eq:kernel_integral}
+			\end{equation}
+		\end{theorem}
+		The estimates are expressed as a summation of the kernel integrals, which would need to be analytically derived or otherwise estimated. For a Gaussian kernel, analytical form can be derived \eqref{eq:smooth_empirical_cdf_gaussian_kernel}.
 
 		\begin{equation}
 			\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \frac{1}{2} \sum_{i = 1}^{n} \beta_{i} \prod_{j = 1}^{d} \Bigg[1 + \mathrm{erf}\bigg(\frac{x_{j} - x_{i, j}}{\sigma_{j} \sqrt{2}}\bigg)\Bigg]
 		\label{eq:smooth_empirical_cdf_gaussian_kernel}
 		\end{equation}
 
-		\begin{equation}
-			\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \bm{\beta}^{T} \bvec{k}_{\ds{X}} \; : \; \bvec{k}_{\ds{X}} := \Bigg\{ \int_{(-\bvec{\infty}, \bvec{x}]}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' \Bigg\}_{i = 1}^{n}
-		\label{eq:kernel_integral}
-		\end{equation}
+		Even if analytical form cannot be derived for some kernels $k$, since it is independent of the embedding weights, the integral $\bvec{K}(\bvec{x}) \equiv \bvec{K}_{\ds{X}}(\bvec{x})$ \eqref{eq:kernel_integral} can be approximated and pre-computed before inference begins.
+
+
 			
 		With this approach, CDF estimates are now smooth and can be shown to converge to the true CDF in the limit of $n \rightarrow \infty$ and vanishing kernel bandwidth. However, due to the possibility of negative weights $\beta_{i}$, both direct approaches may produce CDF estimates that are not strictly non-decreasing, as shown in \cref{fig:direct_quantile_regression}. Notice that the direct non-smooth direct CDF estimate jumps at locations corresponding to training points, and that, due to the negative weights, the smooth CDF estimate contain components that go below zero such that the resultant CDF estimate may not be strictly non-decreasing. Furthermore, the resulting CDF may not be in the range $[0, 1]$. To rectify this, we propose a Pre-Image approach to estimating the CDF.
 
@@ -450,14 +438,14 @@
 
 %	\warn{So we need to cite MKBR before we talk about integrating it. The integration part is relatively short and straight forward, so the section would comprise of deriving and discussing MKBR with examples, and then discuss integration briefly, and then present example figures.}
 	
-	Given a particular embedding, the empirical PDF can be recovered through the quadratic programming pre-image (\qpi) method proposed by \cite{mccalman2013multi}. This method represents the PDF as a mixture of the kernel $k$ centred at each of the data points, and thus has as many components as the number of data points. Through minimising the RKHS distance between the true PDF and the PDF estimate, the resulting algorithm reduces to a tractable quadratic programming optimisation problem, which finds the optimal weights $\{w_{i}\}_{i = 1}^{n}$ for which $\hat{p}_{\bvec{\rv{X}}}$ is closest to the true PDF \eqref{eq:qpi}. 
+	Given a particular embedding, the empirical PDF can be recovered through the quadratic programming pre-image (\qpi) method proposed by \cite{mccalman2013multi}. This method represents the PDF as a mixture of the features $k(\bvec{x}_{i}, \cdot)$ centred at each of the data points, and thus has as many components as the number of data points. Through minimising the RKHS distance between the true PDF and the PDF estimate, the resulting algorithm reduces to a tractable quadratic programming optimisation problem, which finds the optimal weights $\bvec{w} = \{w_{i}\}_{i = 1}^{n}$ for which $\hat{p}_{\bvec{\rv{X}}}$ is closest to the true PDF \eqref{eq:qpi}. 
 	
 	\begin{equation}
 		\hat{p}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} w_{i} k(\bvec{x}_{i}, \bvec{x})
 	\label{eq:qpi}
 	\end{equation}
 
-	Since \qpi recovers a valid PDF that is as smooth as the kernel $k$, integrating this PDF would result a smooth, proper distribution $\hat{\mathbb{P}}_{\bvec{\rv{X}}}$ \eqref{eq:qpi_empirical_distribution} and CDF $\hat{P}_{\bvec{\rv{X}}}$ \eqref{eq:qpi_empirical_cdf} that is always non-decreasing.
+	Since \qpi\space recovers a valid PDF that is as smooth as the kernel $k$, integrating this PDF would result a smooth, proper distribution $\hat{\mathbb{P}}_{\bvec{\rv{X}}}$ \eqref{eq:qpi_empirical_distribution} and CDF $\hat{P}_{\bvec{\rv{X}}}$ \eqref{eq:qpi_empirical_cdf} that is always non-decreasing.
 	
 	\begin{equation}
 		\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] = \int_{A} \hat{p}_{\bvec{\rv{X}}}(\bvec{x}) d\bvec{x} = \sum_{i = 1}^{n} w_{i} \int_{A} k(\bvec{x}_{i}, \bvec{x}) d\bvec{x}
@@ -465,7 +453,7 @@
 	\end{equation}
 	
 	\begin{equation}
-		\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \sum_{i = 1}^{n} w_{i} \int_{(-\bvec{\infty}, \bvec{x}]} k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}'
+		\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} w_{i} \int_{-\bvec{\infty}}^{\bvec{x}} k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' =  \bvec{w}^{T} \bvec{K}(\bvec{x})
 	\label{eq:qpi_empirical_cdf}
 	\end{equation}
 	
@@ -476,7 +464,7 @@
 	\label{eq:qpi_empirical_cdf_gaussian_kernel}
 	\end{equation}
 	
-	This CDF estimate is essentially of the same form as the smooth direct estimate \eqref{eq:smooth_empirical_cdf_gaussian_kernel}, but with the embedding weights $\bm{\beta}$ replaced by the recovered density weights $\bvec{w}$. Since the density weights $\bvec{w}$ are by construction of \qpi always positive, unlike the embedding weights $\bm{\beta}$, the resulting CDF is guaranteed to be non-decreasing. This form equivalence also highlights the fact that the smooth CDF estimate is simply the integral of the normalised embedding.
+	This CDF estimate is essentially of the same form as the smooth direct estimate \eqref{eq:smooth_empirical_cdf_gaussian_kernel}, but with the embedding weights $\bm{\beta}$ replaced by the recovered density weights $\bvec{w}$. Since the density weights $\bvec{w}$ are by construction of \qpi\space always positive, unlike the embedding weights $\bm{\beta}$, the resulting CDF is guaranteed to be non-decreasing.
 		
 \section{Hyperparameter Learning}
 \label{sec:hyperparameter_learning}
@@ -492,7 +480,7 @@
 %		\end{array} \right.
 %	\end{equation}
 	
-	The first approach involves minimising the expected pinball loss \eqref{eq:expected_pinball_loss} for a given dataset $\ds{X} := \{x_{i}\}_{i = 1}^{n}$, where the pinball loss is defined by \eqref{eq:pinball_loss}. The minimiser of the expected pinball loss \eqref{eq:expected_pinball_loss} is the $\tau$-quantile $z = q_{\rv{X}}(\tau)$ of the distribution $\mathbb{P}_{\rv{X}}$ \citep{Koenker1978}.
+	The first approach involves minimising the expected pinball loss \eqref{eq:expected_pinball_loss} for a given dataset $\ds{X} := \{x_{i}\}_{i = 1}^{n}$, where the pinball loss is defined by \eqref{eq:pinball_loss}. The minimiser of the expected pinball loss \eqref{eq:expected_pinball_loss} is the $\tau$-quantile $z = q_{\rv{X}}(\tau)$ of the distribution $\mathbb{P}_{\rv{X}}$ \citep{koenker1978regression}.
 	
 	\begin{equation}
 		L_{\tau}(x, z) = \left\{ \begin{array}{lr}
@@ -512,14 +500,14 @@
 	For a particular quantile, a function which minimises the pinball loss will also minimise the
 	error in the quantile estimate. Additionally, this loss function is tolerant to CDF estimates which may not be strictly non-decreasing, such as \eqref{eq:empirical_cdf} and \eqref{eq:smooth_empirical_cdf}. This however also means that the loss function is specific to a particular quantile such that each quantiles estimate requires separate optimisations despite using the same training set. The result is that quantile estimates may actually cross for certain query locations, a phenomenon known as quantile crossing.
 	
-	Another possible approach to parameter learning is to optimise the parameters with respect to the joint probability of observing the collected dataset \eqref{eq:lml}, also called the evidence. Evaluated over the whole training set, this is akin to method of log marginal likelihood optimisation in the Gaussian process context. However, here we again choose to only evaluate it over a leave-out validation set. We will call this approach \textit{evidence learning}. The advantage of this approach is that it is independent of the particular quantile estimate chosen. As such, a single, consistent CDF is generated for all quantile queries, eliminating the possibility of quantile crossing. 
+	Instead, we can optimise the parameters with respect to the joint probability of observing the collected dataset \eqref{eq:lml}, also called the evidence. Evaluated over the whole training set, this is akin to method of log marginal likelihood optimisation in the Gaussian process context. However, here we again choose to only evaluate it over a leave-out validation set. We will call this approach \textit{evidence learning}. The advantage of this approach is that it is independent of the particular quantile estimate chosen. As such, a single, consistent CDF is generated for all quantile queries, eliminating the possibility of quantile crossing. 
 	
 	\begin{equation}
 		p_{\rv{X}^{(n)}, \bm{\theta}}(x_{1}, \cdots, x_{n}) = \sum_{i = 1}^{n} \log(\hat{p}_{\rv{X}, \bm{\theta}}(x_{i}))
 	\label{eq:lml}
 	\end{equation}
 	
-	However, clearly this requires the PDF to be estimated first, even though direct approaches do not require them. Thus, this method is more natural in the Pre-Image approach. Nevertheless, this is only required during the learning stage. Once the optimal hyperparameters are obtained, one can choose to use the resulting hyperparameters in the direct approach for inference.
+	However, clearly this requires the PDF to be estimated first, even though direct approaches do not require them. Thus, this method is more natural in the Pre-Image approach. Nevertheless, this is only required during the learning stage. Once the optimal hyperparameters are obtained, they can be used in the direct approach for inference.
 	
 \section{Quantile Regression Algorithms}
 \label{sec:quantile_regression_algorithms}
@@ -541,7 +529,7 @@
 		(Smooth Embedding Quantile Estimator)
 		The smooth embedding $\tau$-quantile estimate is
 		\begin{equation}
-			q_{\rv{X}}(\tau) = x : \frac{1}{\Vert \bm{\beta} \Vert} \bm{\beta}^{T} \bvec{k}_{\ds{X}} = \tau
+			q_{\rv{X}}(\tau) = x : \frac{1}{\Vert \bm{\beta} \Vert} \bm{\beta}^{T} \bvec{K}(\bvec{x}) = \tau
 		\end{equation}	
 		The hyperparameter learning is done by minimising the pinball loss \eqref{eq:expected_pinball_loss} of the training data using cross-validation. We denote this algorithm as DS.
 	\end{definition}
@@ -551,7 +539,7 @@
 		(Pre-Image Quantile Estimator)
 		The pre-image $\tau$-quantile estimate is
 		\begin{equation}
-			q_{\rv{X}}(\tau) = x : \bvec{w}^{T} \bvec{k}_{\ds{X}} = \tau
+			q_{\rv{X}}(\tau) = x : \bvec{w}^{T} \bvec{K}(\bvec{x}) = \tau
 		\end{equation}	
 		where $\bvec{w}$ is are the recovered density weights from QPI.
 		Both pinball learning and evidence learning can be used. We denote this algorithm as JB with done with pinball learning, and JL when done with evidence learning.
@@ -562,7 +550,7 @@
 		(Normed Weights Quantile Estimator)
 		The pre-image $\tau$-quantile estimate is
 		\begin{equation}
-		q_{\rv{X}}(\tau) = x : \bvec{\tilde{w}}^{T} \bvec{k}_{\ds{X}} = \tau
+		q_{\rv{X}}(\tau) = x : \bvec{\tilde{w}}^{T} \bvec{K}(\bvec{x}) = \tau
 		\end{equation}
 		where $\bvec{\tilde{w}}$ is the clip-normalised weights of the relevant embedding.
 		Both pinball learning and evidence learning can be used. We denote this algorithm as NB with done with pinball learning, and NL when done with evidence learning.
@@ -598,7 +586,7 @@
 \section{Related Work}
 \label{sec:related_work}
 
-	Quantile regression was first introduced by \cite{Koenker1978}. This work considered the regression problem of inferring values of an unknown linea model given noisy samples of inputs and outputs. Rather than using the mean as an estimator of the function, Koenker chose the 0.5 quantile (the median), on the basis that it was less sensitive to outliers, and hence effective in cases with non-Gaussian or heavy tailed noise. A general regression quantile was then defined as the function value minimising the pinball loss \citep{Koenker1978}. For linear models, the minimisation was formulated as a linear programming problem and so solved efficiently.
+	Quantile regression was first introduced by \cite{koenker1978regression}. This work considered the regression problem of inferring values of an unknown linea model given noisy samples of inputs and outputs. Rather than using the mean as an estimator of the function, Koenker chose the 0.5 quantile (the median), on the basis that it was less sensitive to outliers, and hence effective in cases with non-Gaussian or heavy tailed noise. A general regression quantile was then defined as the function value minimising the pinball loss \citep{koenker1978regression}. For linear models, the minimisation was formulated as a linear programming problem and so solved efficiently.
 	
 	The pursuit of conditional quantiles quickly divided the field into so-called direct methods, that attempt to directly compute the quantile from the training data through minimisation of the pinball loss, and Pre-Image methods, that attempt to first model the conditional cumulative distribution, and from there derive quantile estimates \citep{koenker2005quantile}.
 	
@@ -643,7 +631,7 @@
 	
 		Below we summarise the algorithms we are comparing our algorithms with \cite{Quadrianto2009}.
 		
-		\textbf{Linear Quantile Estimation}. (Algorithm A) This is the linear direct	quantile estimator described in \cite{Koenker1978}.
+		\textbf{Linear Quantile Estimation}. (Algorithm A) This is the linear direct	quantile estimator described in \cite{koenker1978regression}.
 		
 		\textbf{Quantile SVM}. (Algorithm B) This is a non-parametric quantile estimator based on dual optimisation of the loss function through a SVM, as documented in \cite{takeuchi2006nonparametric}. A RBF kernel was used for this algorithm, with kernel width and regularisation fitted as described in \cite{Quadrianto2009}.
 

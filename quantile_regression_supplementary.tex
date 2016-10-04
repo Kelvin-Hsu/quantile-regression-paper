@@ -1045,4 +1045,23 @@
 	\end{theorem}
 		\warn{Finish Later.}
 
+		\begin{equation}
+			\begin{aligned}
+				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{\mathbb{1}}_{A} \rangle = \hat{\mu}_{\bvec{\rv{X}}}^{T}\hat{\mathbb{1}}_{A} = (\Phi \bm{\beta})^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
+				&= \bm{\beta}^{T} \Phi^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} = \bm{\beta}^{T} K K^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
+				&= \bm{\beta}^{T} \mathbb{1}_{A}\{\ds{X}\} = \sum_{i = 1}^{n} \beta_{i} \mathbb{1}_{A}(\bvec{x}_{i}) = \sum_{\bvec{x}_{i} \in A} \beta_{i}
+			\end{aligned}
+		\label{eq:empirical_distribution}
+		\end{equation}
+		
+		\begin{equation}
+			\begin{aligned}
+				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \langle \hat{\mu}_{\bvec{\rv{X}}}, \tilde{\mathbb{1}}_{A} \rangle = \hat{\mu}_{\bvec{\rv{X}}}^{T} \tilde{\mathbb{1}}_{A} = (\Phi_{\ds{X}} \bm{\beta})^{T} \int_{A} \phi_{\bvec{x}} d\bvec{x} \\
+				&= \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \int_{A} \phi_{\bvec{x}} d\bvec{x} = \int_{A} \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \phi_{\bvec{x}} d\bvec{x} \\
+				&= \int_{A} \bm{\beta}^{T} K_{\ds{X} \bvec{x}} d\bvec{x} = \int_{A} \sum_{i = 1}^{n} \beta_{i} k(\bvec{x}_{i}, \bvec{x}) d\bvec{x} \\
+				&= \sum_{i = 1}^{n} \beta_{i} \int_{A}  k(\bvec{x}_{i}, \bvec{x}) d\bvec{x} \\
+			\end{aligned}
+		\label{eq:smooth_empirical_distribution}
+		\end{equation}	
+			
 \end{document}
