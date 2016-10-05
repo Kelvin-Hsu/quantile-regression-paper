@@ -359,7 +359,7 @@
 		\begin{theorem} \label{thm:empirical_distribution_and_cdf}
 			Assume that a kernel $k$ is chosen such that the indicator function is in $\mathcal{H}_{k}$. The direct empirical distribution measured on a set is simply the sum of weights on that set \eqref{eq:empirical_distribution}. See supplementary for proof.
 			\begin{equation}
-				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] = \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} = \sum_{\bvec{x}_{i} \in A} \beta_{i}
+				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} = \sum_{\bvec{x}_{i} \in A} \beta_{i}
 			\label{eq:empirical_distribution}
 			\end{equation}
 			By \cref{def:cdf}, the CDF shows a similar form \eqref{eq:empirical_cdf}.
@@ -374,8 +374,6 @@
 	\subsection{Smooth Empirical Distribution}
 	\label{sec:direct_quantile_regression:smooth_empirical_distribution}
 
-		% BOAST ABOUT NOVELTY SOMEHOW
-		
 		\begin{figure}
 			\begin{center}
 				\includegraphics[width=\columnwidth]{figures/cumulativeexamplesmooth}
@@ -395,7 +393,7 @@
 		\begin{theorem} \label{thm:smooth_empirical_distribution_and_cdf}
 			The smooth distribution \eqref{eq:smooth_empirical_distribution} and CDF \eqref{eq:smooth_empirical_cdf} estimate is simply the integral of the normalised embedding.
 			\begin{equation}
-				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] = \inner{\hat{\mu}_{\bvec{\rv{X}}}}{\tilde{\mathbb{1}}_{A}} = \sum_{i = 1}^{n} \beta_{i} \int_{A}  k(\bvec{x}_{i}, \bvec{x}) d\bvec{x}
+				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{\tilde{\mathbb{1}}_{A}} = \sum_{i = 1}^{n} \beta_{i} \int_{A}  k(\bvec{x}_{i}, \bvec{x}) d\bvec{x}
 			\label{eq:smooth_empirical_distribution}
 			\end{equation}	
 			\begin{equation}
