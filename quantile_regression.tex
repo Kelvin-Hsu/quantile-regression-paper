@@ -96,47 +96,34 @@
 \aistatsaddress{ Unknown Institution 1 \And Unknown Institution 2 \And Unknown Institution 3 } ]
 
 \begin{abstract}
-  The Abstract paragraph should be indented 0.25 inch (1.5 picas) on
-  both left and right-hand margins. Use 10~point type, with a vertical
-  spacing of 11~points. The {\bf Abstract} heading must be centered,
-  bold, and in point size 12. Two line spaces precede the
-  Abstract. The Abstract must be limited to one paragraph.
+
+	\warn{Abstract not completed}
+	
 \end{abstract}
-
-\warn{Red lines are notes to pay attention to. They are not part of the paper.}
-
-\extra{Green lines are sections that we are considering to delete. They are part of the paper.}
 
 \section{Introduction}
 \label{sec:introduction}
 	
-	\warn{Why quantile regression? What are the advantages of quantile regression over regular regression?}
+	\warn{I think this intro could be better... but we are really running out of space!}
+
+	Understanding risk is critical in any discipline making decisions under uncertainty. Bayesian methods in the machine learning community has demonstrated the advantages that probabilistic techniques bring forth. By maintaining not only a point estimate of a phenomenon, but a probability distribution of our belief about that phenomenon, we are able to make predictions and decisions by taking into account the uncertainty involved.
 	
-	Understanding risk is critical to making decisions based on uncertain information. Computing uncertainty through the use of probability, and then bounding that uncertainty with quantile estimation is one approach to this problem. Building from our work in chapter three, we now aim to extend our non-parametric, multi-modal techniques for regression to include cumulative and quantile estimation. With these additions, our work can be applied to problems with unknown prior and likelihood and produce not only probabilistic estimations, but also quantify the risk associated with decisions that rely on them.
+	In a regression setting, one is interested in the behaviour of a continuous output phenomenon given some inputs that are also continuous in nature. Typically, the output is predicted with the mean, and the uncertainty of this prediction is captured by the standard deviation. However, this is only natural in the case of an output phenomenon that is uni-modal. Consider a bi-modal, symmetric distribution centred at zero with density peaks at $\pm1$ and a low density value at zero. The mean prediction of zero would not be a representative prediction of a likely sample or outcome, immediately also limiting the usefulness of the standard deviation which captures deviations from the mean. In this case, it is far more useful and natural to bound the uncertainty, or risk, through a quantile.
 	
+	We propose six novel quantile regression algorithms using kernel embedding techniques. Through mapping general probability distributions to a Hilbert space where marginalisation integrals become linear algebra operations, kernel embedding models are able to capture general, multi-modal phenomenon in a Bayesian and non-parametric way. In this work, no parametric form for the probabilities distributions involved needs to be assumed, allowing flexible and powerful inference though letting the data speak for itself.
+
 %	\begin{figure}
 %		\begin{center}
-%			\includegraphics[width=\columnwidth]{figures/mcquantiles}
+%			\includegraphics[width=0.48\columnwidth]{figures/mcquantiles_1}
+%			\includegraphics[width=0.48\columnwidth]{figures/mcquantiles_2}
 %		\end{center}
-%		\caption{\small Estimate of the cumulative embedding (top),
+%		\caption{\small Estimate of the cumulative embedding (left),
 %			and the quantiles 0.1, 0.25, 0.5, 0.75, 0.9 overlaying a PDF estimate
-%			(bottom)}
+%			(right)}
 %		\label{fig:cembedding}
 %	\end{figure}
-
-	\begin{figure}
-		\begin{center}
-			\includegraphics[width=0.48\columnwidth]{figures/mcquantiles_1}
-			\includegraphics[width=0.48\columnwidth]{figures/mcquantiles_2}
-		\end{center}
-		\caption{\small Estimate of the cumulative embedding (left),
-			and the quantiles 0.1, 0.25, 0.5, 0.75, 0.9 overlaying a PDF estimate
-			(right)}
-		\label{fig:cembedding}
-	\end{figure}
 	
-	\warn{Not done yet. Come back later.}
-	
+\newpage
 \section{Background}
 \label{sec:background}
 	
@@ -405,7 +392,7 @@
 		\label{eq:indicator_smooth}
 		\end{equation}
 		
-		\begin{theorem} \label{thm:smooth_empirical_distribution}
+		\begin{theorem} \label{thm:smooth_empirical_distribution_and_cdf}
 			The smooth distribution \eqref{eq:smooth_empirical_distribution} and CDF \eqref{eq:smooth_empirical_cdf} estimate is simply the integral of the normalised embedding.
 			\begin{equation}
 				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] = \inner{\hat{\mu}_{\bvec{\rv{X}}}}{\tilde{\mathbb{1}}_{A}} = \sum_{i = 1}^{n} \beta_{i} \int_{A}  k(\bvec{x}_{i}, \bvec{x}) d\bvec{x}
@@ -420,6 +407,7 @@
 			\label{eq:kernel_integral}
 			\end{equation}
 		\end{theorem}
+
 		The estimates are expressed as a summation of the kernel integrals, which would need to be analytically derived or otherwise estimated. For a Gaussian kernel, analytical form can be derived \eqref{eq:smooth_empirical_cdf_gaussian_kernel}.
 
 		\begin{equation}
@@ -465,20 +453,13 @@
 	\end{equation}
 	
 	This CDF estimate is essentially of the same form as the smooth direct estimate \eqref{eq:smooth_empirical_cdf_gaussian_kernel}, but with the embedding weights $\bm{\beta}$ replaced by the recovered density weights $\bvec{w}$. Since the density weights $\bvec{w}$ are by construction of \qpi\space always positive, unlike the embedding weights $\bm{\beta}$, the resulting CDF is guaranteed to be non-decreasing.
-		
+ 
 \section{Hyperparameter Learning}
 \label{sec:hyperparameter_learning}
 
 	With all kernel based techniques, the kernel $k = k_{\bm{\theta}}$ itself is usually specified from a family of kernels parametrised by some hyperparameters $\bm{\theta}$. For example, a Gaussian kernel would be specified by its length scale parameters. The number of parameters would depend on whether the kernel is isotropic ($1$ parameter), anisotropic axis-aligned ($d$ parameters), or general ($d(d - 1)/2$ parameters). Whichever family we choose, we would have to find the optimal hyperparameter setting that gives the best performance in terms of inference accuracy.
 	
 	We considered two approaches to hyperparameter learning for the purpose of quantile regression.
-	
-%	\begin{equation}
-%		L_{\rv{X}, \tau}(x) = \left\{ \begin{array}{lr}
-%			(x - q_{\rv{X}}(\tau)) \tau & : x \geq q_{\rv{X}}(\tau) \\
-%			(q_{\rv{X}}(\tau) - x) (1 - \tau) & : x <  q_{\rv{X}}(\tau)
-%		\end{array} \right.
-%	\end{equation}
 	
 	The first approach involves minimising the expected pinball loss \eqref{eq:expected_pinball_loss} for a given dataset $\ds{X} := \{x_{i}\}_{i = 1}^{n}$, where the pinball loss is defined by \eqref{eq:pinball_loss}. The minimiser of the expected pinball loss \eqref{eq:expected_pinball_loss} is the $\tau$-quantile $z = q_{\rv{X}}(\tau)$ of the distribution $\mathbb{P}_{\rv{X}}$ \citep{koenker1978regression}.
 	
@@ -512,43 +493,41 @@
 \section{Quantile Regression Algorithms}
 \label{sec:quantile_regression_algorithms}
 	
-	Suppose some data $\{(\bvec{y}_{i}, x_{i})\}_{i = 1}^{n}$ is collected from a joint distribution $\mathbb{P}_{\rv{Y} \rv{X}}$. We can either find the standard empirical embedding $\hat{\mu}_{\rv{X}}$ or empirical conditional embedding $\hat{\mu}_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}$, both of which is of the form $\Phi_{\ds{X}} \bm{\beta}$ for some weights. This is also true for posterior embeddings obtained from KBR. In this paper we present four main methods for quantile regression. 	Table \ref{table:quantile_regression_methods} lists the properties of each of these algorithms.
+	Suppose some data $\{(\bvec{y}_{i}, x_{i})\}_{i = 1}^{n}$ is collected from a joint distribution $\mathbb{P}_{\rv{Y} \rv{X}}$. We can either find the standard empirical embedding $\hat{\mu}_{\rv{X}}$ or empirical conditional embedding $\hat{\mu}_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}$, both of which is of the form $\Phi \bm{\beta}$ for some weights. This is also true for posterior embeddings obtained from KBR \citep{fukumizu2013kernel}. In this paper we present six algorithms for quantile regression based on the methods proposed in this paper. Table \ref{table:quantile_regression_methods} lists the properties of each of these algorithms.
 
 	\theoremstyle{definition}
 	\begin{definition}
-		(Direct Embedding Quantile Estimator)
-		The direct embedding $\tau$-quantile estimate is
+		Motivated by \cref{thm:empirical_distribution_and_cdf}, the \textit{direct embedding $\tau$-quantile estimate} (DR) is
 		\begin{equation}
-			q_{\rv{X}}(\tau) = \min\{x \in \mathbb{R} : \frac{1}{\Vert \bm{\beta} \Vert} \sum_{i : x_{i} \leq x} \beta_{i} \geq \tau\}
+			q_{\rv{X}}(\tau) = \min\{x \in \mathbb{R} : \frac{1}{z_{\mathrm{DR}}} \sum_{i : x_{i} \leq x} \beta_{i} \geq \tau\}
 		\end{equation}	
-		The hyperparameter learning is done by minimising the pinball loss \eqref{eq:expected_pinball_loss} of the training data using cross-validation. We denote this algorithm as DR.
+		The normalisation constant $z_{\mathrm{DR}}$ ensures that the CDF is within $[0, 1]$ (see supplementary). The hyperparameter learning is done by minimising the pinball loss \eqref{eq:expected_pinball_loss} of the training data using cross-validation.
 	\end{definition}
 	
 	\theoremstyle{definition}
 	\begin{definition}
-		(Smooth Embedding Quantile Estimator)
-		The smooth embedding $\tau$-quantile estimate is
+		Motivated by \cref{thm:smooth_empirical_distribution_and_cdf}, the \textit{smooth embedding $\tau$-quantile estimate} (DS) is
 		\begin{equation}
-			q_{\rv{X}}(\tau) = x : \frac{1}{\Vert \bm{\beta} \Vert} \bm{\beta}^{T} \bvec{K}(\bvec{x}) = \tau
+			q_{\rv{X}}(\tau) = x : \frac{1}{z_{\mathrm{DS}}} \bm{\beta}^{T} \bvec{K}(x) = \tau
 		\end{equation}	
-		The hyperparameter learning is done by minimising the pinball loss \eqref{eq:expected_pinball_loss} of the training data using cross-validation. We denote this algorithm as DS.
+		Similarly, we apply a normalisation constant $z_{\mathrm{DS}}$, and pinball learning is used to learn the hyperparameters.
 	\end{definition}
 	
 	\theoremstyle{definition}
 	\begin{definition}
-		(Pre-Image Quantile Estimator)
-		The pre-image $\tau$-quantile estimate is
+		Using \eqref{eq:qpi_empirical_cdf} directly, the \textit{pre-image $\tau$-quantile estimate} is
 		\begin{equation}
-			q_{\rv{X}}(\tau) = x : \bvec{w}^{T} \bvec{K}(\bvec{x}) = \tau
+			q_{\rv{X}}(\tau) = x : \bvec{w}^{T} \bvec{K}(x) = \tau
 		\end{equation}	
 		where $\bvec{w}$ is are the recovered density weights from QPI.
-		Both pinball learning and evidence learning can be used. We denote this algorithm as JB with done with pinball learning, and JL when done with evidence learning.
+		Both pinball and evidence learning can be used. We denote this algorithm as JB with done with pinball learning, and JL when done with evidence learning.
 	\end{definition}
 	
+	Since obtaining the density weights through \qpi\space requires a separate optimisation loop, this increases the time complexity of the algorithm significantly (see \cref{table:quantile_regression_methods}). At the expense of accuracy, the density weights can be instead obtained through clipping the embedding weights at zero and normalising them such that the resulting weights are valid PDF weights. For more detail, see the supplementary material. We then replace $\bvec{w}$ with these new and cheaply computable weights $\bvec{\tilde{w}}$ in \eqref{eq:qpi_empirical_distribution} and \eqref{eq:qpi_empirical_cdf}.
+
 	\theoremstyle{definition}
 	\begin{definition}
-		(Normed Weights Quantile Estimator)
-		The pre-image $\tau$-quantile estimate is
+		The \textit{clip-normalised $\tau$-quantile estimate} is
 		\begin{equation}
 		q_{\rv{X}}(\tau) = x : \bvec{\tilde{w}}^{T} \bvec{K}(\bvec{x}) = \tau
 		\end{equation}
@@ -579,42 +558,36 @@
 %	\subsection{Computational Complexity}
 %	\label{sec:quantile_regression_algorithms:computational_complexity}
 		
-	The computational complexity of these algorithms varies from $O(n \log(n))$ to $O(n^{3} \log(n))$ in the number of training points $n$. The 1-D root-finding required to solve the quantile equations adds a factor of $\log(n)$ in all cases (using a binary search), the difference comes from the cumulative estimation algorithms.
+	The computational complexity of these algorithms varies from $O(n \log(n))$ to $O(n^{3} \log(n))$ in the number of training points $n$ (\cref{table:quantile_regression_methods}). The 1-D root-finding required to solve the quantile equations adds a factor of $\log(n)$ in all cases (using a binary search). The difference lies in the CDF estimation technique.
 	
-	The cheapest cumulative evaluate is the direct embedding estimator (DR) --- this is simply a (conditional) sum of the mixture weights and is therefore $O(n)$ in the number of training points. The smooth embedding estimator (DS) and the normed weights estimator (NL and NB) are also inexpensive to compute, provided an efficient estimate of the kernel integral exists. They are also $O(n)$, but with a larger constant due to the kernel integration. The most expensive are the pre-image estimators (JL and JB), which require solving a quadratic program to determine the mixture weights and are therefore $O(n^3)$. This is only relevant if a PDF estimate was not required, and the pre-image was computed only for the quantiles. If a pre-image estimate is already available then the JL and JB are also $O(n)$.
+	The cheapest cumulative evaluate is the direct embedding estimator (DR) --- this is simply a (conditional) sum of the mixture weights and is therefore $O(n)$ in the number of training points. The smooth embedding estimator (DS) and the normed weights estimator (NL and NB) are also inexpensive to compute, provided an efficient estimate of the kernel integral exists. They are also $O(n)$, but with a larger constant due to the kernel integration. The most expensive are the \qpi\space-based pre-image estimators (JL and JB), which require solving a quadratic program to determine the mixture weights and are therefore $O(n^3)$. This is only relevant if a PDF estimate was not required, and the pre-image was computed only for the quantiles. If a pre-image estimate is already available then the JL and JB are also $O(n)$.
 	
 \section{Related Work}
 \label{sec:related_work}
 
-	Quantile regression was first introduced by \cite{koenker1978regression}. This work considered the regression problem of inferring values of an unknown linea model given noisy samples of inputs and outputs. Rather than using the mean as an estimator of the function, Koenker chose the 0.5 quantile (the median), on the basis that it was less sensitive to outliers, and hence effective in cases with non-Gaussian or heavy tailed noise. A general regression quantile was then defined as the function value minimising the pinball loss \citep{koenker1978regression}. For linear models, the minimisation was formulated as a linear programming problem and so solved efficiently.
-	
-	The pursuit of conditional quantiles quickly divided the field into so-called direct methods, that attempt to directly compute the quantile from the training data through minimisation of the pinball loss, and Pre-Image methods, that attempt to first model the conditional cumulative distribution, and from there derive quantile estimates \citep{koenker2005quantile}.
-	
-	The direct initially demonstrated the advantage of flexibility --- non-parametric function estimation techniques could be applied that made no assumptions about the underlying distribution. Examples include locally-constant and locally-linear approximations \citep{Chaudhuri1991, Yu1998}. However, this flexibility also led to problems such as quantile crossing; in which a data point might be considered to be below the 0.5 quantile but above the 0.6 quantile \citep{koenker2005quantile}. 
-	
-	An important development was the addition of non-crossing constraints to direct quantile regression solutions \citep{He1997}. This ensured that different quantile estimates obeyed a strict ordering, with no two quantiles having the same function value. Such a strict ordering was achieved by adding a penalty term to the optimisation \citep{Cole1992}, or by reducing the class of possible functions used to represent the quantiles, for instance to classes of location-scale models \citep{Koenker1984, He1997}. Unfortunately, such models implicitly restricted the underlying distribution, causing reduced applicability to data that did not fit the assumptions of the model \citep{koenker2005quantile}.
-	
-	Standard machine learning techniques have also been co-opted for conditional quantile estimation, including the support vector machine (SVM), which finds the decision boundary associated with the minimisation of the pinball loss, with additional non-crossing constraints \citep{takeuchi2006nonparametric}. However, in this algorithm, the non-crossing constraints may cause the resulting estimates to violate the (empirical) quantile definition.
-	
-	More recently, Chernozhukov et. al. developed a monotisation procedure based on function re-arrangement to remove crossing from quantile estimates generated by other algorithms. The resulting quantiles were guaranteed to be more accurate, and no assumptions were made about the underlying distribution \citep{Chernozhukov2010}.
-	
-	The `quanting' algorithm \citep{Langford2006} introduced an important development in direct estimation of conditional quantiles, which was to re-cast quantile regression as a classification problem. By placing a set of classifiers over the range of the regression, each classifier can be trained on whether the quantile is above or below it. The quantile estimate is then the expectation of this assignment, over all the classifiers.  A set of importance weights were learned to minimise the error of the estimation.
-	
+%	Quantile regression was first introduced by \cite{koenker1978regression}. This work considered the regression problem of inferring values of an unknown linea model given noisy samples of inputs and outputs. Rather than using the mean as an estimator of the function, Koenker chose the 0.5 quantile (the median), on the basis that it was less sensitive to outliers, and hence effective in cases with non-Gaussian or heavy tailed noise. A general regression quantile was then defined as the function value minimising the pinball loss \citep{koenker1978regression}. For linear models, the minimisation was formulated as a linear programming problem and so solved efficiently.
+%	
+%	The pursuit of conditional quantiles quickly divided the field into so-called direct methods, that attempt to directly compute the quantile from the training data through minimisation of the pinball loss, and Pre-Image methods, that attempt to first model the conditional cumulative distribution, and from there derive quantile estimates \citep{koenker2005quantile}.
+%	
+%	The direct initially demonstrated the advantage of flexibility --- non-parametric function estimation techniques could be applied that made no assumptions about the underlying distribution. Examples include locally-constant and locally-linear approximations \citep{Chaudhuri1991, Yu1998}. However, this flexibility also led to problems such as quantile crossing; in which a data point might be considered to be below the 0.5 quantile but above the 0.6 quantile \citep{koenker2005quantile}. 
+%	
+%	An important development was the addition of non-crossing constraints to direct quantile regression solutions \citep{He1997}. This ensured that different quantile estimates obeyed a strict ordering, with no two quantiles having the same function value. Such a strict ordering was achieved by adding a penalty term to the optimisation \citep{Cole1992}, or by reducing the class of possible functions used to represent the quantiles, for instance to classes of location-scale models \citep{Koenker1984, He1997}. Unfortunately, such models implicitly restricted the underlying distribution, causing reduced applicability to data that did not fit the assumptions of the model \citep{koenker2005quantile}.
+%	
+%	Standard machine learning techniques have also been co-opted for conditional quantile estimation, including the support vector machine (SVM), which finds the decision boundary associated with the minimisation of the pinball loss, with additional non-crossing constraints \citep{takeuchi2006nonparametric}. However, in this algorithm, the non-crossing constraints may cause the resulting estimates to violate the (empirical) quantile definition.
+%	
+%	More recently, Chernozhukov et. al. developed a monotisation procedure based on function re-arrangement to remove crossing from quantile estimates generated by other algorithms. The resulting quantiles were guaranteed to be more accurate, and no assumptions were made about the underlying distribution \citep{Chernozhukov2010}.
+%	
+
+	Other direct approaches to quantile regression includes The `quanting' algorithm \citep{Langford2006}, which re-casts the quantile regression problem as a classification problem. By placing a set of classifiers over the range of the regression, each classifier can be trained on whether the quantile is above or below it. The quantile estimate is then the expectation of this assignment, over all the classifiers.
+
 	Pre-Image models for conditional quantile regression have also been examined in the semi-parametric and non-parametric setting. Linear models for Bayesian quantile estimation were examined in \cite{Yu2001}, using Laplacian likelihood functions and uniform priors. These methods require Markov chain Monte Carlo (MCMC) integration to perform inference, as well as making the uni-modal assumption. Similar semi-parametric methods such as \cite{Hjort2006, Hjort2009} use Dirichlet process priors, which again required costly inference approximations.
 	
 	Kernel conditional quantiles using Gaussian process regression to explicitly compute the cumulative distribution were examined by \cite{Quadrianto2009}. The underlying PDF was estimated using a Gaussian process, which enforced the non-crossing constraint and allowed for efficient inference. Additionally, heteroskedastic covariance functions were employed to account for input-dependent noise in the data. One limitation of the work was that the underlying Gaussianity assumption restricts applicability to uni-modal distributions.
 	
 	A more general formulation of Bayesian quantile regression was developed in \cite{Taddy2010}, which used Dirichlet process mixture models to represent the underlying joint distribution. This allowed a very general class of distributions to be represented, but inference required expensive MCMC integration.
 	
-	% Indicator co-Kriging in a non-parametric approach in the geo-statistics
-	% literature based on explicit modelling of the underlying distribution through
-	% Kriging~\cite{Pardo2005}.
+	To overcome the limitations of the above methods, we use kernel embedding techniques to allow general probability distributions to be represented in a non-parametric way, thus removing the need of to enforce parametric or uni-modal models to the phenomenon.
 	
-	% check chen and muller 2012 for a nonparametric CDF
-	% approach~\cite{Chen2012} 
-	
-	Our work aims to overcome limitations of both these methods-- giving the flexibility of a mixture distribution representation for modelling multi-modal behaviour, with the efficient inference inherent in the pre-image algorithm. It is to this new algorithm we now turn our attention.
-
 \section{Experiments}
 \label{sec:experiments}
 
@@ -629,7 +602,7 @@
 	\subsection{Comparisons}
 	\label{sec:experiments:comparison}
 	
-		Below we summarise the algorithms we are comparing our algorithms with \cite{Quadrianto2009}.
+		Below we summarise the algorithms we are comparing our algorithms with.
 		
 		\textbf{Linear Quantile Estimation}. (Algorithm A) This is the linear direct	quantile estimator described in \cite{koenker1978regression}.
 		
@@ -637,7 +610,7 @@
 
 		\textbf{Reduction to Classification}. (Algorithm C) This is the algorithm for reducing a quantile estimation problem to a series of classifiers \citep{Langford2006}. The results from this algorithm are taken from \cite{Quadrianto2009}, which used 100 GP classifiers trained with expectation propagation and an RBF kernel.
 		
-		\textbf{Quantile GP}. (Algorithm D) (Algorithm D) This algorithm is the Gaussian-processed based direct CDF estimate \cite{Quadrianto2009}. An RBF kernel was used, with the hyper-parameters learned by optimising the marginal log-likelihood.
+		\textbf{Quantile GP}. (Algorithm D) This algorithm is the Gaussian-processed based direct CDF estimate \cite{Quadrianto2009}. An RBF kernel was used, with the hyper-parameters learned by optimising the marginal log-likelihood.
 		
 		\textbf{Heteroskedastic Quantile GP}. (Algorithm E) This algorithm is the same as the Quantile GP, except that the kernel is a heteroskedastic RBF with 10 latent pseudo-observations controlling the bandwidth along the length of the input dimension \citep{Quadrianto2009}. 
 		
@@ -814,7 +787,7 @@
 		
 		Over the three experiments, we see that extremal quantiles 0.1 and 0.9 have significantly lower pinball loss compared to the median (0.5). There appear to be no algorithm that is especially capable at a particular quantile, although two direct methods (DR and DS) are much more competitive with the extrema than the median. The likely explanation is that, in general, an accurate (empirical) estimate of the median is affected by nearby points both above and below it. These direct methods however only sum contributions from points lying below the median. The pre-image methods on the other hand, sum contributions from mixture components centred at all training points. Far away from the median, there are fewer points nearby and so the effect is reduced.
 		
-		The full results for each individual experiment and quantile are also tabulated. For Antigen, this information is given in \cref{table:antigen}. Curiously, the three top performers for the quantiles were each from a totally different family of algorithms. Our smooth direct embedding estimator (DS), the quantile SVM (B), and the quantile GP (D). The full results for the Weather and Bone Mineral Density tests are given in \cref{table:results}.
+		The full results for each individual experiment and quantile are also tabulated. For Antigen, this information is given in \cref{table:results}. Curiously, the three top performers for the quantiles were each from a totally different family of algorithms. Our smooth direct embedding estimator (DS), the quantile SVM (B), and the quantile GP (D). The full results for the Weather and Bone Mineral Density tests are given in \cref{table:results}.
 		
 		From \cref{table:results}, we can see that algorithm E matched or exceeded all other algorithms in Motorcycle dataset, and was competitive but did not beat our algorithms in the Bone Mineral Density dataset. The likely explanation is the strong heteroskedasicity of the Motorcycle dataset benefited from a modelling approach that explicitly took it into account. This raises a possible avenue of future work--- including heteroskedastic kernel in our methods to improve performance.
 		
@@ -822,8 +795,6 @@
 
 \section{Conclusion}
 \label{sec:conclusion}
-
-	\warn{Future work would include a better learning method for the hyperparameters, and also a better density recovery method for the Pre-Image approach besides \qpi.}
 	
 	This paper presented six new algorithms for estimating quantiles non-parametrically from kernel embeddings of probability distributions given only samples. By projecting the indicator function into the RKHS, we first present a direct approach where the empirical CDF can be computed directly, but lack the the desired smoothness and non-decreasing property. We then impose smoothness by instead projecting a smooth function within the full RKHS that becomes the projected indicator function in the limit of vanishing bandwidth. At a trade off with computational complexity, the non-decreasing constraint is guaranteed by a Pre-Image approach, where the embeddings weights of a PDF is to be recovered from a quadratic program first, before it is integrated to a CDF.
 	
