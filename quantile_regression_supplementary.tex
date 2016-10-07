@@ -1120,7 +1120,146 @@
 		
 		\warn{Put in normalisation constants}
 			
-\bibliographystyle{named}
+\section{Experiments}
+
+The Antigen dataset samples the concentration of various molecules \citep{quadrianto2009kernel} in a blood sample. The dataset contains 97 points, with eight-dimensional observations $\bvec{y}$ and a one-dimensional state $x$. The Weather dataset measures a meteorological variable distributed over the surface of the Earth. It has two-dimensional observations $\bvec{y}$ and a one-dimensional state $\bvec{x}$, and contains 238 points. The Motorcycle dataset is a record of measurements taken from an accelerometer during a front-on motorcycle collision, and is often used because it contains heteroskedastic, non-Gaussian behaviour. The dataset contains 137 points, with a single input dimension $y$ (time), and a single output dimension $x$. Finally, the Bone Mineral Density dataset contains relative spinal bone mineral density measurements from North American adolescents of various ages. It has a single input variable $y$ (age), a single output variable $x$ (bone mineral density), and 485 points. The original data were recorded by \cite{bachrach1999bone}.
+
+		\begin{table*}
+			\begin{center}
+				\resizebox{0.48\textwidth}{!}{
+					\begin{tabular}{l|ccc}
+						Alg. & $\tau = 0.1$     & $\tau = 0.5$  & $\tau = 0.9$      \\ \hline
+						DR & $0.125 \pm 0.033$ & $0.270 \pm 0.063$ & $0.152 \pm 0.022$ \\
+						DS & $\mathbf{0.109 \pm 0.022}$ & $0.267 \pm 0.059$ & $0.141 \pm 0.031$ \\
+						NB & $0.117 \pm 0.021$ & $0.275 \pm 0.065$ & $0.139 \pm 0.017$ \\
+						JB & $0.118 \pm 0.031$ & $0.256 \pm 0.044$ & $0.142 \pm 0.039$ \\
+						NL & $0.136 \pm 0.035$ & $0.294 \pm 0.030$ & $0.141 \pm 0.014$ \\
+						JL & $0.124 \pm 0.017$ & $0.260 \pm 0.033$ & $0.132 \pm 0.022$ \\
+						A & $0.239 \pm 0.105$ & $0.264 \pm 0.050$ & $0.292 \pm 0.087$ \\
+						B & $0.123 \pm 0.033$ & $\mathbf{0.249 \pm 0.033}$ & $0.128 \pm 0.018$ \\
+						C & $0.122 \pm 0.031$ & $0.266 \pm 0.021$ & $0.131 \pm 0.015$ \\
+						D & $0.166 \pm 0.021$ & $0.255 \pm 0.028$ & $\mathbf{0.126 \pm 0.015}$
+					\end{tabular}}
+					\resizebox{0.48\textwidth}{!}{
+						\begin{tabular}{l|ccc}
+							Alg. & $\tau = 0.1$     & $\tau = 0.5$  & $\tau = 0.9$      \\ \hline
+							DR & $0.169 \pm 0.098$ & $0.353 \pm 0.117$ & $0.086 \pm 0.015$ \\
+							DS & $0.106 \pm 0.064$ & $0.169 \pm 0.129$ & $0.073 \pm 0.009$ \\
+							NB & $\mathbf{0.062 \pm 0.012}$ & $0.115 \pm 0.010$ & $0.076 \pm 0.016$ \\
+							JB & $0.055 \pm 0.008$ & $0.112 \pm 0.020$ & $0.072 \pm 0.009$ \\
+							NL & $0.063 \pm 0.008$ & $0.143 \pm 0.029$ & $0.087 \pm 0.016$ \\
+							JL & $0.077 \pm 0.012$ & $0.136 \pm 0.034$ & $0.094 \pm 0.016$ \\
+							A & $0.291 \pm 0.034$ & $0.293 \pm 0.024$ & $0.301 \pm 0.045$ \\
+							B & $0.067 \pm 0.015$ & $0.218 \pm 0.034$ & $0.118 \pm 0.013$ \\
+							C & $0.075 \pm 0.011$ & $0.176 \pm 0.028$ & $0.123 \pm 0.011$ \\
+							D & $0.057 \pm 0.010$ & $\mathbf{0.097 \pm 0.015}$ & $\mathbf{0.068 \pm 0.017}$
+						\end{tabular}}
+						\resizebox{0.48\textwidth}{!}{
+							\begin{tabular}{l|ccc}
+								Alg. & $\tau = 0.1$     & $\tau = 0.5$  & $\tau = 0.9$      \\ \hline
+								DR & $0.163 \pm 0.060$ & $0.240 \pm 0.037$ & $0.096 \pm 0.024$ \\
+								DS & $0.180 \pm 0.075$ & $0.465 \pm 0.181$ & $0.120 \pm 0.022$ \\
+								NB & $0.096 \pm 0.019$ & $0.194 \pm 0.033$ & $0.092 \pm 0.015$ \\
+								JB & $0.101 \pm 0.030$ & $0.204 \pm 0.022$ & $0.107 \pm 0.041$ \\
+								NL & $0.097 \pm 0.016$ & $0.210 \pm 0.034$ & $0.092 \pm 0.016$ \\
+								JL & $0.091 \pm 0.007$ & $0.199 \pm 0.032$ & $0.091 \pm 0.010$ \\
+								A & $0.396 \pm 0.080$ & $0.389 \pm 0.019$ & $0.387 \pm 0.056$ \\
+								B & $0.090 \pm 0.012$ & $0.202 \pm 0.019$ & $0.085 \pm 0.008$ \\
+								C & $0.094 \pm 0.011$ & $0.190 \pm 0.015$ & $0.083 \pm 0.010$ \\
+								D & $0.092 \pm 0.025$ & $\mathbf{0.186 \pm 0.018}$ & $0.089 \pm 0.010$ \\
+								E & $\mathbf{0.079 \pm 0.019}$ & $0.187 \pm 0.021$ & $\mathbf{0.070 \pm
+									0.016}$
+							\end{tabular}}
+							\resizebox{0.48\textwidth}{!}{
+								\begin{tabular}{l|ccc}
+									Alg. & $\tau = 0.1$     & $\tau = 0.5$  & $\tau = 0.9$      \\ \hline
+									DR & $0.125 \pm 0.008$ & $0.308 \pm 0.013$ & $0.162 \pm 0.028$ \\
+									DS & $\mathbf{0.120 \pm 0.007}$ & $0.307 \pm 0.014$ & $0.157 \pm 0.011$ \\
+									NB & $0.122 \pm 0.007$ & $\mathbf{0.306 \pm 0.017}$ & $\mathbf{0.151 \pm
+										0.014}$ \\
+									JB & $0.121 \pm 0.006$ & $0.307 \pm 0.016$ & $0.152 \pm 0.014$ \\
+									NL & $0.121 \pm 0.016$ & $0.308 \pm 0.013$ & $0.153 \pm 0.011$ \\
+									JL & $0.123 \pm 0.014$ & $\mathbf{0.306 \pm 0.012}$ & $0.153 \pm 0.013$ \\
+									A & $0.328 \pm 0.028$ & $0.325 \pm 0.034$ & $0.324 \pm 0.073$ \\
+									B & $0.122 \pm 0.017$ & $\mathbf{0.306 \pm 0.039}$ & $0.152 \pm 0.025$ \\
+									C & $0.121 \pm 0.020$ & $0.311 \pm 0.041$ & $0.154 \pm 0.027$ \\
+									D & $0.135 \pm 0.014$ & $0.310 \pm 0.045$ & $0.168 \pm 0.030$ \\
+									E & $0.123 \pm 0.017$ & $0.309 \pm 0.045$ & $0.153 \pm 0.027$
+								\end{tabular}}
+							\end{center}
+							\caption{Top: Antigen and Weather results. Bottom: Motorcycle and Bone Mineral Density results.}
+							\label{table:results}
+						\end{table*}
+						
+						%		\begin{table*}
+						%			\begin{center}
+						%				\resizebox{0.24\textwidth}{!}{
+						%				\begin{tabular}{l|ccc}
+						%					Alg. & $\tau = 0.1$     & $\tau = 0.5$  & $\tau = 0.9$      \\ \hline
+						%					DR & $0.169 \pm 0.098$ & $0.353 \pm 0.117$ & $0.086 \pm 0.015$ \\
+						%					DS & $0.106 \pm 0.064$ & $0.169 \pm 0.129$ & $0.073 \pm 0.009$ \\
+						%					NB & $\mathbf{0.062 \pm 0.012}$ & $0.115 \pm 0.010$ & $0.076 \pm 0.016$ \\
+						%					JB & $0.055 \pm 0.008$ & $0.112 \pm 0.020$ & $0.072 \pm 0.009$ \\
+						%					NL & $0.063 \pm 0.008$ & $0.143 \pm 0.029$ & $0.087 \pm 0.016$ \\
+						%					JL & $0.077 \pm 0.012$ & $0.136 \pm 0.034$ & $0.094 \pm 0.016$ \\
+						%					A & $0.291 \pm 0.034$ & $0.293 \pm 0.024$ & $0.301 \pm 0.045$ \\
+						%					B & $0.067 \pm 0.015$ & $0.218 \pm 0.034$ & $0.118 \pm 0.013$ \\
+						%					C & $0.075 \pm 0.011$ & $0.176 \pm 0.028$ & $0.123 \pm 0.011$ \\
+						%					D & $0.057 \pm 0.010$ & $\mathbf{0.097 \pm 0.015}$ & $\mathbf{0.068 \pm 0.017}$
+						%				\end{tabular}}
+						%			\end{center}
+						%			\caption{Weather results.}
+						%			\label{table:weather}
+						%		\end{table*}
+						
+						
+						%		\begin{table*}
+						%			\begin{center}
+						%				\resizebox{0.24\textwidth}{!}{
+						%				\begin{tabular}{l|ccc}
+						%					Alg. & $\tau = 0.1$     & $\tau = 0.5$  & $\tau = 0.9$      \\ \hline
+						%					DR & $0.163 \pm 0.060$ & $0.240 \pm 0.037$ & $0.096 \pm 0.024$ \\
+						%					DS & $0.180 \pm 0.075$ & $0.465 \pm 0.181$ & $0.120 \pm 0.022$ \\
+						%					NB & $0.096 \pm 0.019$ & $0.194 \pm 0.033$ & $0.092 \pm 0.015$ \\
+						%					JB & $0.101 \pm 0.030$ & $0.204 \pm 0.022$ & $0.107 \pm 0.041$ \\
+						%					NL & $0.097 \pm 0.016$ & $0.210 \pm 0.034$ & $0.092 \pm 0.016$ \\
+						%					JL & $0.091 \pm 0.007$ & $0.199 \pm 0.032$ & $0.091 \pm 0.010$ \\
+						%					A & $0.396 \pm 0.080$ & $0.389 \pm 0.019$ & $0.387 \pm 0.056$ \\
+						%					B & $0.090 \pm 0.012$ & $0.202 \pm 0.019$ & $0.085 \pm 0.008$ \\
+						%					C & $0.094 \pm 0.011$ & $0.190 \pm 0.015$ & $0.083 \pm 0.010$ \\
+						%					D & $0.092 \pm 0.025$ & $\mathbf{0.186 \pm 0.018}$ & $0.089 \pm 0.010$ \\
+						%					E & $\mathbf{0.079 \pm 0.019}$ & $0.187 \pm 0.021$ & $\mathbf{0.070 \pm
+						%						0.016}$
+						%				\end{tabular}}
+						%			\end{center}
+						%			\caption{Motorcycle results.}
+						%			\label{table:motorcycle}
+						%		\end{table*}
+						%		
+						%		
+						%		\begin{table*}
+						%			\begin{center}
+						%				\resizebox{0.24\textwidth}{!}{
+						%				\begin{tabular}{l|ccc}
+						%					Alg. & $\tau = 0.1$     & $\tau = 0.5$  & $\tau = 0.9$      \\ \hline
+						%					DR & $0.125 \pm 0.008$ & $0.308 \pm 0.013$ & $0.162 \pm 0.028$ \\
+						%					DS & $\mathbf{0.120 \pm 0.007}$ & $0.307 \pm 0.014$ & $0.157 \pm 0.011$ \\
+						%					NB & $0.122 \pm 0.007$ & $\mathbf{0.306 \pm 0.017}$ & $\mathbf{0.151 \pm
+						%						0.014}$ \\
+						%					JB & $0.121 \pm 0.006$ & $0.307 \pm 0.016$ & $0.152 \pm 0.014$ \\
+						%					NL & $0.121 \pm 0.016$ & $0.308 \pm 0.013$ & $0.153 \pm 0.011$ \\
+						%					JL & $0.123 \pm 0.014$ & $\mathbf{0.306 \pm 0.012}$ & $0.153 \pm 0.013$ \\
+						%					A & $0.328 \pm 0.028$ & $0.325 \pm 0.034$ & $0.324 \pm 0.073$ \\
+						%					B & $0.122 \pm 0.017$ & $\mathbf{0.306 \pm 0.039}$ & $0.152 \pm 0.025$ \\
+						%					C & $0.121 \pm 0.020$ & $0.311 \pm 0.041$ & $0.154 \pm 0.027$ \\
+						%					D & $0.135 \pm 0.014$ & $0.310 \pm 0.045$ & $0.168 \pm 0.030$ \\
+						%					E & $0.123 \pm 0.017$ & $0.309 \pm 0.045$ & $0.153 \pm 0.027$
+						%				\end{tabular}}
+						%			\end{center}
+						%			\caption{Bone Mineral Density results.}
+						%			\label{table:bmd}
+						%		\end{table*}
+
 \bibliography{kernel_embeddings}
 
 \end{document}
