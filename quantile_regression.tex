@@ -206,14 +206,14 @@
 		\label{eq:reproducing_property}
 		\end{equation}
 		
-		\extra{
-		In particular, the kernel value between two points can be evaluated as the inner product between the feature functions at those points \eqref{eq:kernel_reproducing_property}.
-
-		\begin{equation}
-			\inner{\phi_{x}}{\phi_{x'}} = k(x, x') ;\quad \inner{\psi_{y}}{\psi_{y'}} = l(y, y')
-		\label{eq:kernel_reproducing_property}
-		\end{equation}
-		}
+%		\extra{
+%		In particular, the kernel value between two points can be evaluated as the inner product between the feature functions at those points \eqref{eq:kernel_reproducing_property}.
+%
+%		\begin{equation}
+%			\inner{\phi_{x}}{\phi_{x'}} = k(x, x') ;\quad \inner{\psi_{y}}{\psi_{y'}} = l(y, y')
+%		\label{eq:kernel_reproducing_property}
+%		\end{equation}
+%		}
 		
 		\begin{definition} \label{def:kernel_embedding}
 			\citep{smola2007hilbert}
@@ -237,19 +237,19 @@
 			
 			In practice, the actual probability distributions of interest are not available in closed form. Instead, independent and identically distributed (\textit{iid}) samples from such probability distributions are available. Suppose that joint samples $\{x_{i}, y_{i}\}_{i = 1}^{n}$ are observed and collected in an \textit{iid} fashion from the joint distribution $\mathbb{P}_{\rv{X} \rv{Y}}$. Let $\ds{X} := \{x_{i}\}_{i = 1}^{n}$ and $\ds{Y} := \{y_{i}\}_{i = 1}^{n}$. It is possible to represent kernel embeddings empirically such that in the limit of infinite data, the empirical representations would converge to the true representations at an appropriate rate. Most significant, however, is the fact that important results for manipulating kernel embeddings also hold for their empirical representations \citep{muandet2016kernel}.
 			
-			By replacing the expectation with an empirical average, the resulting estimator \eqref{eq:empirical_embedding} converges to the true embedding at rate $O(n^{-1/2})$ \citep{smola2007hilbert}
+			By replacing the expectation with an empirical average, the resulting estimator \eqref{eq:empirical_embedding} converges to the true embedding \eqref{eq:kernel_embedding} at rate $O(n^{-1/2})$ \citep{smola2007hilbert}
 
 			\begin{equation}
 				\hatmuX := \frac{1}{n} \sum_{i = 1}^{n} \phi_{x_{i}} ;\quad \hatmuY := \frac{1}{n} \sum_{i = 1}^{n} \psi_{y_{i}}
 			\label{eq:empirical_embedding}
 			\end{equation}
 
-			Correspondingly, the empirical representation of a function expectation is simply the empirical average of the function, and can be obtained by the inner product of the function with the empirical embedding \eqref{eq:empirical_function_expectation}.
-
-			\begin{equation}
-				\inner{\hatmuX}{f} = \frac{1}{n} \sum_{i = 1}^{n} f(x_{i}) ;\quad \inner{\hatmuY}{g} = \frac{1}{n} \sum_{i = 1}^{n} g(y_{i})
-			\label{eq:empirical_function_expectation}
-			\end{equation}
+%			Correspondingly, the empirical representation of a function expectation is simply the empirical average of the function, and can be obtained by the inner product of the function with the empirical embedding \eqref{eq:empirical_function_expectation}.
+%
+%			\begin{equation}
+%				\inner{\hatmuX}{f} = \frac{1}{n} \sum_{i = 1}^{n} f(x_{i}) ;\quad \inner{\hatmuY}{g} = \frac{1}{n} \sum_{i = 1}^{n} g(y_{i})
+%			\label{eq:empirical_function_expectation}
+%			\end{equation}
 
 		
 %			Since the samples $\ds{X} := \{x_{i}\}_{i = 1}^{n}$ and $\ds{Y} := \{y_{i}\}_{i = 1}^{n}$ are sampled from the joint distribution $\mathbb{P}_{\rv{X} \rv{Y}}$ such that marginal samples are simply $\ds{X}$ and $\ds{Y}$ themselves, the empirical representations for regular embeddings $\muX$ and $\muY$ are easy to obtain, as per \cref{thm:empirical_embedding}.
@@ -321,7 +321,7 @@
 
 	The direct approach to quantile regression refers to techniques which computes an estimate of the CDF directly, without needing to compute the PDF first.
 	
-	Using \eqref{eq:reproducing_property}, the distribution can be written as an inner product with the kernel embedding \eqref{eq:distribution_inner}.
+	Using \eqref{eq:function_expectation}, the distribution can be written as an inner product with the kernel embedding \eqref{eq:distribution_inner}.
 		
 	\begin{equation}
 		\mathbb{P}_{\bvec{\rv{X}}}[A] = \mathbb{E}[\mathbb{1}_{A}(\bvec{\rv{X}})] = \langle \mu_{\rv{X}}, \mathbb{1}_{A} \rangle
@@ -478,7 +478,7 @@
 	
 	We considered two approaches to hyperparameter learning for the purpose of quantile regression.
 	
-	The first approach involves minimising the expected pinball loss \eqref{eq:expected_pinball_loss} for a given dataset $\ds{X} := \{x_{i}\}_{i = 1}^{n}$, where the pinball loss is defined by \eqref{eq:pinball_loss}. The minimiser of the expected pinball loss \eqref{eq:expected_pinball_loss} is the $\tau$-quantile $z = q_{\rv{X}}(\tau)$ of the distribution $\mathbb{P}_{\rv{X}}$ \citep{koenker1978regression}.
+	The first approach involves minimising the expected pinball loss \eqref{eq:expected_pinball_loss} for a dataset $\ds{X} := \{x_{i}\}_{i = 1}^{n}$, where the pinball loss is defined by \eqref{eq:pinball_loss}. The minimiser of the expected pinball loss \eqref{eq:expected_pinball_loss} is the $\tau$-quantile $z = q_{\rv{X}}(\tau)$ of the distribution $\mathbb{P}_{\rv{X}}$ \citep{koenker1978regression}.
 	
 	\begin{equation}
 		L_{\tau}(x, z) = \left\{ \begin{array}{lr}
@@ -488,17 +488,16 @@
 	\label{eq:pinball_loss}
 	\end{equation}
 	
-	This expected pinball loss \eqref{eq:expected_pinball_loss} to be minimised is evaluated over a leave-out validation set from the available training data obtained from a standard cross-validation procedure. We will call this approach \textit{pinball learning}.
+	This expected pinball loss \eqref{eq:expected_pinball_loss} is evaluated over a leave-out validation set from the available training data obtained from a standard cross-validation procedure. We will call this approach \textit{pinball learning}.
 	
 	\begin{equation}
 		\bar{L}_{\tau}(\ds{X}, z) := \frac{1}{n} \sum_{i = 1}^{n} L_{\tau}(x_{i}, z)
 	\label{eq:expected_pinball_loss}
 	\end{equation}
 	
-	For a particular quantile, a function which minimises the pinball loss will also minimise the
-	error in the quantile estimate. Additionally, this loss function is tolerant to CDF estimates which may not be strictly non-decreasing, such as \eqref{eq:empirical_cdf} and \eqref{eq:smooth_empirical_cdf}. This however also means that the loss function is specific to a particular quantile such that each quantiles estimate requires separate optimisations despite using the same training set. The result is that quantile estimates may actually cross for certain query locations, a phenomenon known as quantile crossing.
+	The expected pinball loss is tolerant to CDF estimates which may not be strictly non-decreasing, such as \eqref{eq:empirical_cdf} and \eqref{eq:smooth_empirical_cdf}. This however also means that the loss function is specific to a particular quantile such that each quantile estimate requires separate optimisations despite using the same training set. The result is that quantile estimates may actually cross for certain query locations, a phenomenon known as quantile crossing.
 	
-	Instead, we can optimise the parameters with respect to the joint probability of observing the collected dataset \eqref{eq:lml}, also called the evidence. Evaluated over the whole training set, this is akin to method of log marginal likelihood optimisation in the Gaussian process context. However, here we again choose to only evaluate it over a leave-out validation set. We will call this approach \textit{evidence learning}. The advantage of this approach is that it is independent of the particular quantile estimate chosen. As such, a single, consistent CDF is generated for all quantile queries, eliminating the possibility of quantile crossing. 
+	Instead, we can optimise the parameters with respect to the joint probability of observing the collected dataset \eqref{eq:lml}, also called the marginal likelihood. Evaluated over the whole training set, this is akin to method of log marginal likelihood optimisation in the Gaussian process context. However, here we again choose to only evaluate it over a leave-out validation set. We will call this approach \textit{marginal likelihood learning}. The advantage of this approach is that it is independent of the particular quantile estimate chosen. As such, a single, consistent CDF is generated for all quantile queries, eliminating the possibility of quantile crossing. 
 	
 	\begin{equation}
 		p_{\rv{X}^{(n)}, \bm{\theta}}(x_{1}, \cdots, x_{n}) = \sum_{i = 1}^{n} \log(\hat{p}_{\rv{X}, \bm{\theta}}(x_{i}))
@@ -507,6 +506,21 @@
 	
 	However, clearly this requires the PDF to be estimated first, even though direct approaches do not require them. Thus, this method is more natural in the Pre-Image approach. Nevertheless, this is only required during the learning stage. Once the optimal hyperparameters are obtained, they can be used in the direct approach for inference.
 	
+	\begin{figure*}[t]
+		\centering
+		\begin{subfigure}[b]{0.32\textwidth}
+			\includegraphics[width=\textwidth]{figures/Antigen_results}
+		\end{subfigure}
+		\begin{subfigure}[b]{0.32\textwidth}
+			\includegraphics[width=\textwidth]{figures/Bone_Mass_Density_results}
+		\end{subfigure}
+		\begin{subfigure}[b]{0.32\textwidth}
+			\includegraphics[width=\textwidth]{figures/Weather_results}
+		\end{subfigure}
+		\caption{Results from the three quantile experiments. The error bars in these figures represent $\pm 1$ standard deviation of the pinball loss over the testing set.}
+		\label{fig:qfull}
+	\end{figure*}
+
 \section{Quantile Regression Algorithms}
 \label{sec:quantile_regression_algorithms}
 	
@@ -537,7 +551,7 @@
 			q_{\rv{X}}(\tau) = x : \bvec{w}^{T} \bvec{K}(x) = \tau
 		\end{equation}	
 		where $\bvec{w}$ is are the recovered density weights from QPI.
-		Both pinball and evidence learning can be used. We denote this algorithm as JB with done with pinball learning, and JL when done with evidence learning.
+		Both pinball and marginal likelihood learning can be used. We denote this algorithm as JB with done with pinball learning, and JL when done with marginal likelihood learning.
 	\end{definition}
 	
 	Since obtaining the density weights through \qpi\space requires a separate optimisation loop, this increases the time complexity of the algorithm significantly (see \cref{table:quantile_regression_methods}). At the expense of accuracy, the density weights can be instead obtained through clipping the embedding weights at zero and normalising them such that the resulting weights are valid PDF weights. For more detail, see the supplementary material. We then replace $\bvec{w}$ with these new and cheaply computable weights $\bvec{\tilde{w}}$ in \eqref{eq:qpi_empirical_distribution} and \eqref{eq:qpi_empirical_cdf}.
@@ -554,7 +568,7 @@
 		q_{\rv{X}}(\tau) = x : \bvec{\tilde{w}}^{T} \bvec{K}(\bvec{x}) = \tau
 		\end{equation}
 		where $\bvec{\tilde{w}}$ is the clip-normalised weights of the relevant embedding.
-		Both pinball learning and evidence learning can be used. We denote this algorithm as NB with done with pinball learning, and NL when done with evidence learning.
+		Both pinball learning and marginal likelihood learning can be used. We denote this algorithm as NB with done with pinball learning, and NL when done with marginal likelihood learning.
 	\end{definition}	
 	
 	\begin{table}[t!]
@@ -592,6 +606,8 @@
 \section{Related Work}
 \label{sec:related_work}
 
+
+	
 %	Quantile regression was first introduced by \cite{koenker1978regression}. This work considered the regression problem of inferring values of an unknown linea model given noisy samples of inputs and outputs. Rather than using the mean as an estimator of the function, Koenker chose the 0.5 quantile (the median), on the basis that it was less sensitive to outliers, and hence effective in cases with non-Gaussian or heavy tailed noise. A general regression quantile was then defined as the function value minimising the pinball loss \citep{koenker1978regression}. For linear models, the minimisation was formulated as a linear programming problem and so solved efficiently.
 %	
 %	The pursuit of conditional quantiles quickly divided the field into so-called direct methods, that attempt to directly compute the quantile from the training data through minimisation of the pinball loss, and Pre-Image methods, that attempt to first model the conditional cumulative distribution, and from there derive quantile estimates \citep{koenker2005quantile}.
@@ -621,9 +637,11 @@
 % 
 % ^.
 	
+
+	
 \section{Experiments}
 \label{sec:experiments}
-
+		
 	We now test the performance of our quantile estimators on a number of standard machine learning datasets. We compare our algorithms to state-of-the-art Pre-Image and direct techniques for conditional quantile estimation.
 	
 	We evaluated the algorithms on four datasets commonly used in the literature for conditional quantile estimation tests: Antigen, Weather, Bone Mineral Density, and Motorcycle. Antigen, Weather and Motorcycle were taken from the UCI repository \citep{lichman2013uci} and Bone Mass Density from the ``ElemStatLearn'' R package \citep{hastie2005the}. For a detailed description of each dataset, see the supplementary material. 
@@ -632,20 +650,21 @@
 	
 	We place a Gaussian kernel for both the input variable $y$ and the output variable $x$. For the input variable $y$, we whiten the data to decorrelate each dimension using a form of automatic relevance determination \citep{rasmussen2006gaussian} such that an anisotropic but diagonal Gaussian kernel can be used. All our algorithms were trained with (nested) five-fold cross-validation.
 	
-	\subsection{Comparisons}
-	\label{sec:experiments:comparison}
-	
-		Below we summarise the state-of-the-art algorithms to be compared with our algorithms.
-		
-		\textbf{Linear Quantile Estimation}. (Algorithm A) This is the linear direct quantile estimator described in \cite{koenker1978regression}.
-		
-		\textbf{Quantile SVM}. (Algorithm B) This is a non-parametric quantile estimator based on dual optimisation of the loss function through a SVM, as documented in \cite{takeuchi2006nonparametric}. A RBF kernel was used for this algorithm, with kernel width and regularisation fitted as described in \cite{quadrianto2009kernel}.
-
-		\textbf{Reduction to Classification}. (Algorithm C) This is the algorithm for reducing a quantile estimation problem to a series of classifiers \citep{langford2012predicting}. The results from this algorithm are taken from \cite{quadrianto2009kernel}, which used 100 GP classifiers trained with expectation propagation and an RBF kernel.
-		
-		\textbf{Quantile GP}. (Algorithm D) This algorithm is the Gaussian-processed based direct CDF estimate \cite{quadrianto2009kernel}. An RBF kernel was used, with the hyper-parameters learned by optimising the marginal log-likelihood.
-		
-		\textbf{Heteroskedastic Quantile GP}. (Algorithm E) This algorithm is the same as the Quantile GP, except that the kernel is a heteroskedastic RBF with 10 latent pseudo-observations controlling the bandwidth along the length of the input dimension \citep{quadrianto2009kernel}. 
+	We compare our algorithms with state-of-the-art algorithms. These include Linear Quantile Estimation (A) \citep{koenker1978regression}, Quantile SVM (B) \citep{takeuchi2006nonparametric}, Reduction to Classification (C) \citep{langford2012predicting}, Quantile GP (D) \citep{quadrianto2009kernel}, and Heteroskedastic Quantile GP (E) \citep{quadrianto2009kernel}. More detailed descriptions of these algorithms are available in the supplementary.
+%	\subsection{Comparisons}
+%	\label{sec:experiments:comparison}
+%	
+%		Below we summarise the state-of-the-art algorithms to be compared with our algorithms. 
+%		
+%		\textbf{Linear Quantile Estimation}. (Algorithm A) This is the linear direct quantile estimator described in \cite{koenker1978regression}.
+%		
+%		\textbf{Quantile SVM}. (Algorithm B) This is a non-parametric quantile estimator based on dual optimisation of the loss function through a SVM, as documented in \cite{takeuchi2006nonparametric}. A RBF kernel was used for this algorithm, with kernel width and regularisation fitted as described in \cite{quadrianto2009kernel}.
+%
+%		\textbf{Reduction to Classification}. (Algorithm C) This is the algorithm for reducing a quantile estimation problem to a series of classifiers \citep{langford2012predicting}. The results from this algorithm are taken from \cite{quadrianto2009kernel}, which used 100 GP classifiers trained with expectation propagation and an RBF kernel.
+%		
+%		\textbf{Quantile GP}. (Algorithm D) This algorithm is the Gaussian-processed based direct CDF estimate \cite{quadrianto2009kernel}. An RBF kernel was used, with the hyper-parameters learned by optimising the marginal log-likelihood.
+%		
+%		\textbf{Heteroskedastic Quantile GP}. (Algorithm E) This algorithm is the same as the Quantile GP, except that the kernel is a heteroskedastic RBF with 10 latent pseudo-observations controlling the bandwidth along the length of the input dimension \citep{quadrianto2009kernel}. 
 		
 % * <lachlan@mccalman.info> 2016-10-06T00:13:07.395Z:
 %
@@ -654,31 +673,8 @@
 % ^.
 	\subsection{Results}
 	\label{sec:experiments:results}
-	
-		\begin{figure*}[!htbp]
-			\centering
-			\begin{subfigure}[b]{0.32\textwidth}
-				\includegraphics[width=\textwidth]{figures/Antigen_results}
-			\end{subfigure}
-			\begin{subfigure}[b]{0.32\textwidth}
-				\includegraphics[width=\textwidth]{figures/Bone_Mass_Density_results}
-			\end{subfigure}
-			\begin{subfigure}[b]{0.32\textwidth}
-				\includegraphics[width=\textwidth]{figures/Weather_results}
-			\end{subfigure}
-			\caption{Results from the three quantile experiments. The error bars in these
-				figures represent $\pm 1$ standard deviation of the pinball loss over the testing set.}
-			\label{fig:qfull}
-		\end{figure*}
 
-		\begin{figure}[!htbp]
-			\begin{center}
-				\includegraphics[width=\columnwidth]{figures/mcquantilesall}\\
-			\end{center}
-			\caption{Examples of 0.1 (red), 0.5 (green) and 0.9 (blue) quantile estimates
-				for the Motorcycle dataset, for the DR (left), JB (centre) and NL (right) algorithms.}
-			\label{fig:motorcycleresults} 
-		\end{figure}
+
 		
 % * <lachlan@mccalman.info> 2016-10-06T00:12:22.660Z:
 %
@@ -822,30 +818,36 @@
 %%		\end{table*}
 		
 		
-		The average pinball loss for each algorithm in the three experiments is given in \cref{fig:qfull}. Overall, Pre-Image algorithms performed as well if not better than the algorithms from the literature. The two best performing algorithms were NB and JB, which are the normed-weights and \qpi methods, trained under the pinball loss. It is unsurprising that pinball learning performed better than evidence learning, given that the training was optimising the same function that would evaluate the algorithm's performance.
+		The average pinball loss for each algorithm in the three experiments is given in \cref{fig:qfull}. Overall, Pre-Image algorithms performed as well if not better than the algorithms from the literature. The two best performing algorithms were NB and JB, which are the normed-weights and \qpi\space methods, trained under the pinball loss. It is unsurprising that pinball learning performed better than marginal likelihood learning, given that the training was optimising the same function that would evaluate the algorithm's performance.
 
-		This demonstrates a trade-off between using pinball loss and receiving slightly better performance, or using negative log evidence probability (NL and JL) and ensuring the non-crossing constraint holds. The NL and JL algorithms were still competitive, but also beaten out by the kernel conditional quantile (D).
+		This demonstrates a trade-off between using pinball loss and receiving slightly better performance, or using negative log marginal likelihood probability (NL and JL) and ensuring the non-crossing constraint holds. The NL and JL algorithms were still competitive, but also beaten out by the kernel conditional quantile (D).
 
-		With both the pinball learning and evidence learning, there was little difference on average between the pre-image estimator and the normed-weights estimator. This fact in particular is worth noting when considering a real-time application of these algorithms, as the pre-image estimator has a much greater computational cost.
+		With both the pinball learning and marginal likelihood learning, there was little difference on average between the pre-image estimator and the normed-weights estimator. This fact in particular is worth noting when considering a real-time application of these algorithms, as the pre-image estimator has a much greater computational cost.
 		
 		Over the three experiments, we see that extremal quantiles 0.1 and 0.9 have significantly lower pinball loss compared to the median (0.5). There appear to be no algorithm that is especially capable at a particular quantile, although two direct methods (DR and DS) are much more competitive with the extrema than the median. The likely explanation is that, in general, an accurate (empirical) estimate of the median is affected by nearby points both above and below it. These direct methods however only sum contributions from points lying below the median. The pre-image methods on the other hand, sum contributions from mixture components centred at all training points. Far away from the median, there are fewer points nearby and so the effect is reduced.
 		
-		The full results for each individual experiment and quantile are also tabulated. For Antigen, this information is given in \cref{table:results}. Curiously, the three top performers for the quantiles were each from a totally different family of algorithms. Our smooth direct embedding estimator (DS), the quantile SVM (B), and the quantile GP (D). The full results for the Weather and Bone Mineral Density tests are given in \cref{table:results}.
+		\begin{figure}[t]
+			\begin{center}
+				\includegraphics[width=\columnwidth]{figures/mcquantilesall}\\
+			\end{center}
+			\caption{Examples of 0.1 (red), 0.5 (green) and 0.9 (blue) quantile estimates for the Motorcycle dataset, for the DR, JB, and NL algorithms.}
+			\label{fig:motorcycleresults} 
+		\end{figure}
 		
-		From \cref{table:results}, we can see that algorithm E matched or exceeded all other algorithms in Motorcycle dataset, and was competitive but did not beat our algorithms in the Bone Mineral Density dataset. The likely explanation is the strong heteroskedasicity of the Motorcycle dataset benefited from a modelling approach that explicitly took it into account. This raises a possible avenue of future work--- including heteroskedastic kernel in our methods to improve performance.
-		
-		Figure \ref{fig:motorcycleresults} plots the quantiles estimated for the Motorcycle dataset for three of the algorithms. The piecewise-constant quantile estimates are clearly visible in the DR plot. The JB plot has each quantile trained separately, and as a result the 0.1 and 0.9 quantile both fit the boundary of the data very closely. The NL plot shows a much smoother representation, in line with the fact that these are quantiles for a single underlying cumulative distribution (trained with the negative log evidence probability).
+		Figure \ref{fig:motorcycleresults} plots the quantiles estimated for the Motorcycle dataset for three of the algorithms. The piecewise-constant quantile estimates are clearly visible in the DR plot. The JB plot has each quantile trained separately, and as a result the 0.1 and 0.9 quantile both fit the boundary of the data very closely. The NL plot shows a much smoother representation, in line with the fact that these are quantiles for a single underlying cumulative distribution (trained with the negative log marginal likelihood probability).
 
 \section{Conclusion}
 \label{sec:conclusion}
 	
 	This paper presented six new algorithms for estimating quantiles non-parametrically from kernel embeddings of probability distributions given only samples. By projecting the indicator function into the RKHS, we first present a direct approach where the empirical CDF can be computed directly, but lack the the desired smoothness and non-decreasing property. We then impose smoothness by instead projecting a smooth function within the full RKHS that becomes the projected indicator function in the limit of vanishing bandwidth. At a trade off with computational complexity, the non-decreasing constraint is guaranteed by a Pre-Image approach, where the embeddings weights of a PDF is to be recovered from a quadratic program first, before it is integrated to a CDF.
 	
-	We then constructed quantile estimators from these CDF estimators using simple numerical root-finding, and considered training on both the pinball loss function, and the negative log evidence probability. We then evaluated the resulting algorithms using a set of well-known machine learning datasets.
+	We then constructed quantile estimators from these CDF estimators using simple numerical root-finding, and considered training on both the pinball loss function, and the negative log marginal likelihood probability. We then evaluated the resulting algorithms using a set of well-known machine learning datasets.
 	
-	Our Pre-Image quantile estimators in particular were comparable to, or better than, the state-of-the-art algorithms in the literature. These algorithms can be trained either using pinball loss, for a slight increase in performance, or with negative log evidence probability, to guarantee the non-crossing constraint. Additionally, all our algorithms explicitly represent multi-modal distributions, and can model datasets with strong heteroskedasticty.
+	Our Pre-Image quantile estimators in particular were comparable to, or better than, the state-of-the-art algorithms in the literature. These algorithms can be trained either using pinball loss, for a slight increase in performance, or with negative log marginal likelihood probability, to guarantee the non-crossing constraint. Additionally, all our algorithms explicitly represent multi-modal distributions, and can model datasets with strong heteroskedasticty.
 
 \section*{Acknowledgements}
+
+	This work is supported by anonymous organisations.
 
 \bibliography{kernel_embeddings}
 
