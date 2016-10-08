@@ -1125,9 +1125,54 @@
 			\end{align*}
 		\end{proof}
 		
-	\subsection{Clip-Normalisation}
-	
-		\warn{Put in norm-clip method}
+	\subsection{Pre-Image Density Recovery}
+		
+		Recall that the pre-image technique involves approximating the density with the same mixture components as the embedding, but with different weights. That is, suppose that the conditional embedding has the form \eqref{eq:general_conditional_embedding}, where $\bm{\beta}$ is to be computed with the dataset $\ds{Y} := \{\bvec{y}_{i}\}_{i = 1}^{n}$ either through the conditional embedding operator or through kernel Bayes' rule, depending on the application. The pre-imaged PDF would exhibit the form \eqref{eq:general_conditional_density}, where $\bvec{w}$ is obtained from $\bm{\beta}$. For the \qpi\space method, $\bm{\beta}$ is obtained through quadratic programming.
+
+		\begin{equation}
+			\hat{\mu}_{\bvec{X} | \bvec{Y} = y}= \sum_{i = 1}^{n} \beta_{i} k(\bvec{x}_{i}, \cdot)
+		\label{eq:general_conditional_embedding}
+		\end{equation}
+		
+		\begin{equation}
+			\hat{p}_{\bvec{X} | \bvec{Y}}(\cdot | \bvec{y}) = \sum_{i = 1}^{n} w_{i} k(\bvec{x}_{i}, \cdot)
+		\label{eq:general_conditional_density}
+		\end{equation}
+		
+		Because $\hat{p}_{\bvec{X} | \bvec{Y}}(\cdot | \bvec{y})$ is a density, it must integrate to one throughout its domain \eqref{eq:normalisation}. In this paper, all kernels are assumed to be stationary.
+		
+		\begin{equation}
+			\begin{aligned}
+				1 &= \int_{\mathbb{R}^{d}} \hat{p}_{\bvec{X} | \bvec{Y}}(\bvec{x} | \bvec{y}) d\bvec{x} \\
+				&= \int_{\mathbb{R}^{d}} \sum_{i = 1}^{n} w_{i} k(\bvec{x}_{i}, \bvec{x}) d\bvec{x} \\
+				&= \sum_{i = 1}^{n} w_{i} \int_{\mathbb{R}^{d}} k(\bvec{x}_{i}, \bvec{x}) d\bvec{x}
+				&= c \sum_{i = 1}^{n} w_{i}
+			\end{aligned}
+		\label{eq:normalisation}
+		\end{equation}
+				
+		Each integral integrates to $c > 0$ \eqref{eq:constant_definition} as the kernel is stationary, so that $\int_{\mathbb{R}^{d}} k(\bvec{x}^{(1)}, \bvec{x}) d\bvec{x} = \int_{\mathbb{R}^{d}} k(\bvec{x}^{(2)}, \bvec{x}) d\bvec{x}$ for any $\bvec{x}^{(1)}, \bvec{x}^{(2)} \in \mathbb{R}^{d}$. This constant is usually analytically computable from the form of the stationary kernel, such as the Gaussian kernel.
+		
+		\begin{equation}
+			c := \int_{\mathbb{R}^{d}} k(\bvec{0}, \bvec{x}) d\bvec{x}
+		\label{eq:constant_definition}
+		\end{equation}
+
+		Computing the density pre-image density weights through quadratic programming requires a separate optimisation loop, increasing the time complexity of the algorithm significantly. At the expense of accuracy, the density weights can be instead obtained through clipping the embedding weights at zero and normalising them such that the resulting weights $\{\tilde{w}_{i}\}_{i = 1}^{n}$ are valid PDF weights.
+
+		\begin{definition} \label{def:clip_normalise}
+		(Clip-Normalised Weights and Density Recovery)
+		Given a the weights $\bm{\beta}$ for a general conditional embedding \eqref{eq:general_conditional_embedding}, the \textit{clip-normalised weights} \eqref{eq:clip_normalise_weights} can be obtained through clipping the embedding weights $\bm{\beta}$ at zero and normalising them so that they sum up to $\frac{1}{c}$ such that the resulting PDF \eqref{eq:clip_normalise_density} is a valid PDF.
+
+			\begin{equation}
+				\tilde{w}_{i} = \frac{\max\{\beta_{i}, 0\}}{c \sum_{j = 1}^{n} \max\{\beta_{j}, 0\}}
+			\label{eq:clip_normalise_weights}
+			\end{equation}
+			\begin{equation}
+				\hat{p}_{\bvec{X} | \bvec{Y}}(\cdot | \bvec{y}) = \sum_{i = 1}^{n} \tilde{w}_{i} k(\bvec{x}_{i}, \cdot)
+			\label{eq:clip_normalise_density}
+			\end{equation}
+		\end{definition}
 	
 	\subsection{Normalisation Constants}
 	

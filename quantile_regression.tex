@@ -434,8 +434,6 @@
 
 		Even if analytical form cannot be derived for some kernels $k$, since it is independent of the embedding weights, the integral $\bvec{K}(\bvec{x}) \equiv \bvec{K}_{\ds{X}}(\bvec{x})$ \eqref{eq:kernel_integral} can be approximated and pre-computed before inference begins.
 
-
-			
 		With this approach, CDF estimates are now smooth and can be shown to converge to the true CDF in the limit of $n \rightarrow \infty$ and vanishing kernel bandwidth. However, due to the possibility of negative weights $\beta_{i}$, both direct approaches may produce CDF estimates that are not strictly non-decreasing, as shown in \cref{fig:direct_quantile_regression}. Notice that the direct non-smooth direct CDF estimate jumps at locations corresponding to training points, and that, due to the negative weights, the smooth CDF estimate contain components that go below zero such that the resultant CDF estimate may not be strictly non-decreasing. Furthermore, the resulting CDF may not be in the range $[0, 1]$. To rectify this, we propose a Pre-Image approach to estimating the CDF.
 
 \section{Pre-Image Quantile Regression}
@@ -474,7 +472,7 @@
 \section{Hyperparameter Learning}
 \label{sec:hyperparameter_learning}
 
-	With all kernel based techniques, the kernel $k = k_{\bm{\theta}}$ itself is usually specified from a family of kernels parametrised by some hyperparameters $\bm{\theta}$. For example, a Gaussian kernel would be specified by its length scale parameters. The number of parameters would depend on whether the kernel is isotropic ($1$ parameter), anisotropic axis-aligned ($d$ parameters), or general ($d(d - 1)/2$ parameters). Whichever family we choose, we would have to find the optimal hyperparameter setting that gives the best performance in terms of inference accuracy.
+	With all kernel based techniques, the kernel $k = k_{\bm{\theta}}$ itself is usually specified from a family of kernels parametrised by some hyperparameters $\bm{\theta}$. For example, a Gaussian kernel would be specified by its length scale parameters. Whichever family we choose, we would have to find the optimal hyperparameters that results in the best inference accuracy. %The number of parameters would depend on whether the kernel is isotropic ($1$ parameter), anisotropic axis-aligned ($d$ parameters), or general ($d(d - 1)/2$ parameters).
 	
 	We considered two approaches to hyperparameter learning for the purpose of quantile regression.
 	
