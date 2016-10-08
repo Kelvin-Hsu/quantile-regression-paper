@@ -981,143 +981,156 @@
 %		\warn{Finish Later.}
 
 \section{Derivations}
+\label{sec:derivations}
 
 	In this section, we provide the derivations for the results proposed in the paper.
 
-	\begin{theorem} \label{thm:function_projection_solution}
-		(Optimal Function Projection)
-		The function $f \in \mathcal{H}_{k}$ can be approximated with $\hat{f} \in \mathcal{H}_{k, \ds{X}}$ \eqref{eq:function_projection} so that they are close as measured by the norm induced by the full RKHS $\mathcal{H}_{k}$, by tuning the embedding weights $\bm{\alpha} = \{\alpha_{i}\}_{i = 1}^{n}$ \eqref{eq:function_projection_optimisation}.
-		
-		\begin{equation}
-			\hat{f} = \sum_{i = 1}^{n} \alpha_{i} k(\bvec{x}_{i}, \cdot) = \sum_{i = 1}^{n} \alpha_{i} \phi_{\bvec{x}_{i}} = \Phi_{\ds{X}} \bm{\alpha}
-		\label{eq:function_projection}
-		\end{equation}
+	\subsection{Optimal Function Projection}
+	\label{sec:derivations:optimal_function_projection}
 
-		The optimisation problem \eqref{eq:function_projection_optimisation} has a closed form solution \eqref{eq:function_projection_solution}, where $K \equiv K_{\ds{X} \ds{X}} := \{k(\bvec{x}_{i}, \bvec{x}_{j})\}_{i = 1, j = 1}^{n, n}$ is the gram matrix and $\bvec{f} := f\{\ds{X}\} := \{f(\bvec{x}_{i})\}_{i = 1}^{n}$ is the function evaluated at the observed points.
+		\begin{theorem} \label{thm:function_projection_solution}
+			(Optimal Function Projection)
+			The function $f \in \mathcal{H}_{k}$ can be approximated with $\hat{f} \in \mathcal{H}_{k, \ds{X}}$ \eqref{eq:function_projection} so that they are close as measured by the norm induced by the full RKHS $\mathcal{H}_{k}$, by tuning the embedding weights $\bm{\alpha} = \{\alpha_{i}\}_{i = 1}^{n}$ \eqref{eq:function_projection_optimisation}.
 			
-		\begin{equation}
-			\bm{\alpha}^{\star} = \argmin_{\bm{\alpha} \in \mathbb{R}^{n}} \Vert \hat{f} - f \Vert
-		\label{eq:function_projection_optimisation}
-		\end{equation}
-		
-		\begin{equation}
-		\begin{aligned}
-			\bm{\alpha}^{\star} &= K^{-1} \bvec{f} \\
-			\hat{f} &= \Phi \bm{\alpha}^{\star} = \Phi K^{-1} \bvec{f}
-		\label{eq:function_projection_solution}
-		\end{aligned}
-		\end{equation}
+			\begin{equation}
+				\hat{f} = \sum_{i = 1}^{n} \alpha_{i} k(\bvec{x}_{i}, \cdot) = \sum_{i = 1}^{n} \alpha_{i} \phi_{\bvec{x}_{i}} = \Phi_{\ds{X}} \bm{\alpha}
+			\label{eq:function_projection}
+			\end{equation}
+	
+			The optimisation problem \eqref{eq:function_projection_optimisation} has a closed form solution \eqref{eq:function_projection_solution}, where $K \equiv K_{\ds{X} \ds{X}} := \{k(\bvec{x}_{i}, \bvec{x}_{j})\}_{i = 1, j = 1}^{n, n}$ is the gram matrix and $\bvec{f} := f\{\ds{X}\} := \{f(\bvec{x}_{i})\}_{i = 1}^{n}$ is the function evaluated at the observed points.
+				
+			\begin{equation}
+				\bm{\alpha}^{\star} = \argmin_{\bm{\alpha} \in \mathbb{R}^{n}} \Vert \hat{f} - f \Vert
+			\label{eq:function_projection_optimisation}
+			\end{equation}
 			
-	\end{theorem}
+			\begin{equation}
+			\begin{aligned}
+				\bm{\alpha}^{\star} &= K^{-1} \bvec{f} \\
+				\hat{f} &= \Phi \bm{\alpha}^{\star} = \Phi K^{-1} \bvec{f}
+			\label{eq:function_projection_solution}
+			\end{aligned}
+			\end{equation}
+				
+		\end{theorem}
+			
+		\begin{proof}
+			Since the square is a monotonic function for positive inputs, the objective function can be rewritten as follows.
+			
+			\begin{align*}
+				\bm{\alpha}^{\star} &= \argmin_{\bm{\alpha} \in \mathbb{R}^{n}} \Vert \hat{f} - f \Vert \tag{\cref{eq:function_projection_optimisation}} \\
+				&= \argmin_{\bm{\alpha} \in \mathbb{R}^{n}} \Vert \hat{f} - f \Vert^{2} \tag{monotonic transformation}
+			\end{align*}
+			
+			Since this is a positive quadratic form, it is known from quadratic programming that this optimisation has one solution that is obtained by setting the objective's gradient to zero. There is no need to check for the Hessian to distinguish between minimum and maximum, as the quadratic is convex and not concave. Expanding the norm as an inner product through its definition in the Hilbert space results in the following.
+	
+			\begin{align*}
+				\Vert \hat{f} - f \Vert^{2} &= \langle \hat{f} - f, \hat{f} - f \rangle \tag{Hilbert norm definition} \\
+				&= \langle \hat{f}, \hat{f} \rangle - 2 \langle \hat{f}, f \rangle + \langle f, f \rangle \tag{bilinearity of $\inner{\cdot}{\cdot}$} \\
+				&=  \hat{f}^{T} \hat{f} - 2 \hat{f}^{T} f + f^{T} f \tag{linear algebra notation} \\
+				&= (\Phi_{\ds{X}} \bm{\alpha})^{T} \Phi_{\ds{X}}  \bm{\alpha} - 2 (\Phi_{\ds{X}}  \bm{\alpha})^{T} f + f^{T} f \tag{\cref{eq:function_projection}}\\
+				&= \bm{\alpha}^{T} \Phi_{\ds{X}} ^{T} \Phi_{\ds{X}}  \bm{\alpha} - 2 \bm{\alpha}^{T} \Phi_{\ds{X}} ^{T} f + f^{T} f \\
+				&= \bm{\alpha}^{T} K_{\ds{X} \ds{X}}  \bm{\alpha} - 2 \bm{\alpha}^{T} \bvec{f}\{\ds{X}\} + f^{T} f \\
+			\end{align*}
+			
+			Differentiating the above results in the following.
+			
+			\begin{align*}
+				\frac{d}{d \bm{\alpha}} \Vert \hat{f} - f \Vert^{2} &= \frac{d}{d \bm{\alpha}} 
+				\bigg[ \bm{\alpha}^{T} K_{\ds{X} \ds{X}}  \bm{\alpha} - 2 \bm{\alpha}^{T} \bvec{f}\{\ds{X}\} + f^{T} f \bigg]\\
+				&= 2 K_{\ds{X} \ds{X}}  \bm{\alpha} - 2 \bvec{f}\{\ds{X}\}
+			\end{align*}
+			
+			Setting the above to zero reveals the solution.
+			
+			\begin{align*}
+				\frac{d}{d \bm{\alpha}} \Vert \hat{f} - f \Vert^{2} &= 0 \\
+				2 K_{\ds{X} \ds{X}}  \bm{\alpha}^{\star} - 2 \bvec{f}\{\ds{X}\} &= 0 \\
+				K_{\ds{X} \ds{X}}  \bm{\alpha}^{\star} = \bvec{f}\{\ds{X}\} \\
+				\bm{\alpha}^{\star} = K_{\ds{X} \ds{X}}^{-1} \bvec{f}\{\ds{X}\}
+			\end{align*}
+		\end{proof}
 		
-	\begin{proof}
-		Since the square is a monotonic function for positive inputs, the objective function can be rewritten as follows.
+		In practice, it is possible that the kernel gram matrix has no inverse. In that case, we instead use the regularised inverse of the gram matrix \eqref{eq:regularised_function_projection_solution} so that the problem is well posed \citep{muandet2016kernel}, where $I_{n}$ is the identity matrix with size $n$. The regularisation parameter $\lambda$ is treated as a jitter quantity which should diminish as the number of observations increases. As such, it is customary to choose the smallest $\lambda^{2}$ such that the inverse exists, with the ideal situation being $\lambda = 0$. 
 		
-		\begin{align*}
-			\bm{\alpha}^{\star} &= \argmin_{\bm{\alpha} \in \mathbb{R}^{n}} \Vert \hat{f} - f \Vert \tag{\cref{eq:function_projection_optimisation}} \\
-			&= \argmin_{\bm{\alpha} \in \mathbb{R}^{n}} \Vert \hat{f} - f \Vert^{2} \tag{monotonic transformation}
-		\end{align*}
-		
-		Since this is a positive quadratic form, it is known from quadratic programming that this optimisation has one solution that is obtained by setting the objective's gradient to zero. There is no need to check for the Hessian to distinguish between minimum and maximum, as the quadratic is convex and not concave. Expanding the norm as an inner product through its definition in the Hilbert space results in the following.
+		\begin{equation}
+			\bm{\alpha}^{\star} = (K_{\ds{X} \ds{X}} + \lambda^{2} I_{n})^{-1} \bvec{f}\{\ds{X}\}
+		\label{eq:regularised_function_projection_solution}
+		\end{equation}
 
-		\begin{align*}
-			\Vert \hat{f} - f \Vert^{2} &= \langle \hat{f} - f, \hat{f} - f \rangle \tag{Hilbert norm definition} \\
-			&= \langle \hat{f}, \hat{f} \rangle - 2 \langle \hat{f}, f \rangle + \langle f, f \rangle \tag{bilinearity of $\inner{\cdot}{\cdot}$} \\
-			&=  \hat{f}^{T} \hat{f} - 2 \hat{f}^{T} f + f^{T} f \tag{linear algebra notation} \\
-			&= (\Phi_{\ds{X}} \bm{\alpha})^{T} \Phi_{\ds{X}}  \bm{\alpha} - 2 (\Phi_{\ds{X}}  \bm{\alpha})^{T} f + f^{T} f \tag{\cref{eq:function_projection}}\\
-			&= \bm{\alpha}^{T} \Phi_{\ds{X}} ^{T} \Phi_{\ds{X}}  \bm{\alpha} - 2 \bm{\alpha}^{T} \Phi_{\ds{X}} ^{T} f + f^{T} f \\
-			&= \bm{\alpha}^{T} K_{\ds{X} \ds{X}}  \bm{\alpha} - 2 \bm{\alpha}^{T} \bvec{f}\{\ds{X}\} + f^{T} f \\
-		\end{align*}
-		
-		Differentiating the above results in the following.
-		
-		\begin{align*}
-			\frac{d}{d \bm{\alpha}} \Vert \hat{f} - f \Vert^{2} &= \frac{d}{d \bm{\alpha}} 
-			\bigg[ \bm{\alpha}^{T} K_{\ds{X} \ds{X}}  \bm{\alpha} - 2 \bm{\alpha}^{T} \bvec{f}\{\ds{X}\} + f^{T} f \bigg]\\
-			&= 2 K_{\ds{X} \ds{X}}  \bm{\alpha} - 2 \bvec{f}\{\ds{X}\}
-		\end{align*}
-		
-		Setting the above to zero reveals the solution.
-		
-		\begin{align*}
-			\frac{d}{d \bm{\alpha}} \Vert \hat{f} - f \Vert^{2} &= 0 \\
-			2 K_{\ds{X} \ds{X}}  \bm{\alpha}^{\star} - 2 \bvec{f}\{\ds{X}\} &= 0 \\
-			K_{\ds{X} \ds{X}}  \bm{\alpha}^{\star} = \bvec{f}\{\ds{X}\} \\
-			\bm{\alpha}^{\star} = K_{\ds{X} \ds{X}}^{-1} \bvec{f}\{\ds{X}\}
-		\end{align*}
-	\end{proof}
-	
-	In practice, it is possible that the kernel gram matrix has no inverse. In that case, we instead use the regularised inverse of the gram matrix \eqref{eq:regularised_function_projection_solution} so that the problem is well posed \citep{muandet2016kernel}, where $I_{n}$ is the identity matrix with size $n$. The regularisation parameter $\lambda$ is treated as a jitter quantity which should diminish as the number of observations increases. As such, it is customary to choose the smallest $\lambda^{2}$ such that the inverse exists, with the ideal situation being $\lambda = 0$. 
-	
-	\begin{equation}
-		\bm{\alpha}^{\star} = (K_{\ds{X} \ds{X}} + \lambda^{2} I_{n})^{-1} \bvec{f}\{\ds{X}\}
-	\label{eq:regularised_function_projection_solution}
-	\end{equation}
+	\subsection{Direct Empirical Distribution}
+	\label{sec:derivations:direct_empirical_distribution}
 
-	\begin{theorem} \label{thm:empirical_distribution_and_cdf}
-		(Direct Empirical Distribution)
-		Assume that a kernel $k$ is chosen such that the indicator function is in $\mathcal{H}_{k}$. The direct empirical distribution measured on a set is simply the sum of weights on that set \eqref{eq:empirical_distribution}.
-		\begin{equation}
-			\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} = \sum_{\bvec{x}_{i} \in A} \beta_{i}
-		\label{eq:empirical_distribution}
-		\end{equation}
-		By the definition of the CDF, $P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]]$, the CDF shows a similar form \eqref{eq:empirical_cdf}.
-		\begin{equation}
-			\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}
-		\label{eq:empirical_cdf}
-		\end{equation}
-	\end{theorem}
+		\begin{theorem} \label{thm:empirical_distribution_and_cdf}
+			(Direct Empirical Distribution)
+			Assume that a kernel $k$ is chosen such that the indicator function is in $\mathcal{H}_{k}$. The direct empirical distribution measured on a set is simply the sum of weights on that set \eqref{eq:empirical_distribution}.
+			\begin{equation}
+				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} = \sum_{\bvec{x}_{i} \in A} \beta_{i}
+			\label{eq:empirical_distribution}
+			\end{equation}
+			By the definition of the CDF, $P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]]$, the CDF shows a similar form \eqref{eq:empirical_cdf}.
+			\begin{equation}
+				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}
+			\label{eq:empirical_cdf}
+			\end{equation}
+		\end{theorem}
+			
+		\begin{proof}
+			\begin{align*}
+					\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} \tag{by construction} \\
+					&= \hat{\mu}_{\bvec{\rv{X}}}^{T}\hat{\mathbb{1}}_{A} \tag{linear algebra notation} \\
+					&= (\Phi \bm{\beta})^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} \tag{\cref{thm:function_projection_solution}} \\
+					&= \bm{\beta}^{T} \Phi^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
+					&= \bm{\beta}^{T} K K^{-1} \mathbb{1}_{A}\{\ds{X}\} \tag{reproducing property} \\
+					&= \bm{\beta}^{T} \mathbb{1}_{A}\{\ds{X}\} \\
+					&= \sum_{i = 1}^{n} \beta_{i} \mathbb{1}_{A}(\bvec{x}_{i}) \\
+					&= \sum_{\bvec{x}_{i} \in A} \beta_{i}
+			\end{align*}
+		\end{proof}
 		
-	\begin{proof}
-		\begin{align*}
-				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} \tag{by construction} \\
-				&= \hat{\mu}_{\bvec{\rv{X}}}^{T}\hat{\mathbb{1}}_{A} \tag{linear algebra notation} \\
-				&= (\Phi \bm{\beta})^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} \tag{\cref{thm:function_projection_solution}} \\
-				&= \bm{\beta}^{T} \Phi^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
-				&= \bm{\beta}^{T} K K^{-1} \mathbb{1}_{A}\{\ds{X}\} \tag{reproducing property} \\
-				&= \bm{\beta}^{T} \mathbb{1}_{A}\{\ds{X}\} \\
-				&= \sum_{i = 1}^{n} \beta_{i} \mathbb{1}_{A}(\bvec{x}_{i}) \\
-				&= \sum_{\bvec{x}_{i} \in A} \beta_{i}
-		\end{align*}
-	\end{proof}
+	\subsection{Smooth Empirical Distribution}
+	\label{sec:derivations:smooth_empirical_distribution}
+		
+		\begin{theorem} \label{thm:smooth_empirical_distribution_and_cdf}
+			(Smooth Empirical Distribution)
+			The smooth distribution \eqref{eq:smooth_empirical_distribution} and CDF \eqref{eq:smooth_empirical_cdf} estimate is simply the integral of the normalised embedding.
+			\begin{equation}
+				\tilde{\mathbb{1}}_{A} := \int_{A} k(\bvec{x}, \cdot) d\bvec{x} = \int_{A} \phi_{\bvec{x}} d\bvec{x}
+			\label{eq:indicator_smooth}
+			\end{equation}
+			\begin{equation}
+				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{\tilde{\mathbb{1}}_{A}} = \sum_{i = 1}^{n} \beta_{i} \int_{A}  k(\bvec{x}_{i}, \bvec{x}) d\bvec{x}
+			\label{eq:smooth_empirical_distribution}
+			\end{equation}	
+			\begin{equation}
+				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} \beta_{i} \int_{-\bvec{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' = \bm{\beta}^{T} \bvec{K}(\bvec{x})
+			\label{eq:smooth_empirical_cdf}
+			\end{equation}
+			\begin{equation}
+				\bvec{K}(\bvec{x}) := \Bigg\{ \int_{-\bvec{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' \Bigg\}_{i = 1}^{n}
+			\label{eq:kernel_integral}
+			\end{equation}
+		\end{theorem}
+			
+		\begin{proof}
+			\begin{align*}
+					\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \inner{\hat{\mu}_{\bvec{\rv{X}}}}{\tilde{\mathbb{1}}_{A}} \tag{by construction} \\
+					&= \hat{\mu}_{\bvec{\rv{X}}}^{T} \tilde{\mathbb{1}}_{A} \tag{linear algebra notation} \\
+					&= (\Phi_{\ds{X}} \bm{\beta})^{T} \int_{A} \phi_{\bvec{x}} d\bvec{x} \tag{\cref{eq:indicator_smooth}} \\
+					&= \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \int_{A} \phi_{\bvec{x}} d\bvec{x} \\
+					&= \int_{A} \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \phi_{\bvec{x}} d\bvec{x} \tag{linearity of integral} \\
+					&= \int_{A} \bm{\beta}^{T} K_{\ds{X} \bvec{x}} d\bvec{x} \tag{reproducing property} \\
+					&= \int_{A} \sum_{i = 1}^{n} \beta_{i} k(\bvec{x}_{i}, \bvec{x}) d\bvec{x} \\
+					&= \sum_{i = 1}^{n} \beta_{i} \int_{A}  k(\bvec{x}_{i}, \bvec{x}) d\bvec{x} \\
+			\end{align*}
+		\end{proof}
+		
+	\subsection{Clip-Normalisation}
 	
-	
-	\begin{theorem} \label{thm:smooth_empirical_distribution_and_cdf}
-		(Smooth Empirical Distribution)
-		The smooth distribution \eqref{eq:smooth_empirical_distribution} and CDF \eqref{eq:smooth_empirical_cdf} estimate is simply the integral of the normalised embedding.
-		\begin{equation}
-			\tilde{\mathbb{1}}_{A} := \int_{A} k(\bvec{x}, \cdot) d\bvec{x} = \int_{A} \phi_{\bvec{x}} d\bvec{x}
-		\label{eq:indicator_smooth}
-		\end{equation}
-		\begin{equation}
-			\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{\tilde{\mathbb{1}}_{A}} = \sum_{i = 1}^{n} \beta_{i} \int_{A}  k(\bvec{x}_{i}, \bvec{x}) d\bvec{x}
-		\label{eq:smooth_empirical_distribution}
-		\end{equation}	
-		\begin{equation}
-			\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} \beta_{i} \int_{-\bvec{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' = \bm{\beta}^{T} \bvec{K}(\bvec{x})
-		\label{eq:smooth_empirical_cdf}
-		\end{equation}
-		\begin{equation}
-			\bvec{K}(\bvec{x}) := \Bigg\{ \int_{-\bvec{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' \Bigg\}_{i = 1}^{n}
-		\label{eq:kernel_integral}
-		\end{equation}
-	\end{theorem}
-		
-	\begin{proof}
-		\begin{align*}
-				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \inner{\hat{\mu}_{\bvec{\rv{X}}}}{\tilde{\mathbb{1}}_{A}} \tag{by construction} \\
-				&= \hat{\mu}_{\bvec{\rv{X}}}^{T} \tilde{\mathbb{1}}_{A} \tag{linear algebra notation} \\
-				&= (\Phi_{\ds{X}} \bm{\beta})^{T} \int_{A} \phi_{\bvec{x}} d\bvec{x} \tag{\cref{eq:indicator_smooth}} \\
-				&= \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \int_{A} \phi_{\bvec{x}} d\bvec{x} \\
-				&= \int_{A} \bm{\beta}^{T} \Phi_{\ds{X}}^{T} \phi_{\bvec{x}} d\bvec{x} \tag{linearity of integral} \\
-				&= \int_{A} \bm{\beta}^{T} K_{\ds{X} \bvec{x}} d\bvec{x} \tag{reproducing property} \\
-				&= \int_{A} \sum_{i = 1}^{n} \beta_{i} k(\bvec{x}_{i}, \bvec{x}) d\bvec{x} \\
-				&= \sum_{i = 1}^{n} \beta_{i} \int_{A}  k(\bvec{x}_{i}, \bvec{x}) d\bvec{x} \\
-		\end{align*}
-	\end{proof}
-		
 		\warn{Put in norm-clip method}
-		
+	
+	\subsection{Normalisation Constants}
+	
 		\warn{Put in normalisation constants}
 			
 \section{Experiments}
