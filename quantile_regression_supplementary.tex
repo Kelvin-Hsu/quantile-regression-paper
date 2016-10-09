@@ -200,7 +200,7 @@
 %		\begin{aligned}
 %		\{\rv{X} \leq x\} &:= \{\rv{X} \in (-\infty, x]\} \\
 %		\{\bvec{\rv{X}} \leq \bvec{x}\} &:= \bigcap\limits_{j = 1}^{d} \{\rv{X}_{j} \in (-\infty, x_{j}]\} \in \mathcal{W} \\
-%		(-\bvec{\infty}, \bvec{x}] &:= (-\infty, x_{1}] \times \dots \times (-\infty, x_{d}] \\
+%		(-\bm{\infty}, \bvec{x}] &:= (-\infty, x_{1}] \times \dots \times (-\infty, x_{d}] \\
 %		\end{aligned}
 %		\label{eq:shorthand}
 %		\end{equation}
@@ -220,9 +220,9 @@
 %	Recall that $\mathbb{P}[W] = \mathbb{E}[\mathbb{1}[W]] \;\; \forall W \in \mathcal{W}$, so that the CDF for a vector-valued random variable $\bvec{\rv{X}}$ is
 %	\begin{equation}
 %	\begin{aligned}
-%	P_{\bvec{\rv{X}}}(\bvec{x}) &= \mathbb{P}[\bvec{\rv{X}} \leq \bvec{x}] = \mathbb{E}[\mathbb{1}[\bvec{\rv{X}} \leq \bvec{x}]] = \mathbb{E}[\mathbb{1}_{(-\bvec{\infty}, \bvec{x}]}(\bvec{X})] \\
-%	&= \int_{\Omega} \mathbb{1}_{(-\bvec{\infty}, \bvec{x}]} \circ \bvec{\rv{X}} d \mathbb{P} = \int_{\mathbb{R}^{D}} \mathbb{1}_{(-\bvec{\infty}, \bvec{x}]} d \mathbb{P}_{\bvec{\rv{X}}} \\
-%	&= \int_{(-\bvec{\infty}, \bvec{x}]} d \mathbb{P}_{\bvec{\rv{X}}}
+%	P_{\bvec{\rv{X}}}(\bvec{x}) &= \mathbb{P}[\bvec{\rv{X}} \leq \bvec{x}] = \mathbb{E}[\mathbb{1}[\bvec{\rv{X}} \leq \bvec{x}]] = \mathbb{E}[\mathbb{1}_{(-\bm{\infty}, \bvec{x}]}(\bvec{X})] \\
+%	&= \int_{\Omega} \mathbb{1}_{(-\bm{\infty}, \bvec{x}]} \circ \bvec{\rv{X}} d \mathbb{P} = \int_{\mathbb{R}^{D}} \mathbb{1}_{(-\bm{\infty}, \bvec{x}]} d \mathbb{P}_{\bvec{\rv{X}}} \\
+%	&= \int_{(-\bm{\infty}, \bvec{x}]} d \mathbb{P}_{\bvec{\rv{X}}}
 %	\end{aligned}
 %	\label{eq:cdf_integral}
 %	\end{equation}
@@ -980,13 +980,13 @@
 %		}
 %		\warn{Finish Later.}
 
-\section{Derivations}
-\label{sec:derivations}
+\section{Direct Quantile Regression}
+\label{sec:direct_quantile_regression}
 
 	In this section, we provide the derivations for the results proposed in the paper.
 
 	\subsection{Optimal Function Projection}
-	\label{sec:derivations:optimal_function_projection}
+	\label{sec:direct_quantile_regression:optimal_function_projection}
 
 		\begin{theorem} \label{thm:function_projection_solution}
 			(Optimal Function Projection)
@@ -1059,7 +1059,7 @@
 		\end{equation}
 
 	\subsection{Direct Empirical Distribution}
-	\label{sec:derivations:direct_empirical_distribution}
+	\label{sec:direct_quantile_regression:direct_empirical_distribution}
 
 		\begin{theorem} \label{thm:empirical_distribution_and_cdf}
 			(Direct Empirical Distribution)
@@ -1068,9 +1068,9 @@
 				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} = \sum_{\bvec{x}_{i} \in A} \beta_{i}
 			\label{eq:empirical_distribution}
 			\end{equation}
-			By the definition of the CDF, $P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]]$, the CDF shows a similar form \eqref{eq:empirical_cdf}.
+			By the definition of the CDF, $P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]]$, the CDF shows a similar form \eqref{eq:empirical_cdf}.
 			\begin{equation}
-				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}
+				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]] = \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}
 			\label{eq:empirical_cdf}
 			\end{equation}
 		\end{theorem}
@@ -1089,7 +1089,7 @@
 		\end{proof}
 		
 	\subsection{Smooth Empirical Distribution}
-	\label{sec:derivations:smooth_empirical_distribution}
+	\label{sec:direct_quantile_regression:smooth_empirical_distribution}
 		
 		\begin{theorem} \label{thm:smooth_empirical_distribution_and_cdf}
 			(Smooth Empirical Distribution)
@@ -1103,11 +1103,11 @@
 			\label{eq:smooth_empirical_distribution}
 			\end{equation}	
 			\begin{equation}
-				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} \beta_{i} \int_{-\bvec{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' = \bm{\beta}^{T} \bvec{K}(\bvec{x})
+				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} \beta_{i} \int_{-\bm{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' = \bm{\beta}^{T} \bvec{K}(\bvec{x})
 			\label{eq:smooth_empirical_cdf}
 			\end{equation}
 			\begin{equation}
-				\bvec{K}(\bvec{x}) := \Bigg\{ \int_{-\bvec{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' \Bigg\}_{i = 1}^{n}
+				\bvec{K}(\bvec{x}) := \Bigg\{ \int_{-\bm{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' \Bigg\}_{i = 1}^{n}
 			\label{eq:kernel_integral}
 			\end{equation}
 		\end{theorem}
@@ -1125,9 +1125,92 @@
 			\end{align*}
 		\end{proof}
 		
-	\subsection{Pre-Image Density Recovery}
+	\subsection{Normalisation Constants}
+	\label{sec:direct_quantile_regression:normalisation_constants}
+	
+		Suppose some data $\{(\bvec{y}_{i}, x_{i})\}_{i = 1}^{n}$ is collected from a joint distribution $\mathbb{P}_{\rv{Y} \rv{X}}$. We can either find the standard empirical embedding $\hat{\mu}_{\rv{X}}$ or empirical conditional embedding $\hat{\mu}_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}$, both of which is of the form $\Phi \bm{\beta}$ for some embedding weights $\bm{\beta}$. This is also true for posterior embeddings obtained from KBR \citep{fukumizu2013kernel}.
 		
-		Recall that the pre-image technique involves approximating the density with the same mixture components as the embedding, but with different weights. That is, suppose that the conditional embedding has the form \eqref{eq:general_conditional_embedding}, where $\bm{\beta}$ is to be computed with the dataset $\ds{Y} := \{\bvec{y}_{i}\}_{i = 1}^{n}$ either through the conditional embedding operator or through kernel Bayes' rule, depending on the application. The pre-imaged PDF would exhibit the form \eqref{eq:general_conditional_density}, where $\bvec{w}$ is obtained from $\bm{\beta}$. For the \qpi\space method, $\bm{\beta}$ is obtained through quadratic programming.
+		Direct quantile regression methods rely on estimating the CDF directly from the dataset, without the need to find the pre-image embedding weights first. While efficient and effective, it does not guarantee that the resulting CDF estimate is a valid CDF which satisfies its defining properties. Those properties are that the CDF may not be within the range $[0, 1]$, and that it may not always be non-decreasing. Those are properties that are inherent in the direct approach, as the indicator function is not guaranteed to be in the RKHS. However, in the limit of infinite data and vanishing bandwidth \citep{kanagawa2016filtering}, the empirical embedding converges to the true PDF, so that the CDF estimates based on the embedding weights will also converge to the true CDF.
+		
+		Nevertheless, for a finite number of observations, it can be beneficial to enforce some of these constraints for better numerical performance. In practice, while both the range criteria and non-decreasing criteria can be enforced, it is usually sufficient and sometimes beneficial to only enforce the fact that the CDF must end with $1$ as its inputs tends to infinity. This removes the possibility of having an quantile problem with no solution (for example, there are no inputs such that the CDF is 0.99), although it is possible that quantile problem may have multiple solutions unless the other criteria are enforced too. Rather than being an issue however, this usually indicates a lack of observation at those candidate quantile locations, and therefore can be very useful in active sampling or Bayesian optimisation applications.
+		
+		Therefore, we choose to retain the shape of the direct CDF estimate, so that the CDF is merely scaled uniformly through a multiplicative constant. We first derive the form of the scaled CDF estimate for general multivariate distribution, then we restrict it to a univariate distribution for defining the quantile estimate.
+		
+		For the direct CDF estimate \eqref{eq:empirical_cdf} from \cref{thm:empirical_distribution_and_cdf}, we require that the scaled CDF estimate $\tilde{P}_{\bvec{\rv{X}}}(\bvec{x})$ approach $1$ as $\bvec{x} \to \infty $, which is a shorthand for $x_{j} \to \infty \; \forall j \in \{1, \cdots, d\}$. To do this, we normalise the CDF estimate $\hat{P}_{\bvec{\rv{X}}}(\bvec{x})$ by a fixed constant $z_{\mathrm{DR}}$ to a new CDF $\tilde{P}_{\bvec{\rv{X}}}(\bvec{x})$ estimate \eqref{eq:modified_empirical_cdf}, where the constant is derived as \eqref{eq:normalisation_constant_dr}.
+		
+		\begin{equation}
+			\tilde{P}_{\bvec{\rv{X}}}(\bvec{x}) := \frac{1}{z_{\mathrm{DR}}} \hat{P}_{\bvec{\rv{X}}}(\bvec{x})
+		\label{eq:modified_empirical_cdf}
+		\end{equation}
+		
+		\begin{equation}
+			\begin{aligned}
+				1 &= \lim_{\bvec{x} \to \infty} \tilde{P}_{\bvec{\rv{X}}}(\bvec{x}) \\
+				&= \lim_{\bvec{x} \to \infty} \frac{1}{z_{\mathrm{DR}}} \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i} \\
+				&= \frac{1}{z_{\mathrm{DR}}} \lim_{\bvec{x} \to \infty} \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i} \\
+				&= \frac{1}{z_{\mathrm{DS}}} \sum_{i = 1}^{n} \beta_{i} \\
+				z_{\mathrm{DR}} &= \sum_{i = 1}^{n} \beta_{i}
+			\end{aligned}
+		\label{eq:normalisation_constant_dr}
+		\end{equation}
+		
+		Similarly, for the smooth CDF estimate \eqref{eq:smooth_empirical_cdf} from \cref{thm:smooth_empirical_distribution_and_cdf}, we normalise the CDF estimate $\hat{P}_{\bvec{\rv{X}}}(\bvec{x})$ by a fixed constant $z_{\mathrm{DS}}$ to a new CDF $\tilde{P}_{\bvec{\rv{X}}}(\bvec{x})$ estimate \eqref{eq:modified_smooth_cdf}, where the constant is derived as \eqref{eq:normalisation_constant_ds}.
+		
+		\begin{equation}
+			\tilde{P}_{\bvec{\rv{X}}}(\bvec{x}) := \frac{1}{z_{\mathrm{DS}}} \hat{P}_{\bvec{\rv{X}}}(\bvec{x})
+		\label{eq:modified_smooth_cdf}
+		\end{equation}
+		
+		\begin{equation}
+			\begin{aligned}
+				1 &= \lim_{\bvec{x} \to \infty} \tilde{P}_{\bvec{\rv{X}}}(\bvec{x}) \\
+				&= \lim_{\bvec{x} \to \infty} \frac{1}{z_{\mathrm{DS}}} \sum_{i = 1}^{n} \beta_{i} \int_{-\bm{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' \\
+				&= \frac{1}{z_{\mathrm{DS}}} \lim_{\bvec{x} \to \infty} \sum_{i = 1}^{n} \beta_{i} \int_{-\bm{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' \\
+				&= \frac{1}{z_{\mathrm{DS}}} \sum_{i = 1}^{n} \beta_{i} \lim_{\bvec{x} \to \infty} \int_{-\bm{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' \\
+				&= \frac{1}{z_{\mathrm{DS}}} \sum_{i = 1}^{n} \beta_{i} \int_{-\bm{\infty}}^{\bm{\infty}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' \\
+				&= \frac{1}{z_{\mathrm{DS}}} \sum_{i = 1}^{n} \beta_{i} c \\
+				&= \frac{c}{z_{\mathrm{DS}}} \sum_{i = 1}^{n} \beta_{i} \\
+				z_{\mathrm{DR}} &= c \sum_{i = 1}^{n} \beta_{i}
+			\end{aligned}
+		\label{eq:normalisation_constant_ds}
+		\end{equation}
+		
+		Each integral integrates to $c > 0$ \eqref{eq:constant_definition} as the kernel is stationary, so that $\int_{\mathbb{R}^{d}} k(\bvec{x}^{(1)}, \bvec{x}) d\bvec{x} = \int_{\mathbb{R}^{d}} k(\bvec{x}^{(2)}, \bvec{x}) d\bvec{x}$ for any $\bvec{x}^{(1)}, \bvec{x}^{(2)} \in \mathbb{R}^{d}$. This constant is usually analytically computable from the form of the stationary kernel, such as the Gaussian kernel.
+		
+		\begin{equation}
+			c := \int_{\mathbb{R}^{d}} k(\bvec{0}, \bvec{x}) d\bvec{x}
+		\label{eq:constant_definition}
+		\end{equation}
+		
+		With the normalisation constants, we now focus on obtaining quantiles for a univariate distribution.
+
+		\theoremstyle{definition}
+		\begin{definition}
+			Motivated by \cref{thm:empirical_distribution_and_cdf}, the \textit{direct embedding $\tau$-quantile estimate} (DR) is
+			\begin{equation}
+			q_{\rv{X}}(\tau) = \min\{x \in \mathbb{R} : \frac{1}{\sum_{i = 1}^{n} \beta_{i}} \sum_{i : x_{i} \leq x} \beta_{i} \geq \tau\}
+			\end{equation}	
+			The normalisation constant $\sum_{i = 1}^{n} \beta_{i}$ ensures that the CDF is within $[0, 1]$. The hyperparameter learning is done by minimising the pinball loss of the training data using cross-validation.
+		\end{definition}
+		
+		\theoremstyle{definition}
+		\begin{definition}
+			Motivated by \cref{thm:smooth_empirical_distribution_and_cdf}, the \textit{smooth embedding $\tau$-quantile estimate} (DS) is
+			\begin{equation}
+			q_{\rv{X}}(\tau) = x : \frac{1}{\int_{\mathbb{R}} k(0, x) dx \sum_{i = 1}^{n} \beta_{i}} \bm{\beta}^{T} \bvec{K}(x) = \tau
+			\end{equation}	
+			Similarly, we apply a normalisation constant $\int_{\mathbb{R}} k(0, x) dx \sum_{i = 1}^{n} \beta_{i}$, and pinball learning is used to learn the hyperparameters.
+		\end{definition}
+	
+\section{Pre-Image Quantile Regression}
+	\label{sec:pre_image_quantile_regression}
+
+	Below we introduce the efficient, but less accurate, clip-normalisation technique for density recovery.
+	
+	\subsection{Clip-Normalise Density Recovery}
+	\label{sec:pre_image_quantile_regression:density_recovery}
+	
+		Recall that the pre-image technique involves approximating the density with the same mixture components as the embedding, but with different weights. That is, suppose that the conditional embedding has the form \eqref{eq:general_conditional_embedding}, where $\bm{\beta}$ is to be computed with the dataset $\ds{Y} := \{\bvec{y}_{i}\}_{i = 1}^{n}$ either through the conditional embedding operator or through kernel Bayes' rule, depending on the application. The pre-imaged PDF would exhibit the form \eqref{eq:general_conditional_density}, where $\bvec{w}$ is obtained from $\bm{\beta}$. For the \qpi method introduced by \cite{mccalman2013multi}, $\bm{\beta}$ is obtained through quadratic programming.
 
 		\begin{equation}
 			\hat{\mu}_{\bvec{X} | \bvec{Y} = y}= \sum_{i = 1}^{n} \beta_{i} k(\bvec{x}_{i}, \cdot)
@@ -1150,13 +1233,6 @@
 			\end{aligned}
 		\label{eq:normalisation}
 		\end{equation}
-				
-		Each integral integrates to $c > 0$ \eqref{eq:constant_definition} as the kernel is stationary, so that $\int_{\mathbb{R}^{d}} k(\bvec{x}^{(1)}, \bvec{x}) d\bvec{x} = \int_{\mathbb{R}^{d}} k(\bvec{x}^{(2)}, \bvec{x}) d\bvec{x}$ for any $\bvec{x}^{(1)}, \bvec{x}^{(2)} \in \mathbb{R}^{d}$. This constant is usually analytically computable from the form of the stationary kernel, such as the Gaussian kernel.
-		
-		\begin{equation}
-			c := \int_{\mathbb{R}^{d}} k(\bvec{0}, \bvec{x}) d\bvec{x}
-		\label{eq:constant_definition}
-		\end{equation}
 
 		Computing the density pre-image density weights through quadratic programming requires a separate optimisation loop, increasing the time complexity of the algorithm significantly. At the expense of accuracy, the density weights can be instead obtained through clipping the embedding weights at zero and normalising them such that the resulting weights $\{\tilde{w}_{i}\}_{i = 1}^{n}$ are valid PDF weights.
 
@@ -1173,10 +1249,6 @@
 			\label{eq:clip_normalise_density}
 			\end{equation}
 		\end{definition}
-	
-	\subsection{Normalisation Constants}
-	
-		\warn{Put in normalisation constants}
 			
 \section{Experiments}
 \label{sec:experiments}
@@ -1191,13 +1263,13 @@
 	
 	\textbf{Linear Quantile Estimation}. (Algorithm A) This is the linear direct quantile estimator described in \cite{koenker1978regression}.
 	
-	\textbf{Quantile SVM}. (Algorithm B) This is a non-parametric quantile estimator based on dual optimisation of the loss function through a SVM, as documented in \cite{takeuchi2006nonparametric}. A RBF kernel was used for this algorithm, with kernel width and regularisation fitted as described in \cite{quadrianto2009kernel}.
+	\textbf{Quantile SVM}. (Algorithm B) This is a non-parametric quantile estimator based on dual optimisation of the loss function through a SVM, as documented in \cite{takeuchi2006nonparametric}. A Gaussian kernel was used for this algorithm, with kernel width and regularisation fitted as described in \cite{quadrianto2009kernel}.
 	
 	\textbf{Reduction to Classification}. (Algorithm C) This is the algorithm for reducing a quantile estimation problem to a series of classifiers \citep{langford2012predicting}. The results from this algorithm are taken from \cite{quadrianto2009kernel}, which used 100 GP classifiers trained with expectation propagation and an RBF kernel.
 	
-	\textbf{Quantile GP}. (Algorithm D) This algorithm is the Gaussian-processed based direct CDF estimate \cite{quadrianto2009kernel}. An RBF kernel was used, with the hyper-parameters learned by optimising the marginal log-likelihood.
+	\textbf{Quantile GP}. (Algorithm D) This algorithm is the Gaussian-processed based direct CDF estimate \cite{quadrianto2009kernel}. An Gaussian kernel was used, with the hyper-parameters learned by optimising the marginal log-likelihood.
 	
-	\textbf{Heteroskedastic Quantile GP}. (Algorithm E) This algorithm is the same as the Quantile GP, except that the kernel is a heteroskedastic RBF with 10 latent pseudo-observations controlling the bandwidth along the length of the input dimension \citep{quadrianto2009kernel}. 
+	\textbf{Heteroskedastic Quantile GP}. (Algorithm E) This algorithm is the same as the Quantile GP, except that the kernel is a heteroskedastic Gaussian with 10 latent pseudo-observations controlling the bandwidth along the length of the input dimension \citep{quadrianto2009kernel}. 
 		
 	\subsection{Results}
 	\label{sec:experiments:results}

@@ -171,7 +171,7 @@
 		The \textit{cumulative distribution function} (CDF) $P_{\bvec{\rv{X}}} : \mathbb{R}^{d} \to [0, 1]$ of a \textit{real-valued} random vector $\bvec{\rv{X}} : \Omega \to \mathbb{R}^{d}$ is defined by
 		
 		\begin{equation}
-				P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \mathbb{P}[\bvec{\rv{X}} \leq \bvec{x}]
+				P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]] = \mathbb{P}[\bvec{\rv{X}} \leq \bvec{x}]
 		\label{eq:cdf}
 		\end{equation}
 
@@ -179,7 +179,7 @@
 		\begin{equation}
 			\begin{aligned}
 				\{\bvec{\rv{X}} \leq \bvec{x}\} &:= \bigcap\limits_{j = 1}^{d} \{\rv{X}_{j} \in (-\infty, x_{j}]\} \in \mathcal{W} \\
-				(-\bvec{\infty}, \bvec{x}] &:= (-\infty, x_{1}] \times \dots \times (-\infty, x_{d}] \\
+				(-\bm{\infty}, \bvec{x}] &:= (-\infty, x_{1}] \times \dots \times (-\infty, x_{d}] \\
 			\end{aligned}
 		\label{eq:shorthand}
 		\end{equation}
@@ -331,7 +331,7 @@
 	The CDF  $P_{\rv{X}}$ reveals a similar structure to the distribution $\mathbb{P}_{\rv{X}}$ through \cref{def:cdf} \eqref{eq:cdf_inner}.
 			
 	\begin{equation}
-		P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \langle \mu_{\bvec{\rv{X}}}, \mathbb{1}_{(-\bvec{\infty}, \bvec{x}]} \rangle
+		P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]] = \langle \mu_{\bvec{\rv{X}}}, \mathbb{1}_{(-\bm{\infty}, \bvec{x}]} \rangle
 	\label{eq:cdf_inner}
 	\end{equation}
 
@@ -383,7 +383,7 @@
 			\end{equation}
 			By \cref{def:cdf}, the CDF shows a similar form \eqref{eq:empirical_cdf}.
 			\begin{equation}
-				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bvec{\infty}, \bvec{x}]] = \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}
+				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]] = \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}
 			\label{eq:empirical_cdf}
 			\end{equation}
 		\end{theorem}
@@ -416,11 +416,11 @@
 			\label{eq:smooth_empirical_distribution}
 			\end{equation}	
 			\begin{equation}
-				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} \beta_{i} \int_{-\bvec{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' = \bm{\beta}^{T} \bvec{K}(\bvec{x})
+				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} \beta_{i} \int_{-\bm{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' = \bm{\beta}^{T} \bvec{K}(\bvec{x})
 			\label{eq:smooth_empirical_cdf}
 			\end{equation}
 			\begin{equation}
-				\bvec{K}(\bvec{x}) := \Bigg\{ \int_{-\bvec{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' \Bigg\}_{i = 1}^{n}
+				\bvec{K}(\bvec{x}) := \Bigg\{ \int_{-\bm{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' \Bigg\}_{i = 1}^{n}
 			\label{eq:kernel_integral}
 			\end{equation}
 		\end{theorem}
@@ -437,7 +437,7 @@
 		With this approach, CDF estimates are now smooth and can be shown to converge to the true CDF in the limit of $n \rightarrow \infty$ and vanishing kernel bandwidth. However, due to the possibility of negative weights $\beta_{i}$, both direct approaches may produce CDF estimates that are not strictly non-decreasing, as shown in \cref{fig:direct_quantile_regression}. Notice that the direct non-smooth direct CDF estimate jumps at locations corresponding to training points, and that, due to the negative weights, the smooth CDF estimate contain components that go below zero such that the resultant CDF estimate may not be strictly non-decreasing. Furthermore, the resulting CDF may not be in the range $[0, 1]$. To rectify this, we propose a Pre-Image approach to estimating the CDF.
 
 \section{Pre-Image Quantile Regression}
-\label{sec:Pre-Image_quantile_regression}
+\label{sec:pre_image_quantile_regression}
 
 %	\warn{So we need to cite MKBR before we talk about integrating it. The integration part is relatively short and straight forward, so the section would comprise of deriving and discussing MKBR with examples, and then discuss integration briefly, and then present example figures.}
 	
@@ -456,7 +456,7 @@
 	\end{equation}
 	
 	\begin{equation}
-		\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} w_{i} \int_{-\bvec{\infty}}^{\bvec{x}} k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' =  \bvec{w}^{T} \bvec{K}(\bvec{x})
+		\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} w_{i} \int_{-\bm{\infty}}^{\bvec{x}} k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' =  \bvec{w}^{T} \bvec{K}(\bvec{x})
 	\label{eq:qpi_empirical_cdf}
 	\end{equation}
 	
@@ -522,24 +522,24 @@
 \section{Quantile Regression Algorithms}
 \label{sec:quantile_regression_algorithms}
 	
-	Suppose some data $\{(\bvec{y}_{i}, x_{i})\}_{i = 1}^{n}$ is collected from a joint distribution $\mathbb{P}_{\rv{Y} \rv{X}}$. We can either find the standard empirical embedding $\hat{\mu}_{\rv{X}}$ or empirical conditional embedding $\hat{\mu}_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}$, both of which is of the form $\Phi \bm{\beta}$ for some weights. This is also true for posterior embeddings obtained from KBR \citep{fukumizu2013kernel}. In this paper we present six algorithms for quantile regression based on the methods proposed in this paper. Table \ref{table:quantile_regression_methods} lists the properties of each of these algorithms.
+	Suppose some data $\{(\bvec{y}_{i}, x_{i})\}_{i = 1}^{n}$ is collected from a joint distribution $\mathbb{P}_{\rv{Y} \rv{X}}$. We can either find the standard empirical embedding $\hat{\mu}_{\rv{X}}$ or empirical conditional embedding $\hat{\mu}_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}$, both of which is of the form $\Phi \bm{\beta}$. This is also true for posterior embeddings obtained from KBR \citep{fukumizu2013kernel}. In this paper we present the following algorithms for quantile regression based on the methods proposed in this paper. Table \ref{table:quantile_regression_methods} lists the properties of each of these algorithms.
 
 	\theoremstyle{definition}
 	\begin{definition}
 		Motivated by \cref{thm:empirical_distribution_and_cdf}, the \textit{direct embedding $\tau$-quantile estimate} (DR) is
 		\begin{equation}
-			q_{\rv{X}}(\tau) = \min\{x \in \mathbb{R} : \frac{1}{z_{\mathrm{DR}}} \sum_{i : x_{i} \leq x} \beta_{i} \geq \tau\}
+		q_{\rv{X}}(\tau) = \min\{x \in \mathbb{R} : \frac{1}{\sum_{i = 1}^{n} \beta_{i}} \sum_{i : x_{i} \leq x} \beta_{i} \geq \tau\}
 		\end{equation}	
-		The normalisation constant $z_{\mathrm{DR}}$ ensures that the CDF is within $[0, 1]$ (see supplementary). The hyperparameter learning is done by minimising the pinball loss \eqref{eq:expected_pinball_loss} of the training data using cross-validation.
+		The normalisation constant ensures that the CDF reaches 1. The hyperparameter learning is done by minimising the pinball loss using cross-validation.
 	\end{definition}
 	
 	\theoremstyle{definition}
 	\begin{definition}
 		Motivated by \cref{thm:smooth_empirical_distribution_and_cdf}, the \textit{smooth embedding $\tau$-quantile estimate} (DS) is
 		\begin{equation}
-			q_{\rv{X}}(\tau) = x : \frac{1}{z_{\mathrm{DS}}} \bm{\beta}^{T} \bvec{K}(x) = \tau
+		q_{\rv{X}}(\tau) = x : \frac{1}{\int_{\mathbb{R}} k(0, x) dx \sum_{i = 1}^{n} \beta_{i}} \bm{\beta}^{T} \bvec{K}(x) = \tau
 		\end{equation}	
-		Similarly, we apply a normalisation constant $z_{\mathrm{DS}}$, and pinball learning is used to learn the hyperparameters.
+		Similarly, we apply a normalisation constant, and pinball learning is used to learn the hyperparameters.
 	\end{definition}
 	
 	\theoremstyle{definition}
@@ -563,7 +563,7 @@
 	\begin{definition}
 		The \textit{clip-normalised $\tau$-quantile estimate} is
 		\begin{equation}
-		q_{\rv{X}}(\tau) = x : \bvec{\tilde{w}}^{T} \bvec{K}(\bvec{x}) = \tau
+		q_{\rv{X}}(\tau) = x : \bvec{\tilde{w}}^{T} \bvec{K}(x) = \tau
 		\end{equation}
 		where $\bvec{\tilde{w}}$ is the clip-normalised weights of the relevant embedding.
 		Both pinball learning and marginal likelihood learning can be used. We denote this algorithm as NB with done with pinball learning, and NL when done with marginal likelihood learning.
