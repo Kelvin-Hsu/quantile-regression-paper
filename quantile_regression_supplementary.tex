@@ -1253,31 +1253,6 @@
 \section{Experiments}
 \label{sec:experiments}
 
-	The Antigen dataset samples the concentration of various molecules \citep{quadrianto2009kernel} in a blood sample. The dataset contains 97 points, with eight-dimensional observations $\bvec{y}$ and a one-dimensional state $x$. The Weather dataset measures a meteorological variable distributed over the surface of the Earth. It has two-dimensional observations $\bvec{y}$ and a one-dimensional state $\bvec{x}$, and contains 238 points. The Motorcycle dataset is a record of measurements taken from an accelerometer during a front-on motorcycle collision, and is often used because it contains heteroskedastic, non-Gaussian behaviour. The dataset contains 137 points, with a single input dimension $y$ (time), and a single output dimension $x$. Finally, the Bone Mineral Density dataset contains relative spinal bone mineral density measurements from North American adolescents of various ages. It has a single input variable $y$ (age), a single output variable $x$ (bone mineral density), and 485 points. The original data were recorded by \cite{bachrach1999bone}.
-
-
-	\subsection{Comparisons}
-	\label{sec:experiments:comparison}
-	
-	Below we summarise the state-of-the-art algorithms to be compared with our algorithms.
-	
-	\textbf{Linear Quantile Estimation}. (Algorithm A) This is the linear direct quantile estimator described in \cite{koenker1978regression}.
-	
-	\textbf{Quantile SVM}. (Algorithm B) This is a non-parametric quantile estimator based on dual optimisation of the loss function through a SVM, as documented in \cite{takeuchi2006nonparametric}. A Gaussian kernel was used for this algorithm, with kernel width and regularisation fitted as described in \cite{quadrianto2009kernel}.
-	
-	\textbf{Reduction to Classification}. (Algorithm C) This is the algorithm for reducing a quantile estimation problem to a series of classifiers \citep{langford2012predicting}. The results from this algorithm are taken from \cite{quadrianto2009kernel}, which used 100 GP classifiers trained with expectation propagation and an RBF kernel.
-	
-	\textbf{Quantile GP}. (Algorithm D) This algorithm is the Gaussian-processed based direct CDF estimate \cite{quadrianto2009kernel}. An Gaussian kernel was used, with the hyper-parameters learned by optimising the marginal log-likelihood.
-	
-	\textbf{Heteroskedastic Quantile GP}. (Algorithm E) This algorithm is the same as the Quantile GP, except that the kernel is a heteroskedastic Gaussian with 10 latent pseudo-observations controlling the bandwidth along the length of the input dimension \citep{quadrianto2009kernel}. 
-		
-	\subsection{Results}
-	\label{sec:experiments:results}
-	
-		The full results for each individual experiment and quantile are also tabulated. For Antigen, this information is given in \cref{table:results}. Curiously, the three top performers for the quantiles were each from a totally different family of algorithms. Our smooth direct embedding estimator (DS), the quantile SVM (B), and the quantile GP (D). The full results for the Weather and Bone Mineral Density tests are given in \cref{table:results}.
-		
-		From \cref{table:results}, we can see that algorithm E matched or exceeded all other algorithms in Motorcycle dataset, and was competitive but did not beat our algorithms in the Bone Mineral Density dataset. The likely explanation is the strong heteroskedasicity of the Motorcycle dataset benefited from a modelling approach that explicitly took it into account. This raises a possible avenue of future work--- including heteroskedastic kernel in our methods to improve performance.
-	
 		\begin{table*}
 			\begin{center}
 				\resizebox{0.48\textwidth}{!}{
@@ -1413,6 +1388,42 @@
 						%			\caption{Bone Mineral Density results.}
 						%			\label{table:bmd}
 						%		\end{table*}
+						
+	\subsection{Datasets}
+	\label{sec:experiments:datasets}
+	
+		We describe the dataset that was used for comparisons of algorithm performance.
+		
+		The Antigen dataset samples the concentration of various molecules \citep{quadrianto2009kernel} in a blood sample. The dataset contains 97 points, with eight-dimensional observations $\bvec{y}$ and a one-dimensional state $x$.
+		
+		The Weather dataset measures a meteorological variable distributed over the surface of the Earth. It has two-dimensional observations $\bvec{y}$ and a one-dimensional state $\bvec{x}$, and contains 238 points.
+		
+		The Motorcycle dataset is a record of measurements taken from an accelerometer during a front-on motorcycle collision, and is often used because it contains heteroskedastic, non-Gaussian behaviour. The dataset contains 137 points, with a single input dimension $y$ (time), and a single output dimension $x$.
+		
+		Finally, the Bone Mineral Density dataset contains relative spinal bone mineral density measurements from North American adolescents of various ages. It has a single input variable $y$ (age), a single output variable $x$ (bone mineral density), and 485 points. The original data were recorded by \cite{bachrach1999bone}.
+
+
+	\subsection{Comparisons}
+	\label{sec:experiments:comparison}
+	
+		Below we summarise the state-of-the-art algorithms to be compared with our algorithms.
+		
+		\textbf{Linear Quantile Estimation}. (Algorithm A) This is the linear direct quantile estimator described in \cite{koenker1978regression}.
+		
+		\textbf{Quantile SVM}. (Algorithm B) This is a non-parametric quantile estimator based on dual optimisation of the loss function through a SVM, as documented in \cite{takeuchi2006nonparametric}. A Gaussian kernel was used for this algorithm, with kernel width and regularisation fitted as described in \cite{quadrianto2009kernel}.
+		
+		\textbf{Reduction to Classification}. (Algorithm C) This is the algorithm for reducing a quantile estimation problem to a series of classifiers \citep{langford2012predicting}. The results from this algorithm are taken from \cite{quadrianto2009kernel}, which used 100 GP classifiers trained with expectation propagation and an RBF kernel.
+		
+		\textbf{Quantile GP}. (Algorithm D) This algorithm is the Gaussian-processed based direct CDF estimate \cite{quadrianto2009kernel}. An Gaussian kernel was used, with the hyper-parameters learned by optimising the marginal log-likelihood.
+		
+		\textbf{Heteroskedastic Quantile GP}. (Algorithm E) This algorithm is the same as the Quantile GP, except that the kernel is a heteroskedastic Gaussian with 10 latent pseudo-observations controlling the bandwidth along the length of the input dimension \citep{quadrianto2009kernel}. 
+		
+	\subsection{Results}
+	\label{sec:experiments:results}
+	
+		The full results for each individual experiment and quantile are tabulated in \cref{table:results}. For Antigen, this information is given in \cref{table:results}. Curiously, the three top performers for the quantiles were each from a totally different family of algorithms. Our smooth direct embedding estimator (DS), the quantile SVM (B), and the quantile GP (D).
+		
+		From \cref{table:results}, we can see that algorithm E matched or exceeded all other algorithms in Motorcycle dataset, and was competitive but did not beat our algorithms in the Bone Mineral Density dataset. The likely explanation is the strong heteroskedasicity of the Motorcycle dataset benefited from a modelling approach that explicitly took it into account. This raises a possible avenue of future work--- including heteroskedastic kernel in our methods to improve performance.
 
 \bibliography{kernel_embeddings}
 
