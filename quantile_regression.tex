@@ -540,7 +540,6 @@
 		\begin{equation}
 		q_{\rv{X}}(\tau) = \min\{x \in \mathbb{R} : \frac{1}{\sum_{i = 1}^{n} \beta_{i}} \sum_{i : x_{i} \leq x} \beta_{i} \geq \tau\}
 		\end{equation}	
-		The normalisation constant ensures that the CDF reaches 1. The hyperparameter learning is done by minimising the pinball loss using cross-validation.
 	\end{definition}
 	
 	\theoremstyle{definition}
@@ -549,9 +548,10 @@
 		\begin{equation}
 		q_{\rv{X}}(\tau) = x : \frac{1}{\int_{\mathbb{R}} k(0, x) dx \sum_{i = 1}^{n} \beta_{i}} \bm{\beta}^{T} \bvec{K}(x) = \tau
 		\end{equation}	
-		Similarly, we apply a normalisation constant, and pinball learning is used to learn the hyperparameters.
 	\end{definition}
 	
+	For both approaches, pinball learning with cross-validation is used to optimise the hyperparameters. The normalisation factors ensure that the CDF approaches $1$ as its input approaches infinity, and are derived in the supplementary material.
+
 	\theoremstyle{definition}
 	\begin{definition}
 		Using \eqref{eq:qpi_empirical_cdf} directly, the \textit{pre-image $\tau$-quantile estimate} is
@@ -677,7 +677,7 @@
 		
 		The average pinball loss for each algorithm in the three experiments is given in \cref{fig:qfull}. Overall, pre-image algorithms performed on par or better than algorithms from the literature. The two best performing algorithms were NB and JB, which are the normed-weights and \qpi\space methods, trained under the pinball loss. % It is unsurprising that pinball learning performed better than marginal likelihood learning, given that the training was optimising the same function that would evaluate the algorithm's performance.
 
-		This demonstrates a trade-off between using pinball learning and receiving slightly better performance, or marginal likelihood learning (NL and JL) and ensuring the non-crossing constraint holds. The NL and JL algorithms were competitive, but kernel conditional Quantile GP (D) achieved the best performance.
+		This demonstrates a trade-off between using pinball learning and receiving slightly better performance, or marginal likelihood learning (NL and JL) and ensuring the non-crossing constraint holds. % The NL and JL algorithms were competitive, but kernel conditional Quantile GP (D) achieved the best performance.
 
 		With both pinball and marginal likelihood learning, there was little difference on average between the pre-image estimator and the normed-weights estimator. This fact is worth noting when considering a real-time application of these algorithms, as the pre-image estimator has a much greater computational cost.
 		
