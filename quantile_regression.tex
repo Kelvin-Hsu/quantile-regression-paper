@@ -106,9 +106,18 @@
 
 	Understanding risk is critical in any discipline making decisions under uncertainty. Uncertainty can arise from both incomplete information and randomness in events, whose behaviour can be captured by probabilistic methods. In many cases, such decisions depend on one or more quantities of interest, where the likelihood that such quantities will fall outside a nominal or acceptable range is used to quantify the corresponding risks involved.
 	
-	For example, the exterior toughness of a motorcycle can be designed to withstand a likely range of acceleration experienced under collision, and no more, in order to limit the development cost. The probability that the actual acceleration experienced falls outside this nominal range is seen as the level of risk involved in this decision.
+	For example, the exterior toughness of a motorcycle can be designed to withstand a likely range of acceleration experienced under collision, and no more, in order to limit the development cost. The probability that the actual acceleration experienced falls outside this nominal range is seen as the level of risk involved in this decision. 
 
-	More naturally, however, instead of specifying an acceptable range of values and determining the level of risk involved, an acceptable risk probability can be specified instead, which is then used to obtain the bounds of the acceptable range. That is, we are interested in finding quantiles, which provide the bounds inside which a known mass of probability is contained.
+	\begin{figure}
+		\begin{center}
+			\includegraphics[width=0.48\columnwidth]{figures/mcquantiles_1}
+			\includegraphics[width=0.48\columnwidth]{figures/mcquantiles_2}
+		\end{center}
+		\caption{\small CDF estimate (left), and the 0.1, 0.25, 0.5, 0.75, 0.9 quantiles overlaying a PDF estimate (right)} on a motorcycle dataset (acceleration v.s. time)
+		\label{fig:quantile_regression_motorcycle}
+	\end{figure}
+	
+	More naturally, however, instead of specifying an acceptable range of values and determining the level of risk involved, an acceptable risk probability can be specified instead, which is then used to obtain the bounds of the acceptable range. That is, we are interested in finding quantiles, which provide the bounds inside which a known mass of probability is contained. 
 	
 %	Bayesian methods in the machine learning community has demonstrated the advantages that probabilistic techniques bring forth. By maintaining not only a point estimate of a phenomenon, but a probability distribution of our belief about that phenomenon, informed decisions and actions can be taken by taking into account the uncertainty involved.
 	
@@ -118,7 +127,7 @@
 % Done
 % ^.
 
-	When the quantity of interest is a response variable conditionally dependent on a input variable that is also continuous, the relationship can be captured by a regression model. Typically, the response variable is predicted with the mean, and the uncertainty of this prediction can be captured by the standard deviation. However, this is only natural in the case of an output phenomenon that is uni-modal. Consider a bi-modal, symmetric distribution centred at zero with density peaks at $\pm1$ and a low density value at zero. The mean prediction of zero would not be a representative prediction of a likely sample or outcome, immediately also limiting the usefulness of the standard deviation which captures deviations from the mean. In this case, it is far more useful and natural to bound the uncertainty, or risk, through a quantile.
+	When the quantity of interest is a response variable conditionally dependent on a input variable that is also continuous, the relationship can be captured by a regression model. \Cref{fig:quantile_regression_motorcycle} shows a typical example of quantile regression on motorcycle acceleration against time. Typically, the response variable is predicted with the mean, and the uncertainty of this prediction can be captured by the standard deviation. However, this is only natural in the case of an output phenomenon that is uni-modal. Consider a bi-modal, symmetric distribution centred at zero with density peaks at $\pm1$ and a low density value at zero. The mean prediction of zero would not be a representative prediction of a likely sample or outcome, immediately also limiting the usefulness of the standard deviation which captures deviations from the mean. In this case, it is far more useful and natural to bound the uncertainty, or risk, through a quantile.
 	
 % * <lachlan@mccalman.info> 2016-10-05T23:33:18.326Z:
 %
@@ -137,17 +146,6 @@
 % Done!
 % 
 % ^.
-
-%	\begin{figure}
-%		\begin{center}
-%			\includegraphics[width=0.48\columnwidth]{figures/mcquantiles_1}
-%			\includegraphics[width=0.48\columnwidth]{figures/mcquantiles_2}
-%		\end{center}
-%		\caption{\small Estimate of the cumulative embedding (left),
-%			and the quantiles 0.1, 0.25, 0.5, 0.75, 0.9 overlaying a PDF estimate
-%			(right)}
-%		\label{fig:cembedding}
-%	\end{figure}
 	
 \section{Background}
 \label{sec:background}
@@ -198,18 +196,11 @@
 	\subsection{Kernel Embedding}
 	\label{sec:background:kernel_embedding}
 	
-		This section summarises fundamental and important results in the field of kernel embeddings that form the background of this paper.
+%		This section summarises fundamental and important results in the field of kernel embeddings that form the background of this paper.
 
 		In this paper we assume all kernels involved are positive definite and characteristic. That is, the kernel $k : \mathcal{X} \times \mathcal{X} \to \mathbb{R}$ defines a unique reproducing kernel Hilbert space (RKHS), denoted by $\mathcal{H}_{k}$ \citep{fukumizu2004dimensionality}. Let $\rv{X} : \Omega \to \mathcal{X}$ and $\rv{Y} : \Omega \to \mathcal{Y}$ be random variables with distributions $\mathbb{P}_{\rv{X}}$ and $\mathbb{P}_{\rv{Y}}$, and let $k$ and $l$ be characteristic positive definite kernels defined on $\mathcal{X}$ and $\mathcal{Y}$ respectively. Let $f \in \Hk$ and $g \in \Hl$ be real-valued functions.
 		
-		The feature function of a RKHS can be obtained from the partially applied kernel \eqref{eq:feature_functions}, and forms the basis for the full RKHS \citep{muandet2016kernel}.
-			
-		\begin{equation}
-			\phi_{x} := k(x, \cdot) \in \Hk ;\quad \psi_{y} := l(y, \cdot) \in \Hl
-		\label{eq:feature_functions}
-		\end{equation}
-
-		An inner product in the RKHS satisfies the reproducing property \eqref{eq:reproducing_property}, where the function evaluation operator within the full RKHS is the inner product with the feature function in that RKHS \citep{muandet2016kernel}.
+		The feature function of a RKHS can be obtained from the partially applied kernels $\phi_{x} := k(x, \cdot) \in \Hk$ and $\psi_{y} := l(y, \cdot) \in \Hl$, and forms the basis for the full RKHS. An inner product in the RKHS satisfies the reproducing property \eqref{eq:reproducing_property}, where the function evaluation operator within the full RKHS is the inner product with the feature function \citep{muandet2016kernel}.
 
 		\begin{equation}
 			\inner{\phi_{x}}{f} = f(x) ;\quad \inner{\psi_{y}}{g} = g(y)
@@ -293,7 +284,7 @@
 			\end{equation}
 				
 
-			With this notation, general empirical embeddings can be written with matrix notation \eqref{eq:empirical_conditional_embedding_matrices}, where $\bm{\gamma} := \{\gamma_{i}\}_{i = 1}^{n}$ depends on $\ds{X}$ and $\bm{\beta} := \{\beta_{i}\}_{i = 1}^{n}$ depends on $\ds{Y}$ \citep{muandet2016kernel}. For marginal (non-conditional) embeddings, the weights become uniform such that $\gamma_{i} = \frac{1}{n}$ and $\beta_{i} = \frac{1}{n}$ for $i \in \{1, \dots, n\}$.
+			With this notation, general empirical embeddings can be written with matrix notation \eqref{eq:empirical_conditional_embedding_matrices}, where $\bm{\gamma} := \{\gamma_{i}\}_{i = 1}^{n}$ depends on $\ds{X}$ and $\bm{\beta} := \{\beta_{i}\}_{i = 1}^{n}$ depends on $\ds{Y}$ \citep{muandet2016kernel}. For marginal (non-conditional) embeddings, the weights become uniform such that $\gamma_{i} = \frac{1}{n}$ and $\beta_{i} = \frac{1}{n}$ for $i \in \{1, \dots, n\}$. However, the marginal embeddings will be written with general weights in later sections, so that the technique can be easily extended to conditional embeddings.
 			
 			\begin{equation}
 				\hatmuXy = \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}} = \Phi \bm{\beta} ;\quad \hatmuYx = \Psi \bm{\gamma}
@@ -317,7 +308,7 @@
 
 		Finding the conditional quantile is an identical problem to finding a regular quantile, except with the CDF replaced by a conditional CDF. As such, for brevity and simpleness, in this paper we will present CDF estimation from a general embedding with general weights, whose form both conditional embeddings and regular embeddings share.
 
-		Quantile regression is then the problem of finding an empirical estimate $\hat{q}_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(\tau)$ for $q_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(\tau)$ given a set of paired observations $\{(\bvec{y}_{i}, x_{i})\}_{i = 1}^{n}$ and a query point $\bvec{y}$.
+		Quantile regression is then the problem of finding an empirical estimate $\hat{q}_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(\tau)$ for $q_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(\tau)$ given observations $\{(\bvec{y}_{i}, x_{i})\}_{i = 1}^{n}$ and a query point $\bvec{y}$.
 		
 		In practice, the infimum is often replaced with the minimum. If the CDF estimate is smooth and always increasing, the inequality becomes an equality, and obtaining quantiles becomes a root finding procedure once an estimate of the CDF is obtained \eqref{eq:quantile_root_finding}. Therefore, in this paper, we focus on techniques for CDF estimation from a given dataset, using both direct and pre-image approaches.
 		
@@ -331,7 +322,7 @@
 
 	The direct approach to quantile regression refers to techniques which computes an estimate of the CDF directly, without needing to compute the PDF first.
 	
-	Using \eqref{eq:function_expectation}, the distribution can be written as an inner product with the kernel embedding \eqref{eq:distribution_inner}.
+	Using \eqref{eq:function_expectation}, our approach begins by expressing the distribution as an inner product \eqref{eq:distribution_inner}.
 		
 	\begin{equation}
 		\mathbb{P}_{\bvec{\rv{X}}}[A] = \mathbb{E}[\mathbb{1}_{A}(\bvec{\rv{X}})] = \langle \mu_{\bvec{\rv{X}}}, \mathbb{1}_{A} \rangle
@@ -532,7 +523,8 @@
 \section{Quantile Regression Algorithms}
 \label{sec:quantile_regression_algorithms}
 	
-	Suppose some data $\{(\bvec{y}_{i}, x_{i})\}_{i = 1}^{n}$ is collected from a joint distribution $\mathbb{P}_{\rv{Y} \rv{X}}$. We can either find the standard empirical embedding $\hat{\mu}_{\rv{X}}$ or empirical conditional embedding $\hat{\mu}_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}$, both of which is of the form $\Phi \bm{\beta}$. This is also true for posterior embeddings obtained from KBR \citep{fukumizu2013kernel}, making these techniques very general in nature. In this paper we present the following algorithms for quantile regression based on the methods proposed in this paper. Table \ref{table:quantile_regression_methods} lists the properties of each of these algorithms.
+	% Suppose some data $\{(\bvec{y}_{i}, x_{i})\}_{i = 1}^{n}$ is collected from a joint distribution $\mathbb{P}_{\rv{Y} \rv{X}}$. We can either find the standard empirical embedding $\hat{\mu}_{\rv{X}}$ or empirical conditional embedding $\hat{\mu}_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}$, both of which is of the form $\Phi \bm{\beta}$. This is also true for posterior embeddings obtained from KBR \citep{fukumizu2013kernel}, making these techniques very general in nature.
+	We present the following algorithms for quantile regression based on the methods proposed in this paper. Table \ref{table:quantile_regression_methods} lists the properties of each of these algorithms.
 
 	\theoremstyle{definition}
 	\begin{definition}
@@ -608,9 +600,9 @@
 %	\subsection{Computational Complexity}
 %	\label{sec:quantile_regression_algorithms:computational_complexity}
 		
-	The computational complexity of these algorithms varies from $O(n \log(n))$ to $O(n^{3} \log(n))$ in the number of training points $n$ (\cref{table:quantile_regression_methods}). The 1-D root-finding required to solve the quantile equation \eqref{eq:quantile_root_finding} introduces a factor of $\log(n)$ in all cases (using a binary search). The difference lies in the CDF estimation technique.
+	The computational complexity of these algorithms varies from $O(n \log(n))$ to $O(n^{3} \log(n))$ in the number of training points $n$ (\cref{table:quantile_regression_methods}). The 1-D root-finding required to solve the quantile equation \eqref{eq:quantile_root_finding} introduces a factor of $\log(n)$ in all cases (using a binary search). The difference lies in the CDF estimation technique. %, whose computational complexity is discussed in the supplementary material.
 	
-	The cheapest cumulative evaluate is the direct embedding estimator (DR) --- this is simply a (conditional) sum of the mixture weights and is therefore $O(n)$ in the number of training points. The smooth embedding estimator (DS) and the clip-normalised estimator (NL and NB) are similarly inexpensive to compute, once the kernel integral \eqref{eq:kernel_integral} is pre-computed. They are also $O(n)$, but requires pre-computation of the kernel integral. The most expensive are the \qpi-based pre-image estimators (JL and JB), which require solving a quadratic program to determine the mixture weights and therefore introduces a further factor of $O(n^2)$. However, if a pre-image estimate is also required for other tasks and is therefore already available, then JL and JB also only introduces a further factor of $O(n)$.
+	The cheapest algorithm is DR, which is simply a (conditional) sum of the mixture weights and is therefore $O(n)$ in the number of training points. Similarly, DS, NL, and NB are also $O(n)$, but requires pre-computation of the kernel integral $\eqref{eq:kernel_integral}$ of constant complexity. The most expensive are the \qpi-based pre-image estimators (JL and JB), which require solving a quadratic program and therefore introduces a further factor of $O(n^2)$. However, if a pre-image estimate is also required for other tasks and is therefore already available, then JL and JB also only introduces a further factor of $O(n)$.
 	
 \section{Related Work}
 \label{sec:related_work}

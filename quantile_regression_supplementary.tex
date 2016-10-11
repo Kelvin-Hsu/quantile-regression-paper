@@ -1265,6 +1265,37 @@
 			\end{equation}
 		\end{definition}
 			
+%\section{Computational Complexity}
+%\label{sec:computational_complexity}
+%
+%	\begin{table}[t!]
+%		% * <lachlan@mccalman.info> 2016-10-06T00:07:58.096Z:
+%		% 
+%		% If you want to double check these complexity bounds I'd appreciate it  =)
+%		% They make sense to me too
+%		% 
+%		% ^.
+%		\begin{center}
+%			\begin{tabular}{l|cccc}
+%				Algorithm & S & ND &   NC & Complexity \\ \hline
+%				DR  &              &                &                & $O(n \log(n))$    \\
+%				DS  & $\checkmark$ &                &                &
+%				$O(n \log(n))$  \\
+%				NB  & $\checkmark$ & $\checkmark$   &                &
+%				$O(n \log(n))$ \\
+%				JB  & $\checkmark$ & $\checkmark$   &                &
+%				$O(n^{3} \log(n))$ \\
+%				NL  & $\checkmark$ & $\checkmark$   & $\checkmark$   &
+%				$O(n \log(n))$ \\
+%				JL  & $\checkmark$ & $\checkmark$   & $\checkmark$   &   $O(n^{3} \log(n))$ 
+%			\end{tabular}
+%		\end{center}
+%		\caption{\small Comparison of Quantile estimation techniques. S stands for Smooth, ND for Non-Decreasing, NC for Non-Crossing, and $n$ is the number of training points.}
+%		\label{table:quantile_regression_methods}
+%	\end{table}
+%	
+%	The cheapest cumulative evaluate is the direct embedding estimator (DR) --- this is simply a (conditional) sum of the mixture weights and is therefore $O(n)$ in the number of training points. The smooth embedding estimator (DS) and the clip-normalised estimator (NL and NB) are similarly inexpensive to compute, once the kernel integral \eqref{eq:kernel_integral} is pre-computed. They are also $O(n)$, but requires pre-computation of the kernel integral. The most expensive are the \qpi-based pre-image estimators (JL and JB), which require solving a quadratic program to determine the mixture weights and therefore introduces a further factor of $O(n^2)$. However, if a pre-image estimate is also required for other tasks and is therefore already available, then JL and JB also only introduces a further factor of $O(n)$.
+
 \section{Experiments}
 \label{sec:experiments}
 
