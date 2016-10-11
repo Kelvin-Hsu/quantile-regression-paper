@@ -88,7 +88,7 @@
 
 \twocolumn[
 
-\aistatstitle{Non-Parametric Quantile Regression with Kernel Embeddings: \\ Supplementary Material}
+\aistatstitle{Nonparametric Quantile Regression with Kernel Embeddings: \\ Supplementary Material}
 
 \aistatsauthor{ Anonymous Author 1 \And Anonymous Author 2 \And Anonymous Author 3 }
 
@@ -544,7 +544,7 @@
 %		
 %		\begin{theorem} \label{thm:kernel_sum_rule}
 %			(Kernel Sum Rule)
-%			The Kernel Sum Rule \eqref{eq:kernel_sum_rule} is the kernelised and non-parametric version of the basic sum rule of probability \eqref{eq:sum_rule}.
+%			The Kernel Sum Rule \eqref{eq:kernel_sum_rule} is the kernelised and nonparametric version of the basic sum rule of probability \eqref{eq:sum_rule}.
 %			\begin{equation}
 %			\begin{aligned}
 %				p_{\rv{X}}(x) &= \int_{\mathcal{Y}} p_{\rv{X} | \rv{Y}}(x | \cdot) d\mathbb{P}_{\rv{Y}} \quad & \mathrm{(Lebesgue)} \\
@@ -626,7 +626,7 @@
 %	
 %		\begin{theorem} \label{thm:kernel_chain_rule}
 %			(Kernel Chain Rule)
-%			The Kernel Chain Rule \eqref{eq:kernel_chain_rule} is the kernelised and non-parametric version of the basic chain rule of probability \eqref{eq:chain_rule}.
+%			The Kernel Chain Rule \eqref{eq:kernel_chain_rule} is the kernelised and nonparametric version of the basic chain rule of probability \eqref{eq:chain_rule}.
 %			\begin{equation}
 %			\begin{aligned}
 %				p_{\rv{X} \rv{Y}}(x, y) &= p_{\rv{X} | \rv{Y}}(x | y) p_{\rv{Y}}(y)
@@ -1456,7 +1456,7 @@
 		
 		\textbf{Linear Quantile Estimation}. (Algorithm A) This is the linear direct quantile estimator described in \cite{koenker1978regression}.
 		
-		\textbf{Quantile SVM}. (Algorithm B) This is a non-parametric quantile estimator based on dual optimisation of the loss function through a SVM, as documented in \cite{takeuchi2006nonparametric}. A Gaussian kernel was used for this algorithm, with kernel width and regularisation fitted as described in \cite{quadrianto2009kernel}.
+		\textbf{Quantile SVM}. (Algorithm B) This is a nonparametric quantile estimator based on dual optimisation of the loss function through a SVM, as documented in \cite{takeuchi2006nonparametric}. A Gaussian kernel was used for this algorithm, with kernel width and regularisation fitted as described in \cite{quadrianto2009kernel}.
 		
 		\textbf{Reduction to Classification}. (Algorithm C) This is the algorithm for reducing a quantile estimation problem to a series of classifiers \citep{langford2012predicting}. The results from this algorithm are taken from \cite{quadrianto2009kernel}, which used 100 GP classifiers trained with expectation propagation and an RBF kernel.
 		

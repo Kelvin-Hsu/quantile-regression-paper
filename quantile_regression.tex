@@ -89,7 +89,7 @@
 
 \twocolumn[
 
-\aistatstitle{Non-Parametric Quantile Regression with Kernel Embeddings}
+\aistatstitle{Nonparametric Quantile Regression with Kernel Embeddings}
 
 \aistatsauthor{ Anonymous Author 1 \And Anonymous Author 2 \And Anonymous Author 3 }
 
@@ -97,7 +97,7 @@
 
 \begin{abstract}
 
-	Quantile regression is concerned with the estimation of quantiles from a conditional distribution of a response variable, offering a more complete and robust inference framework than the mean prediction. This is especially important in decision making applications where a risk probability is used to bound the acceptable ranges of the response variable. In this paper, we develop a non-parametric quantile regression framework by utilising the expressive power and flexibility of kernel embedding models, which embeds probability distributions as unique mean embeddings that can be represented directly from data. We present a set of novel algorithms for computing quantiles from such a non-parametric inference model, and compare it to state-of-the-art algorithms in quantile regression. On multiple standard datasets, our methods produces competitive or improved quantile estimates in comparison to the literature.
+	Quantile regression is concerned with the estimation of quantiles from a conditional distribution of a response variable, offering a more complete and robust inference framework than the mean prediction. This is especially important in decision making applications where a risk probability is used to bound the acceptable ranges of the response variable. In this paper, we develop a nonparametric quantile regression framework by utilising the expressive power and flexibility of kernel embedding models, which embeds probability distributions as unique mean embeddings that can be represented directly from data. We present a set of novel algorithms for computing quantiles from such a nonparametric inference model, and compare it to state-of-the-art algorithms in quantile regression. On multiple standard datasets, our methods produces competitive or improved quantile estimates in comparison to the literature.
 	
 \end{abstract}
 
@@ -612,7 +612,7 @@
 %	
 %	The pursuit of conditional quantiles quickly divided the field into so-called direct methods, that attempt to directly compute the quantile from the training data through minimisation of the pinball loss, and Pre-Image methods, that attempt to first model the conditional cumulative distribution, and from there derive quantile estimates \citep{koenker2005quantile}.
 %	
-%	The direct initially demonstrated the advantage of flexibility --- non-parametric function estimation techniques could be applied that made no assumptions about the underlying distribution. Examples include locally-constant and locally-linear approximations \citep{Chaudhuri1991, Yu1998}. However, this flexibility also led to problems such as quantile crossing; in which a data point might be considered to be below the 0.5 quantile but above the 0.6 quantile \citep{koenker2005quantile}. 
+%	The direct initially demonstrated the advantage of flexibility --- nonparametric function estimation techniques could be applied that made no assumptions about the underlying distribution. Examples include locally-constant and locally-linear approximations \citep{Chaudhuri1991, Yu1998}. However, this flexibility also led to problems such as quantile crossing; in which a data point might be considered to be below the 0.5 quantile but above the 0.6 quantile \citep{koenker2005quantile}. 
 %	
 %	An important development was the addition of non-crossing constraints to direct quantile regression solutions \citep{He1997}. This ensured that different quantile estimates obeyed a strict ordering, with no two quantiles having the same function value. Such a strict ordering was achieved by adding a penalty term to the optimisation \citep{Cole1992}, or by reducing the class of possible functions used to represent the quantiles, for instance to classes of location-scale models \citep{Koenker1984, He1997}. Unfortunately, such models implicitly restricted the underlying distribution, causing reduced applicability to data that did not fit the assumptions of the model \citep{koenker2005quantile}.
 %	
@@ -623,15 +623,15 @@
 
 	Other direct approaches include the `quanting' algorithm \citep{langford2012predicting}, or Reduction to Classification (Algorithm C), which re-casts the quantile regression problem as a classification problem. By placing a set of classifiers over the range of the regression, each classifier can be trained on whether the quantile is above or below it. The quantile estimate is then the expectation of this assignment, over all the classifiers.
 
-	Pre-image techniques for conditional quantile regression have also been examined in the semi-parametric and non-parametric setting. \cite{yu2001bayesian} used a parametric linear model with Laplacian likelihood and uniform prior, which makes the unimodal assumption, and requires Markov chain Monte Carlo (MCMC) integration for inference. Similar semi-parametric methods such as \cite{hjort2007nonparametric, hjort2009quantile} use Dirichlet process priors, which again requires costly inference approximations.
+	Pre-image techniques for conditional quantile regression have also been examined in the semi-parametric and nonparametric setting. \cite{yu2001bayesian} used a parametric linear model with Laplacian likelihood and uniform prior, which makes the unimodal assumption, and requires Markov chain Monte Carlo (MCMC) integration for inference. Similar semi-parametric methods such as \cite{hjort2007nonparametric, hjort2009quantile} use Dirichlet process priors, which again requires costly inference approximations.
 	
-	In the non-parametric setting, \cite{quadrianto2009kernel} examined kernel conditional Quantile GP (Algorithm D) using Gaussian process regression (GPR) to explicitly compute the resulting CDF, for which analytical forms exist. The Gaussian structure enforces non-crossing constraints and allows for efficient inference. Additionally, heteroskedastic covariance functions were employed to account for input-dependent noise in the data, leading to Heteroskedastic Quantile GP (Algorithm E). However, while non-parametric and Bayesian, the Gaussian structure restricts applicability to symmetric, unimodal phenomenon.
+	In the nonparametric setting, \cite{quadrianto2009kernel} examined kernel conditional Quantile GP (Algorithm D) using Gaussian process regression (GPR) to explicitly compute the resulting CDF, for which analytical forms exist. The Gaussian structure enforces non-crossing constraints and allows for efficient inference. Additionally, heteroskedastic covariance functions were employed to account for input-dependent noise in the data, leading to Heteroskedastic Quantile GP (Algorithm E). However, while nonparametric and Bayesian, the Gaussian structure restricts applicability to symmetric, unimodal phenomenon.
 	
 	\cite{boukouvalas2012gaussian} then extends this GPR framework by instead minimising the expected pinball loss \eqref{eq:pinball_loss}, so that the technique is specifically optimised for obtaining quantiles. The resulting learning algorithm then loses its analytical tractability, and is computed by expectation propagation instead. With a similar goal, \cite{abeywardana2015variational} instead replaces the Gaussian likelihood involved in GPR with a scaled exponentiation of the pinball loss \eqref{eq:pinball_loss}, and uses variational inference to approximate the resulting intractable posterior, leading to a powerful and flexible quantile regression framework. However, while asymmetric, the likelihood is still unimodal, again limiting its capability to model multimodal phenomenon.
 	 
 %	A more general formulation of Bayesian quantile regression was developed in \cite{taddy2012bayesian}, which used Dirichlet process mixture models to represent the underlying joint distribution. This allowed a very general class of distributions to be represented, but inference required expensive MCMC integration.
 	
-	To overcome the limitations of these methods, we apply kernel embedding techniques to represent general probability distributions non-parametrically. Without limiting the resulting distribution to any particular parametric form, quantile regression with kernel embeddings can model a variety of phenomenon which exhibits various structural forms.
+	To overcome the limitations of these methods, we apply kernel embedding techniques to represent general probability distributions nonparametrically. Without limiting the resulting distribution to any particular parametric form, quantile regression with kernel embeddings can model a variety of phenomenon which exhibits various structural forms.
 	
 % * <lachlan@mccalman.info> 2016-10-06T00:09:48.133Z:
 % 
@@ -691,7 +691,7 @@
 \section{Conclusion}
 \label{sec:conclusion}
 	
-	This paper presented a set of novel algorithms for estimating quantiles non-parametrically from kernel embeddings of probability distributions given sampled observations. By projecting the indicator function into the RKHS, we first present a direct approach where the empirical CDF can be computed directly, but lack the the desired smoothness and non-decreasing property. We then impose smoothness by instead projecting a smooth function within the full RKHS that becomes the indicator function in the limit of vanishing bandwidth. At a trade off with computational complexity, the non-decreasing constraint is guaranteed by a pre-image approach, where the effective weights is to be recovered from a quadratic program.
+	This paper presented a set of novel algorithms for estimating quantiles nonparametrically from kernel embeddings of probability distributions given sampled observations. By projecting the indicator function into the RKHS, we first present a direct approach where the empirical CDF can be computed directly, but lack the the desired smoothness and non-decreasing property. We then impose smoothness by instead projecting a smooth function within the full RKHS that becomes the indicator function in the limit of vanishing bandwidth. At a trade off with computational complexity, the non-decreasing constraint is guaranteed by a pre-image approach, where the effective weights is to be recovered from a quadratic program.
 	
 	We then construct quantile estimators from these CDF estimates using numerical root-finding, and considered training on both the pinball loss and the log marginal likelihood. We then evaluated the resulting algorithms using a set of well-known machine learning datasets.
 	
