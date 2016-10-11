@@ -1051,7 +1051,7 @@
 			\end{align*}
 		\end{proof}
 		
-		In practice, it is possible that the kernel gram matrix has no inverse. In that case, we instead use the regularised inverse of the gram matrix \eqref{eq:regularised_function_projection_solution} so that the problem is well posed \citep{muandet2016kernel}, where $I_{n}$ is the identity matrix with size $n$. The regularisation parameter $\lambda$ is treated as a jitter quantity which should diminish as the number of observations increases. As such, it is customary to choose the smallest $\lambda^{2}$ such that the inverse exists, with the ideal situation being $\lambda = 0$. 
+		In practice, it is possible that the kernel gram matrix has no inverse. In that case, we instead use the regularised inverse of the gram matrix \eqref{eq:regularised_function_projection_solution} so that the problem is well posed \citep{muandet2016kernel}, where $I_{n}$ is the identity matrix with size $n$. The regularisation parameter $\lambda$ is treated as a jitter quantity which should diminish as the number of observations increases. As such, it is customary to choose the smallest $\lambda^{2}$ such that the inverse exists, with the ideal situation being $\lambda = 0$ if the gram matrix is already invertible. 
 		
 		\begin{equation}
 			\bm{\alpha}^{\star} = (K_{\ds{X} \ds{X}} + \lambda^{2} I_{n})^{-1} \bvec{f}\{\ds{X}\}
@@ -1065,7 +1065,7 @@
 			(Direct Empirical Distribution)
 			Assume that a kernel $k$ is chosen such that the indicator function is in $\mathcal{H}_{k}$. The direct empirical distribution measured on a set is simply the sum of weights on that set \eqref{eq:empirical_distribution}.
 			\begin{equation}
-				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} = \sum_{\bvec{x}_{i} \in A} \beta_{i}
+				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} = \sum_{i : \bvec{x}_{i} \in A} \beta_{i}
 			\label{eq:empirical_distribution}
 			\end{equation}
 			By the definition of the CDF, $P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]]$, the CDF shows a similar form \eqref{eq:empirical_cdf}.
@@ -1073,18 +1073,29 @@
 				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]] = \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}
 			\label{eq:empirical_cdf}
 			\end{equation}
+			Note that the notation $\bvec{a} \leq \bvec{b}$ implies that $a_{i} \leq b_{i}$ for all $i \in \{1, \dots, d\}$.
 		\end{theorem}
 			
 		\begin{proof}
+			Given that the indicator function $\mathbb{1}_{A} \in \mathcal{H}_{k}$ is in the RKHS, we can derive \eqref{eq:empirical_distribution} by projecting the indicator function into the relevant vector subspace $\mathcal{H}_{k, \ds{X}}$ using \cref{thm:function_projection_solution}, and taking the inner product between the empirical embedding and the resulting projection. 
+
 			\begin{align*}
-					\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} \tag{by construction} \\
-					&= \hat{\mu}_{\bvec{\rv{X}}}^{T}\hat{\mathbb{1}}_{A} \tag{linear algebra notation} \\
-					&= (\Phi \bm{\beta})^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} \tag{\cref{thm:function_projection_solution}} \\
-					&= \bm{\beta}^{T} \Phi^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
-					&= \bm{\beta}^{T} K K^{-1} \mathbb{1}_{A}\{\ds{X}\} \tag{reproducing property} \\
-					&= \bm{\beta}^{T} \mathbb{1}_{A}\{\ds{X}\} \\
-					&= \sum_{i = 1}^{n} \beta_{i} \mathbb{1}_{A}(\bvec{x}_{i}) \\
-					&= \sum_{\bvec{x}_{i} \in A} \beta_{i}
+				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} \tag{by construction} \\
+				&= \hat{\mu}_{\bvec{\rv{X}}}^{T}\hat{\mathbb{1}}_{A} \tag{linear algebra notation} \\
+				&= (\Phi \bm{\beta})^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} \tag{\cref{thm:function_projection_solution}} \\
+				&= \bm{\beta}^{T} \Phi^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
+				&= \bm{\beta}^{T} K K^{-1} \mathbb{1}_{A}\{\ds{X}\} \tag{reproducing property} \\
+				&= \bm{\beta}^{T} \mathbb{1}_{A}\{\ds{X}\} \\
+				&= \sum_{i = 1}^{n} \beta_{i} \mathbb{1}_{A}(\bvec{x}_{i}) \\
+				&= \sum_{i : \bvec{x}_{i} \in A} \beta_{i}
+			\end{align*}
+
+			The empirical estimate for the cumulative distribution function is then defined according to its theoretical definition, which derives \eqref{eq:empirical_cdf}.
+
+			\begin{align*}
+				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) &= \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]] \tag{definition of CDF} \\
+				&= \sum_{i : \bvec{x}_{i} \in (-\bm{\infty}, \bvec{x}]} \beta_{i} \\
+				&= \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}
 			\end{align*}
 		\end{proof}
 		
@@ -1113,6 +1124,8 @@
 		\end{theorem}
 			
 		\begin{proof}
+			As an integral of the feature functions $k(\bvec{x}, \cdot)$, which are the basis functions for the RKHS $\mathcal{H}_{k}$, over some set $A$, the smooth indicator approximation $\tilde{\mathbb{1}}_{A} \in \mathcal{H}_{k}$ is also within the same RKHS. The derivation of \eqref{eq:smooth_empirical_distribution} then follows by similarly taking the inner product between the empirical embedding and this smooth indicator approximation.
+			
 			\begin{align*}
 					\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \inner{\hat{\mu}_{\bvec{\rv{X}}}}{\tilde{\mathbb{1}}_{A}} \tag{by construction} \\
 					&= \hat{\mu}_{\bvec{\rv{X}}}^{T} \tilde{\mathbb{1}}_{A} \tag{linear algebra notation} \\
@@ -1123,6 +1136,8 @@
 					&= \int_{A} \sum_{i = 1}^{n} \beta_{i} k(\bvec{x}_{i}, \bvec{x}) d\bvec{x} \\
 					&= \sum_{i = 1}^{n} \beta_{i} \int_{A}  k(\bvec{x}_{i}, \bvec{x}) d\bvec{x} \\
 			\end{align*}
+			
+			The CDF estimate \eqref{eq:smooth_empirical_cdf} then follows directly from the definition of of a CDF, where we defined \eqref{eq:kernel_integral} for concise notation.
 		\end{proof}
 		
 	\subsection{Normalisation Constants}

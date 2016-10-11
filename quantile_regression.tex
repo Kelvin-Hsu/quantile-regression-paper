@@ -388,7 +388,7 @@
 		\begin{theorem} \label{thm:empirical_distribution_and_cdf}
 			Assume that a kernel $k$ is chosen such that the indicator function is in $\mathcal{H}_{k}$. The direct empirical distribution measured on a set is simply the sum of weights on that set \eqref{eq:empirical_distribution}. See supplementary for proof.
 			\begin{equation}
-				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} = \sum_{\bvec{x}_{i} \in A} \beta_{i}
+				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} = \sum_{i : \bvec{x}_{i} \in A} \beta_{i}
 			\label{eq:empirical_distribution}
 			\end{equation}
 			By \cref{def:cdf}, the CDF shows a similar form \eqref{eq:empirical_cdf}.
@@ -508,7 +508,7 @@
 	Instead, we can optimise the parameters with respect to the log joint probability of observing the collected dataset \eqref{eq:lml}, also called the log marginal likelihood. Evaluated over the whole training set, this is akin to method of log marginal likelihood optimisation in the Gaussian process context. However, here we choose to evaluate it over a leave-out validation set. We will call this approach \textit{marginal likelihood learning}. The advantage of this approach is that it is independent of the particular quantile estimate chosen. As such, a single, consistent CDF is generated for all quantile queries, eliminating the possibility of quantile crossing. 
 	
 	\begin{equation}
-		\log(p_{\rv{X}^{(n)}, \bm{\theta}}(x_{1}, \cdots, x_{n}))= \sum_{i = 1}^{n} \log(\hat{p}_{\rv{X}, \bm{\theta}}(x_{i}))
+		\log(p_{\rv{X}^{(n)}, \bm{\theta}}(x_{1}, \dots, x_{n}))= \sum_{i = 1}^{n} \log(\hat{p}_{\rv{X}, \bm{\theta}}(x_{i}))
 	\label{eq:lml}
 	\end{equation}
 	
@@ -573,7 +573,7 @@
 	\begin{definition}
 		The \textit{clip-normalised $\tau$-quantile estimate} is
 		\begin{equation}
-		q_{\rv{X}}(\tau) = x : \bvec{\tilde{w}}^{T} \bvec{K}(x) = \tau
+			q_{\rv{X}}(\tau) = x : \bvec{\tilde{w}}^{T} \bvec{K}(x) = \tau
 		\end{equation}
 		where $\bvec{\tilde{w}}$ is the clip-normalised weights of the relevant embedding.
 		Both pinball learning and marginal likelihood learning can be used. We denote this algorithm as NB with done with pinball learning, and NL when done with marginal likelihood learning.
@@ -583,6 +583,7 @@
 % * <lachlan@mccalman.info> 2016-10-06T00:07:58.096Z:
 % 
 % If you want to double check these complexity bounds I'd appreciate it  =)
+% They make sense to me too
 % 
 % ^.
 		\begin{center}
