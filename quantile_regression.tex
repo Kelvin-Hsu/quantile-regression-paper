@@ -98,7 +98,7 @@
 \begin{abstract}
 
 	Quantile regression is concerned with the estimation of quantiles from a conditional distribution of a response variable, offering a more complete and robust inference framework than the mean prediction. This is especially important in decision making applications where a risk probability is used to bound the acceptable ranges of the response variable. In this paper, we develop a nonparametric quantile regression framework by utilising the expressive power and flexibility of kernel embedding models, which transforms probability distributions into unique mean embeddings that can be represented directly from data. We present a set of novel algorithms for computing quantiles from such a nonparametric inference model, and compare it to state-of-the-art algorithms in quantile regression. On multiple standard datasets, our methods produces competitive or improved quantile estimates in comparison to the literature.
-	
+
 \end{abstract}
 
 \section{Introduction}
@@ -156,7 +156,7 @@
 % I mentioned that we are introducing notations from probability theory, which is a sub-field of measure theory.
 %
 % ^.
-	We first introduce the necessary mathematical background from probability theory. Let $(\Omega, \mathcal{W}, \mathbb{P})$ be a probability space, where $\Omega$ is the sample space, $\mathcal{W}$ is a $\sigma$-field on $\Omega$, and $\mathbb{P} : \mathcal{W} \to [0, 1]$ a probability measure. The elements $W$ of $\mathcal{W}$, that is, the measurable sets, are called events, which are by definition subsets of $\Omega$. Let $\mathcal{X}$ be some Borel measurable space of interest, endowed by a $\sigma$-field $\mathcal{A}$ on $\mathcal{X}$.
+	We first introduce the necessary mathematical background and definitions. Let $(\Omega, \mathcal{W}, \mathbb{P})$ be a probability space, where $\Omega$ is the sample space, $\mathcal{W}$ is a $\sigma$-field on $\Omega$, and $\mathbb{P} : \mathcal{W} \to [0, 1]$ a probability measure. The elements $W$ of $\mathcal{W}$, that is, the measurable sets, are called events, which are by definition subsets of $\Omega$. Let $\mathcal{X}$ be some Borel measurable space of interest, endowed by a $\sigma$-field $\mathcal{A}$ on $\mathcal{X}$.
 % * <lachlan@mccalman.info> 2016-10-05T23:45:45.159Z:
 %
 % I'd add a sentence here explaining why you're using the measure-theoretic approach.
@@ -200,10 +200,9 @@
 
 		In this paper we assume all kernels involved are positive definite and characteristic. That is, the kernel $k : \mathcal{X} \times \mathcal{X} \to \mathbb{R}$ defines a unique reproducing kernel Hilbert space (RKHS), denoted by $\mathcal{H}_{k}$ \citep{fukumizu2004dimensionality}. Let $\rv{X} : \Omega \to \mathcal{X}$ and $\rv{Y} : \Omega \to \mathcal{Y}$ be random variables with distributions $\mathbb{P}_{\rv{X}}$ and $\mathbb{P}_{\rv{Y}}$, and let $k$ and $l$ be characteristic positive definite kernels defined on $\mathcal{X}$ and $\mathcal{Y}$ respectively. Let $f \in \Hk$ and $g \in \Hl$ be real-valued functions.
 		
-		The feature function of a RKHS can be obtained from the partially applied kernels $\phi_{x} := k(x, \cdot) \in \Hk$ and $\psi_{y} := l(y, \cdot) \in \Hl$, and forms the basis for the full RKHS. An inner product in the RKHS satisfies the reproducing property \eqref{eq:reproducing_property}, where the function evaluation operator within the full RKHS is the inner product with the feature function \citep{muandet2016kernel}.
-
+		The feature function of a RKHS can be obtained from the partially applied kernels $\phi_{x} := k(x, \cdot) \in \Hk$ and $\psi_{y} := l(y, \cdot) \in \Hl$, and forms the basis for the full RKHS. An inner product in the RKHS satisfies the reproducing property \eqref{eq:reproducing_property}, where the function evaluation operator within the full RKHS is the inner product with the feature function \citep{muandet2016kernel},
 		\begin{equation}
-			\inner{\phi_{x}}{f} = f(x) ;\quad \inner{\psi_{y}}{g} = g(y)
+			\inner{\phi_{x}}{f} = f(x) ;\quad \inner{\psi_{y}}{g} = g(y).
 		\label{eq:reproducing_property}
 		\end{equation}
 		
@@ -218,17 +217,16 @@
 		
 		\begin{definition} \label{def:kernel_embedding}
 			\citep{smola2007hilbert}
-			The \textit{kernel embedding} (or \textit{mean embedding}) of a distribution $\mathbb{P}_{\rv{X}}$ is defined as the expectation of the corresponding feature function in that RKHS \eqref{eq:kernel_embedding}.
+			The \textit{kernel embedding} (or \textit{mean embedding}) of a distribution $\mathbb{P}_{\rv{X}}$ is defined as the expectation of the corresponding feature function in that RKHS \eqref{eq:kernel_embedding},
 			\begin{equation}
-				\muX \equiv \muX(\cdot) := \expect{\phiX} = \expect{k(\rv{X}, \cdot)} \in \Hk
+				\muX \equiv \muX(\cdot) := \expect{\phiX} = \expect{k(\rv{X}, \cdot)} \in \Hk.
 			\label{eq:kernel_embedding}
 			\end{equation}
 		\end{definition}
 		
-		Kernel embeddings are powerful tools as each embedding $\muX$ holds all the statistical information of its corresponding distribution $\mathbb{P}_{\rv{X}}$, and this correspondence is unique for a characteristic kernel $k$. Furthermore, expectations of a function in the RKHS can be evaluated as the inner product \eqref{eq:function_expectation} between the kernel embedding and the function \citep{muandet2016kernel}.
-		
+		Kernel embeddings are powerful tools as each embedding $\muX$ holds all the statistical information of its corresponding distribution $\mathbb{P}_{\rv{X}}$, and this correspondence is unique for a characteristic kernel $k$. Furthermore, expectations of a function in the RKHS can be evaluated as the inner product \eqref{eq:function_expectation} between the kernel embedding and the function \citep{muandet2016kernel},
 		\begin{equation}
-			\inner{\muX}{f} = \expect{f(\rv{X})} ;\quad \inner{\muY}{g} = \expect{g(\rv{Y})}
+			\inner{\muX}{f} = \expect{f(\rv{X})} ;\quad \inner{\muY}{g} = \expect{g(\rv{Y})}.
 		\label{eq:function_expectation}
 		\end{equation}
 
@@ -520,7 +518,7 @@
 		\label{fig:qfull}
 	\end{figure*}
 
-\section{Quantile Regression Algorithms}
+\section{Summary of Quantile Regression Algorithms}
 \label{sec:quantile_regression_algorithms}
 	
 	% Suppose some data $\{(\bvec{y}_{i}, x_{i})\}_{i = 1}^{n}$ is collected from a joint distribution $\mathbb{P}_{\rv{Y} \rv{X}}$. We can either find the standard empirical embedding $\hat{\mu}_{\rv{X}}$ or empirical conditional embedding $\hat{\mu}_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}$, both of which is of the form $\Phi \bm{\beta}$. This is also true for posterior embeddings obtained from KBR \citep{fukumizu2013kernel}, making these techniques very general in nature.
@@ -530,7 +528,7 @@
 	\begin{definition}
 		Motivated by \cref{thm:empirical_distribution_and_cdf}, the \textit{direct embedding $\tau$-quantile estimate} (DR) is
 		\begin{equation}
-		q_{\rv{X}}(\tau) = \min\{x \in \mathbb{R} : \frac{1}{\sum_{i = 1}^{n} \beta_{i}} \sum_{i : x_{i} \leq x} \beta_{i} \geq \tau\}
+		q_{\rv{X}}(\tau) = \min\{x \in \mathbb{R} : \frac{1}{\sum_{i = 1}^{n} \beta_{i}} \sum_{i : x_{i} \leq x} \beta_{i} \geq \tau\}.
 		\end{equation}	
 	\end{definition}
 	
@@ -538,7 +536,7 @@
 	\begin{definition}
 		Motivated by \cref{thm:smooth_empirical_distribution_and_cdf}, the \textit{smooth embedding $\tau$-quantile estimate} (DS) is
 		\begin{equation}
-		q_{\rv{X}}(\tau) = x : \frac{1}{\int_{\mathbb{R}} k(0, x) dx \sum_{i = 1}^{n} \beta_{i}} \bm{\beta}^{T} \bvec{K}(x) = \tau
+		q_{\rv{X}}(\tau) = x : \frac{1}{\int_{\mathbb{R}} k(0, x) dx \sum_{i = 1}^{n} \beta_{i}} \bm{\beta}^{T} \bvec{K}(x) = \tau.
 		\end{equation}	
 	\end{definition}
 	
@@ -548,7 +546,7 @@
 	\begin{definition}
 		Using \eqref{eq:qpi_empirical_cdf} directly, the \textit{pre-image $\tau$-quantile estimate} is
 		\begin{equation}
-			q_{\rv{X}}(\tau) = x : \bvec{w}^{T} \bvec{K}(x) = \tau
+			q_{\rv{X}}(\tau) = x : \bvec{w}^{T} \bvec{K}(x) = \tau,
 		\end{equation}	
 		where $\bvec{w}$ is are the recovered density weights from QPI.
 		We denote this algorithm as JB and JL when learned under pinball loss and marginal likelihood respectively.
