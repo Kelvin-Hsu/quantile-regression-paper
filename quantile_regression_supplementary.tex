@@ -1190,7 +1190,7 @@
 		\label{eq:normalisation_constant_ds}
 		\end{equation}
 		
-		Each integral integrates to $c > 0$ \eqref{eq:constant_definition} as the kernel is stationary, so that $\int_{\mathbb{R}^{d}} k(\bvec{x}^{(1)}, \bvec{x}) d\bvec{x} = \int_{\mathbb{R}^{d}} k(\bvec{x}^{(2)}, \bvec{x}) d\bvec{x}$ for any $\bvec{x}^{(1)}, \bvec{x}^{(2)} \in \mathbb{R}^{d}$. This constant is usually analytically computable from the form of the stationary kernel, such as the Gaussian kernel.
+		Each integral integrates to $c > 0$ \eqref{eq:constant_definition} for stationary kernels, so that $\int_{\mathbb{R}^{d}} k(\bvec{x}^{(1)}, \bvec{x}) d\bvec{x} = \int_{\mathbb{R}^{d}} k(\bvec{x}^{(2)}, \bvec{x}) d\bvec{x}$ for any $\bvec{x}^{(1)}, \bvec{x}^{(2)} \in \mathbb{R}^{d}$. This constant is usually analytically computable from the form of the stationary kernel, such as the Gaussian kernel.
 		
 		\begin{equation}
 			c := \int_{\mathbb{R}^{d}} k(\bvec{0}, \bvec{x}) d\bvec{x}
@@ -1205,7 +1205,7 @@
 			\begin{equation}
 			q_{\rv{X}}(\tau) = \min\{x \in \mathbb{R} : \frac{1}{\sum_{i = 1}^{n} \beta_{i}} \sum_{i : x_{i} \leq x} \beta_{i} \geq \tau\}
 			\end{equation}	
-			The normalisation constant $\sum_{i = 1}^{n} \beta_{i}$ ensures that the CDF is within $[0, 1]$. The hyperparameter learning is done by minimising the pinball loss of the training data using cross-validation.
+			The normalisation constant $\sum_{i = 1}^{n} \beta_{i}$ ensures that the CDF approaches one as its inputs approaches infinity. The hyperparameter learning is done by minimising the pinball loss of the training data using cross-validation.
 		\end{definition}
 		
 		\theoremstyle{definition}
