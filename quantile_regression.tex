@@ -168,7 +168,7 @@
 		\citep{bauer1981probability}
 		The \textit{distribution} of a random variable $\rv{X} : \Omega \to \mathcal{X}$ is the Borel measure $\mathbb{P}_{\rv{X}} : \mathcal{A} \to [0, 1]$ defined by
 		\begin{equation}
-			\mathbb{P}_{\rv{X}}[A] := \mathbb{P}[\rv{X} \in A]
+			\mathbb{P}_{\rv{X}}[A] := \mathbb{P}[\rv{X} \in A].
 		\label{eq:distribution}
 		\end{equation}
 		where the event $\{\rv{X} \in A\} := \rv{X}^{-1}[A] := \{\omega \in \Omega : \rv{X}(\omega) \in A\} \in \mathcal{W}$ is the inverse image of $A \in \mathcal{A}$ (thus $A \subseteq \mathcal{X}$ by definition) under the random variable $\rv{X}$.
@@ -179,15 +179,15 @@
 		The \textit{cumulative distribution function} (CDF) $P_{\bvec{\rv{X}}} : \mathbb{R}^{d} \to [0, 1]$ of a \textit{real-valued} random vector $\bvec{\rv{X}} : \Omega \to \mathbb{R}^{d}$ is
 		
 		\begin{equation}
-				P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]] = \mathbb{P}[\bvec{\rv{X}} \leq \bvec{x}]
+				P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]] = \mathbb{P}[\bvec{\rv{X}} \leq \bvec{x}].
 		\label{eq:cdf}
 		\end{equation}
 
-		For conciseness, we define the following shorthand \eqref{eq:shorthand}. 
+		For conciseness, we define the following shorthand \eqref{eq:shorthand},
 		\begin{equation}
 			\begin{aligned}
-				\{\bvec{\rv{X}} \leq \bvec{x}\} &:= \bigcap\limits_{j = 1}^{d} \{\rv{X}_{j} \in (-\infty, x_{j}]\} \in \mathcal{W} \\
-				(-\bm{\infty}, \bvec{x}] &:= (-\infty, x_{1}] \times \dots \times (-\infty, x_{d}] \\
+				\{\bvec{\rv{X}} \leq \bvec{x}\} &:= \bigcap\limits_{j = 1}^{d} \{\rv{X}_{j} \in (-\infty, x_{j}]\} \in \mathcal{W}, \\
+				(-\bm{\infty}, \bvec{x}] &:= (-\infty, x_{1}] \times \dots \times (-\infty, x_{d}]. \\
 			\end{aligned}
 		\label{eq:shorthand}
 		\end{equation}
@@ -202,7 +202,7 @@
 		
 		The feature function of a RKHS can be obtained from the partially applied kernels $\phi_{x} := k(x, \cdot) \in \Hk$ and $\psi_{y} := l(y, \cdot) \in \Hl$, and forms the basis for the full RKHS. An inner product in the RKHS satisfies the reproducing property \eqref{eq:reproducing_property}, where the function evaluation operator within the full RKHS is the inner product with the feature function \citep{muandet2016kernel},
 		\begin{equation}
-			\inner{\phi_{x}}{f} = f(x) ;\quad \inner{\psi_{y}}{g} = g(y).
+			\inner{\phi_{x}}{f} = f(x) ,\quad \inner{\psi_{y}}{g} = g(y).
 		\label{eq:reproducing_property}
 		\end{equation}
 		
@@ -226,7 +226,7 @@
 		
 		Kernel embeddings are powerful tools as each embedding $\muX$ holds all the statistical information of its corresponding distribution $\mathbb{P}_{\rv{X}}$, and this correspondence is unique for a characteristic kernel $k$. Furthermore, expectations of a function in the RKHS can be evaluated as the inner product \eqref{eq:function_expectation} between the kernel embedding and the function \citep{muandet2016kernel},
 		\begin{equation}
-			\inner{\muX}{f} = \expect{f(\rv{X})} ;\quad \inner{\muY}{g} = \expect{g(\rv{Y})}.
+			\inner{\muX}{f} = \expect{f(\rv{X})} ,\quad \inner{\muY}{g} = \expect{g(\rv{Y})}.
 		\label{eq:function_expectation}
 		\end{equation}
 
@@ -238,7 +238,7 @@
 			
 			By replacing the expectation with an empirical average, the resulting estimator \eqref{eq:empirical_embedding} converges to the true embedding \eqref{eq:kernel_embedding} at rate $O(n^{-1/2})$ \citep{smola2007hilbert},
 			\begin{equation}
-				\hatmuX := \frac{1}{n} \sum_{i = 1}^{n} \phi_{x_{i}} ;\quad \hatmuY := \frac{1}{n} \sum_{i = 1}^{n} \psi_{y_{i}}
+				\hatmuX := \frac{1}{n} \sum_{i = 1}^{n} \phi_{x_{i}} ,\quad \hatmuY := \frac{1}{n} \sum_{i = 1}^{n} \psi_{y_{i}}.
 			\label{eq:empirical_embedding}
 			\end{equation}
 
@@ -275,14 +275,14 @@
 %			
 			Following the notation of \cite{muandet2016kernel}, a feature matrix $\Phi \equiv \Phi_{\ds{X}}$ is formed by stacking the corresponding feature functions \textit{horizontally} \eqref{eq:feature_matrix}, where each function represents a column of that matrix,	
 			\begin{equation}
-				\Phi := \begin{bmatrix} \phi_{x_{1}} & \cdots & \phi_{x_{n}} \end{bmatrix}; \Psi := \begin{bmatrix} \psi_{y_{1}} & \cdots & \psi_{y_{n}} \end{bmatrix}
+				\Phi := \begin{bmatrix} \phi_{x_{1}} & \cdots & \phi_{x_{n}} \end{bmatrix}, \; \Psi := \begin{bmatrix} \psi_{y_{1}} & \cdots & \psi_{y_{n}} \end{bmatrix}.
 			\label{eq:feature_matrix}
 			\end{equation}
 			The subscripts of $\Phi$ and $\Psi$ are dropped whenever it is clear from context the dataset involved. In this way, $\Phi$ and $\Psi$ has effective size $\cardX \times n$ and $\cardY \times n$, where $\Vert \cdot \Vert$ denotes the cardinality of a set, which is uncountably infinite in the case for continuous Euclidean spaces.
 			
 			With this notation, general empirical embeddings can then be expressed as the matrix product of a feature matrix and a weight vector of size $n \times 1$ \eqref{eq:empirical_conditional_embedding_matrices},
 			\begin{equation}
-			\hatmuXy = \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}} = \Phi \bm{\beta} ;\quad \hatmuYx = \Psi \bm{\gamma}
+			\hatmuXy = \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}} = \Phi \bm{\beta} ,\quad \hatmuYx = \Psi \bm{\gamma}.
 			\label{eq:empirical_conditional_embedding_matrices}
 			\end{equation}			
 			where $\bm{\gamma} := \{\gamma_{i}\}_{i = 1}^{n}$ depends on $\ds{X}$ and $\bm{\beta} := \{\beta_{i}\}_{i = 1}^{n}$ depends on $\ds{Y}$ for a conditional embedding. For marginal embeddings, the weights become uniform such that $\gamma_{i} = \frac{1}{n}$ and $\beta_{i} = \frac{1}{n}$ for $i \in \{1, \dots, n\}$. However, the marginal embeddings will be written with general weights in later sections, as our technique can be applied to any embedding in general.
@@ -290,12 +290,12 @@
 	\subsection{Quantiles and Quantile Regression}
 	\label{sec:background:quantiles}
 
-		The definition of a quantile is given as follows.
+		At the heart of quantile regression is the quantile itself, which bounds the probability mass of a distribution.
 		\begin{definition} \label{def:quantile}
 			\citep{takeuchi2006nonparametric}
-			Consider a real-valued random variable $\rv{X} : \Omega \to \mathbb{R}$. The \textit{$\tau$-quantiles}, $\tau \in (0, 1)$, of $\mathbb{P}_{\rv{X}}$ and $P_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}$ is
+			Consider a real-valued random variable $\rv{X} : \Omega \to \mathbb{R}$. The \textit{$\tau$-quantiles}, $\tau \in (0, 1)$, of $\mathbb{P}_{\rv{X}}$ is the smallest value $x$ for which the CDF is still an upper bound for $\tau$,
 			\begin{equation}
-				q_{\rv{X}}(\tau) := \inf\{x : P_{\rv{X}}(x) \geq \tau\} \equiv \inf_{P_{\rv{X}}(x) \geq \tau} x
+				q_{\rv{X}}(\tau) := \inf\{x : P_{\rv{X}}(x) \geq \tau\} \equiv \inf_{P_{\rv{X}}(x) \geq \tau} x.
 			\label{eq:quantile}
 			\end{equation}
 %			\begin{equation}
@@ -312,7 +312,7 @@
 		
 		In practice, the infimum is often replaced with the minimum. If the CDF estimate is smooth and always increasing, the inequality becomes an equality, and obtaining quantiles becomes a root finding procedure once an estimate of the CDF is obtained \eqref{eq:quantile_root_finding},
 		\begin{equation}
-			q_{\rv{X}} = \bvec{y}}(\tau) = x : P_{\rv{X}}(x) = \tau
+			q_{\rv{X}}(\tau) = x : P_{\rv{X}}(x) = \tau.
 		\label{eq:quantile_root_finding}
 		\end{equation}	
 		Therefore, in this paper, we focus on techniques for CDF estimation from a given dataset, using both direct and pre-image approaches.
@@ -324,12 +324,12 @@
 	
 	Using \eqref{eq:function_expectation}, our approach begins by expressing the distribution as an inner product between the mean embedding and the indicator function \eqref{eq:distribution_inner}, 
 	\begin{equation}
-		\mathbb{P}_{\bvec{\rv{X}}}[A] = \mathbb{E}[\mathbb{1}_{A}(\bvec{\rv{X}})] = \langle \mu_{\bvec{\rv{X}}}, \mathbb{1}_{A} \rangle
+		\mathbb{P}_{\bvec{\rv{X}}}[A] = \expect{\mathbb{1}_{A}(\bvec{\rv{X}})} = \inner{\mu_{\bvec{\rv{X}}}}{\mathbb{1}_{A}}.
 	\label{eq:distribution_inner}
 	\end{equation}
 	The CDF  $P_{\bvec{\rv{X}}}$ reveals a similar structure to the distribution $\mathbb{P}_{\rv{X}}$ through \cref{def:cdf} \eqref{eq:cdf_inner},	
 	\begin{equation}
-		P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]] = \langle \mu_{\bvec{\rv{X}}}, \mathbb{1}_{(-\bm{\infty}, \bvec{x}]} \rangle
+		P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]] = \inner{\mu_{\bvec{\rv{X}}}}{\mathbb{1}_{(-\bm{\infty}, \bvec{x}]}}.
 	\label{eq:cdf_inner}
 	\end{equation}
 	We will now focus our attention on how to estimate the distribution and CDF from a given dataset by empirically estimating \eqref{eq:distribution_inner} and \eqref{eq:cdf_inner}.
@@ -341,42 +341,42 @@
 
 		Suppose $\ds{X} := \{\bvec{x}_{1}, \dots, \bvec{x}_{n}\} \in \mathbb{R}^{n \times d}$ is set of observations from $\mathbb{P}_{\rv{X}}$. Functions that can be represented by these samples are linear combinations of the feature functions $\phi_{\bvec{x}_{i}}$ \eqref{eq:function_projection} \citep{muandet2016kernel},
 		\begin{equation}
-			\hat{f} = \sum_{i = 1}^{n} \alpha_{i} k(\bvec{x}_{i}, \cdot) = \sum_{i = 1}^{n} \alpha_{i} \phi_{\bvec{x}_{i}} = \Phi \bm{\alpha}
+			\hat{f} = \sum_{i = 1}^{n} \alpha_{i} k(\bvec{x}_{i}, \cdot) = \sum_{i = 1}^{n} \alpha_{i} \phi_{\bvec{x}_{i}} = \Phi \bm{\alpha}.
 		\label{eq:function_projection}
 		\end{equation}
 		The span obtained by those basis $\{\phi_{\bvec{x}_{i}}\}_{i = 1}^{n}$ also forms a RKHS, denoted by $\mathcal{H}_{k, \ds{X}}$, and is a finite vector subspace of the full RKHS $\mathcal{H}_{k}$.
 
 		We are interested in approximating $f \in \mathcal{H}_{k}$ with $\hat{f} \in \mathcal{H}_{k, \ds{X}}$ through tuning the weights \eqref{eq:function_projection_optimisation} until they are closest as measured by the RKHS-induced norm \eqref{eq:function_projection_optimisation},
 		\begin{equation}
-			\bm{\alpha}^{\star} = \argmin_{\bm{\alpha} \in \mathbb{R}^{n}} \Vert \hat{f} - f \Vert
+			\bm{\alpha}^{\star} = \argmin_{\bm{\alpha} \in \mathbb{R}^{n}} \Vert \hat{f} - f \Vert.
 		\label{eq:function_projection_optimisation}
 		\end{equation}
 		This optimisation has a solution given by \cref{thm:function_projection_solution}.
 		\begin{theorem} \label{thm:function_projection_solution}
-			The optimisation \eqref{eq:function_projection_optimisation} has a closed form solution $\bm{\alpha}^{\star} = K^{-1} \bvec{f}$ \eqref{eq:function_projection_solution}, where $K \equiv K_{\ds{X} \ds{X}} := \{k(\bvec{x}_{i}, \bvec{x}_{j})\}_{i = 1, j = 1}^{n, n}$ is the gram matrix and $\bvec{f} := f\{\ds{X}\} := \{f(\bvec{x}_{i})\}_{i = 1}^{n}$. See supplementary for proof.
+			The optimisation \eqref{eq:function_projection_optimisation} has a closed form solution $\bm{\alpha}^{\star} = K^{-1} \bvec{f}$ \eqref{eq:function_projection_solution}, where $K \equiv K_{\ds{X} \ds{X}} := \{k(\bvec{x}_{i}, \bvec{x}_{j})\}_{i = 1, j = 1}^{n, n}$ is the gram matrix and $\bvec{f} := f\{\ds{X}\} := \{f(\bvec{x}_{i})\}_{i = 1}^{n}$,
 			\begin{equation}
-				\hat{f} = \Phi \bm{\alpha}^{\star} = \Phi K^{-1} \bvec{f}
+				\hat{f} = \Phi \bm{\alpha}^{\star} = \Phi K^{-1} \bvec{f}.
 			\label{eq:function_projection_solution}
 			\end{equation}
 		\end{theorem}
-		
+		The proof is given in the supplementary material.
+
 	\subsection{Direct Empirical Distribution}
 	\label{sec:direct_quantile_regression:optimal_empirical_distribution}
 	
-		If $\mathbb{1}_{A} \in \mathcal{H}_{k}$, we can let $f = \mathbb{1}_{A}$ to obtain the projection of an indicator $\hat{\mathbb{1}}_{A} = \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\}$ into $\mathcal{H}_{k, \ds{X}}$ using \cref{thm:function_projection_solution}. Motivated by \eqref{eq:distribution_inner}, $\hat{\mathbb{1}}_{A}$ can then be used to derive the direct empirical distribution as follows.
+		If $\mathbb{1}_{A} \in \mathcal{H}_{k}$, we can let $f = \mathbb{1}_{A}$ and project it into $\mathcal{H}_{k, \ds{X}}$ as $\hat{\mathbb{1}}_{A} = \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\}$ using \cref{thm:function_projection_solution}. Motivated by \eqref{eq:distribution_inner}, \cref{thm:empirical_distribution_and_cdf} provides a direct distribution and CDF estimate. The derivation is given in the supplementary material.
 		\begin{theorem} \label{thm:empirical_distribution_and_cdf}
-			Assume that a kernel $k$ is chosen such that the indicator function is in $\mathcal{H}_{k}$. The direct empirical distribution measured on a set is simply the sum of weights on that set \eqref{eq:empirical_distribution}. See supplementary for proof.
+			Assume that a kernel $k$ is chosen such that the indicator function is in $\mathcal{H}_{k}$. The direct empirical distribution measured on a set is simply the sum of weights on that set \eqref{eq:empirical_distribution},
 			\begin{equation}
-				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} = \sum_{i : \bvec{x}_{i} \in A} \beta_{i}
+				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} = \sum_{i : \bvec{x}_{i} \in A} \beta_{i}.
 			\label{eq:empirical_distribution}
 			\end{equation}
 			By \cref{def:cdf}, the CDF shows a similar form \eqref{eq:empirical_cdf},
 			\begin{equation}
-				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]] = \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}
+				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]] = \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}.
 			\label{eq:empirical_cdf}
 			\end{equation}
 		\end{theorem}
-
 		Nevertheless, in order to apply \cref{thm:empirical_distribution_and_cdf}, the class of applicable kernels is restricted to those whose RKHS $\mathcal{H}_{k}$ contains the indicator function. \cite{kanagawa2014recovering} showed that the estimator $\langle \hat{\mu}_{\bvec{\rv{X}}}, \hat{f} \rangle$ is consistent for $\mathbb{E}[f(\bvec{\rv{X}})]$ if $f$ is in the Besov space, which is a superset of the full RKHS $\mathcal{H}_{k}$. This means that \cref{thm:empirical_distribution_and_cdf} also holds if the indicator function is in the Besov space. However, experiments show that even if this assumption is not satisfied, the estimators provided in \cref{thm:empirical_distribution_and_cdf} still converges to the true distribution and CDF empirically.
 
 	\subsection{Smooth Empirical Distribution}
@@ -391,31 +391,32 @@
 			\label{fig:direct_quantile_regression}
 		\end{figure}
 		
-		By embedding indicator functions, the resulting CDF estimate \eqref{eq:empirical_cdf} is discontinuous at the jumps located at each data point. Directly differentiating this would result in a superposition of Dirac deltas for the PDF. However, in many applications, the PDF is rather smooth, and thus so is the CDF. Many characteristic kernels are also smooth, and thus so are the functions within their RKHS. Therefore, instead of taking the inner product with the indicator projection into $\mathcal{H}_{k, \ds{X}}$, we propose to take the inner product with the indicator projection into the full RKHS $\mathcal{H}_{k}$ \eqref{eq:indicator_smooth}, which would converges to the indicator function $\mathbb{1}_{A}$ as the kernel bandwidth goes to zero,
+		By embedding indicator functions, the resulting CDF estimate \eqref{eq:empirical_cdf} is discontinuous at the jumps located at each data point. Directly differentiating this would result in a superposition of Dirac deltas for the PDF. However, in many applications, the PDF is rather smooth, and thus so is the CDF. Many characteristic kernels are also smooth, and thus so are the functions within their RKHS. Therefore, instead of taking the inner product with the indicator projection $\hat{1}_{A}$ into $\mathcal{H}_{k, \ds{X}}$, we propose to take the inner product with the indicator projection $\tilde{1}_{A}$ into the full RKHS $\mathcal{H}_{k}$ \eqref{eq:indicator_smooth},
 		\begin{equation}
-			\tilde{\mathbb{1}}_{A} := \int_{\mathcal{X}} \mathbb{1}_{A}(\bvec{x}) k(\bvec{x}, \cdot) d\bvec{x} = \int_{A} k(\bvec{x}, \cdot) d\bvec{x}
+			\tilde{\mathbb{1}}_{A} := \int_{\mathcal{X}} \mathbb{1}_{A}(\bvec{x}) k(\bvec{x}, \cdot) d\bvec{x} = \int_{A} k(\bvec{x}, \cdot) d\bvec{x},
 		\label{eq:indicator_smooth}
 		\end{equation}
-		This leads to the following smooth CDF estimate.
+		which would converges to the indicator function $\mathbb{1}_{A}$ as the kernel bandwidth goes to zero. This leads to the following smooth distribution and CDF estimate. The derivation is given in the supplementary material.
 		\begin{theorem} \label{thm:smooth_empirical_distribution_and_cdf}
-			The smooth distribution \eqref{eq:smooth_empirical_distribution} and CDF \eqref{eq:smooth_empirical_cdf} estimate is simply an integral of the normalised embedding. See supplementary for proof.
+			The smooth distribution estimate \eqref{eq:smooth_empirical_distribution},
 			\begin{equation}
-				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{\tilde{\mathbb{1}}_{A}} = \sum_{i = 1}^{n} \beta_{i} \int_{A}  k(\bvec{x}_{i}, \bvec{x}) d\bvec{x}
+				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{\tilde{\mathbb{1}}_{A}} = \sum_{i = 1}^{n} \beta_{i} \int_{A}  k(\bvec{x}_{i}, \bvec{x}) d\bvec{x},
 			\label{eq:smooth_empirical_distribution}
-			\end{equation}	
+			\end{equation}
+			and the smooth CDF estimate \eqref{eq:smooth_empirical_cdf},
 			\begin{equation}
-				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} \beta_{i} \int_{-\bm{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' = \bm{\beta}^{T} \bvec{K}(\bvec{x})
+				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} \beta_{i} \int_{-\bm{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' = \bm{\beta}^{T} \bvec{K}(\bvec{x}),
 			\label{eq:smooth_empirical_cdf}
 			\end{equation}
+			can be obtained by integrating the corresponding mean embedding, resulting in a linear combination of kernel integrals. The vector of kernel integrals is notated by
 			\begin{equation}
-				\bvec{K}(\bvec{x}) := \Bigg\{ \int_{-\bm{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' \Bigg\}_{i = 1}^{n}
+				\bvec{K}(\bvec{x}) := \Bigg\{ \int_{-\bm{\infty}}^{\bvec{x}}  k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' \Bigg\}_{i = 1}^{n}.
 			\label{eq:kernel_integral}
 			\end{equation}
 		\end{theorem}
-
 		The estimates are expressed as a summation of the kernel integrals, which would need to be analytically derived or otherwise estimated. For a Gaussian kernel, analytical form can be derived \eqref{eq:smooth_empirical_cdf_gaussian_kernel},
 		\begin{equation}
-			\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \frac{1}{2} \sum_{i = 1}^{n} \beta_{i} \prod_{j = 1}^{d} \Bigg[1 + \mathrm{erf}\bigg(\frac{x_{j} - x_{i, j}}{\sigma_{j} \sqrt{2}}\bigg)\Bigg]
+			\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \frac{1}{2} \sum_{i = 1}^{n} \beta_{i} \prod_{j = 1}^{d} \Bigg[1 + \mathrm{erf}\bigg(\frac{x_{j} - x_{i, j}}{\sigma_{j} \sqrt{2}}\bigg)\Bigg].
 		\label{eq:smooth_empirical_cdf_gaussian_kernel}
 		\end{equation}
 		Even if the analytical form cannot be derived for some kernels $k$, since it is independent of the embedding weights, the integral $\bvec{K}(\bvec{x}) \equiv \bvec{K}_{\ds{X}}(\bvec{x})$ \eqref{eq:kernel_integral} can be approximated and pre-computed before inference begins.
@@ -429,16 +430,16 @@
 	
 	Given a particular embedding, the empirical PDF can be recovered through the quadratic programming pre-image (\qpi) method proposed by \cite{mccalman2013multi}. This method represents the PDF as a mixture of the features $k(\bvec{x}_{i}, \cdot)$ centred at each of the data points, and thus has as many components as the number of data points. Through minimising the RKHS distance between the true PDF and the PDF estimate, the resulting algorithm reduces to a tractable quadratic programming optimisation problem, which finds the optimal weights $\bvec{w} = \{w_{i}\}_{i = 1}^{n}$ for which $\hat{p}_{\bvec{\rv{X}}}$ \eqref{eq:qpi} is closest to the true PDF $p_{\bvec{\rv{X}}}$,
 	\begin{equation}
-		\hat{p}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} w_{i} k(\bvec{x}_{i}, \bvec{x})
+		\hat{p}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} w_{i} k(\bvec{x}_{i}, \bvec{x}).
 	\label{eq:qpi}
 	\end{equation}
 	Since \qpi\space recovers a valid PDF that is as smooth as the kernel $k$, integrating this PDF would result a smooth, proper distribution $\hat{\mathbb{P}}_{\bvec{\rv{X}}}$ \eqref{eq:qpi_empirical_distribution} and CDF $\hat{P}_{\bvec{\rv{X}}}$ \eqref{eq:qpi_empirical_cdf} that is always non-decreasing,
 	\begin{equation}
-		\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] = \int_{A} \hat{p}_{\bvec{\rv{X}}}(\bvec{x}) d\bvec{x} = \sum_{i = 1}^{n} w_{i} \int_{A} k(\bvec{x}_{i}, \bvec{x}) d\bvec{x}
+		\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] = \int_{A} \hat{p}_{\bvec{\rv{X}}}(\bvec{x}) d\bvec{x} = \sum_{i = 1}^{n} w_{i} \int_{A} k(\bvec{x}_{i}, \bvec{x}) d\bvec{x},
 	\label{eq:qpi_empirical_distribution}
 	\end{equation}
 	\begin{equation}
-		\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} w_{i} \int_{-\bm{\infty}}^{\bvec{x}} k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' =  \bvec{w}^{T} \bvec{K}(\bvec{x})
+		\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} w_{i} \int_{-\bm{\infty}}^{\bvec{x}} k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' =  \bvec{w}^{T} \bvec{K}(\bvec{x}).
 	\label{eq:qpi_empirical_cdf}
 	\end{equation}
 	This CDF estimate is essentially of the same form as the smooth direct estimate \eqref{eq:smooth_empirical_cdf_gaussian_kernel}, but with the embedding weights $\bm{\beta}$ replaced by the density weights $\bvec{w}$. Since the density weights $\bvec{w}$ are by construction of \qpi\space always positive, unlike the embedding weights $\bm{\beta}$, the resulting CDF is guaranteed to be non-decreasing. Again, the integral $\bvec{K}(\bvec{x})$ \eqref{eq:kernel_integral} can be pre-computed for efficient inference, and analytical form is available for Gaussian kernels by replacing the embedding weights $\beta_{i}$ by the density weights $w_{i}$ in \eqref{eq:smooth_empirical_cdf_gaussian_kernel}.
@@ -454,24 +455,28 @@
 	
 	We considered two approaches to hyperparameter learning for the purpose of quantile regression.
 	
-	The first approach involves minimising the expected pinball loss \eqref{eq:expected_pinball_loss} for a dataset $\ds{X} := \{x_{i}\}_{i = 1}^{n}$, where the pinball loss is defined by \eqref{eq:pinball_loss}. The minimiser of the expected pinball loss \eqref{eq:expected_pinball_loss} is the $\tau$-quantile $z = q_{\rv{X}}(\tau)$ of the distribution $\mathbb{P}_{\rv{X}}$ \citep{koenker1978regression}.
+	The first approach involves minimising the expected pinball loss \eqref{eq:expected_pinball_loss} for a dataset $\ds{X} := \{x_{i}\}_{i = 1}^{n}$, 
+	\begin{equation}
+		\bar{L}_{\tau}(\ds{X}, z) := \frac{1}{n} \sum_{i = 1}^{n} L_{\tau}(x_{i}, z),
+	\label{eq:expected_pinball_loss}
+	\end{equation}
+	where the pinball loss is defined by \eqref{eq:pinball_loss},
 	\begin{equation}
 		L_{\tau}(x, z) = \left\{ \begin{array}{lr}
 			(x - z) \tau & : x \geq z \\
 			(z - x) (1 - \tau) & : x < z
-		\end{array} \right.
+		\end{array} \right. .
 	\label{eq:pinball_loss}
 	\end{equation}
+	This is motivated by the fact that the $\tau$-quantile $z = q_{\rv{X}}(\tau)$ of the distribution $\mathbb{P}_{\rv{X}}$ minimises the expected pinball loss \eqref{eq:expected_pinball_loss} \citep{koenker1978regression}.
+
 	This expected pinball loss \eqref{eq:expected_pinball_loss} is evaluated over a leave-out validation set from the available training data obtained from a standard cross-validation procedure. We will call this approach \textit{pinball learning}.
-	\begin{equation}
-		\bar{L}_{\tau}(\ds{X}, z) := \frac{1}{n} \sum_{i = 1}^{n} L_{\tau}(x_{i}, z)
-	\label{eq:expected_pinball_loss}
-	\end{equation}
+
 	The expected pinball loss is tolerant to CDF estimates which may not be strictly non-decreasing, such as \eqref{eq:empirical_cdf} and \eqref{eq:smooth_empirical_cdf}. This however also means that pinball loss is specific to a particular quantile such that each quantile estimate requires separate optimisations despite using the same training set. The result is that quantile estimates may actually cross for certain query locations, where for example a point may be regarded as being below the 0.5 quantile but above the 0.6 quantile, a phenomenon known as quantile crossing \citep{he1997quantile}. 
 	
 	Instead, we can optimise the parameters with respect to the log joint probability of observing the collected dataset \eqref{eq:lml}, also called the log marginal likelihood,
 	\begin{equation}
-		\log(p_{\rv{X}^{(n)}, \bm{\theta}}(x_{1}, \dots, x_{n}))= \sum_{i = 1}^{n} \log(\hat{p}_{\rv{X}, \bm{\theta}}(x_{i}))
+		\log(p_{\rv{X}^{(n)}, \bm{\theta}}(x_{1}, \dots, x_{n}))= \sum_{i = 1}^{n} \log(\hat{p}_{\rv{X}, \bm{\theta}}(x_{i})).
 	\label{eq:lml}
 	\end{equation}
 	Evaluated over the whole training set, this is akin to method of log marginal likelihood optimisation in the Gaussian process context. However, here we choose to evaluate it over a leave-out validation set. We will call this approach \textit{marginal likelihood learning}. The advantage of this approach is that it is independent of the particular quantile estimate chosen. As such, a single, consistent CDF is generated for all quantile queries, eliminating the possibility of quantile crossing. 
@@ -537,7 +542,7 @@
 	\begin{definition}
 		The \textit{clip-normalised $\tau$-quantile estimate} is
 		\begin{equation}
-			q_{\rv{X}}(\tau) = x : \bvec{\tilde{w}}^{T} \bvec{K}(x) = \tau
+			q_{\rv{X}}(\tau) = x : \bvec{\tilde{w}}^{T} \bvec{K}(x) = \tau.
 		\end{equation}
 		where $\bvec{\tilde{w}}$ is the clip-normalised weights of the relevant embedding.
 		Both pinball learning and marginal likelihood learning can be used. We denote this algorithm as NB when done with pinball learning, and NL when done with marginal likelihood learning.

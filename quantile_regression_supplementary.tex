@@ -986,66 +986,59 @@
 \section{Direct Quantile Regression}
 \label{sec:direct_quantile_regression}
 
-	In this section, we provide the derivations for the results proposed in the paper.
+	Direct approaches to quantile regression refer to methods that estimate the cumulative distribution function (CDF) directly, without requiring the probability density function (PDF) to be estimated first as with pre-image approaches. Once the CDF is obtained, the corresponding quantiles are then computed from a root finding procedure. By omitting the need for PDF estimation, direct approaches are faster than pre-image approaches by a factor proportional to the square of the number of observations $n$. However, the computational efficiency comes at a trade off of estimation accuracy.
+	
+	Below we provide the corresponding derivations for the theoretical results introduced in the corresponding section of the paper.
 
 	\subsection{Optimal Function Projection}
 	\label{sec:direct_quantile_regression:optimal_function_projection}
 
+		A function $f \in \mathcal{H}_{k}$ in the full RKHS can be approximated with $\hat{f} \in \mathcal{H}_{k, \ds{X}}$ in the RKHS spanned by the feature functions centered at the observations \eqref{eq:function_projection},
+		\begin{equation}
+			\hat{f} = \sum_{i = 1}^{n} \alpha_{i} k(\bvec{x}_{i}, \cdot) = \sum_{i = 1}^{n} \alpha_{i} \phi_{\bvec{x}_{i}} = \Phi_{\ds{X}} \bm{\alpha}
+		\label{eq:function_projection}
+		\end{equation}
+		By tuning the embedding weights $\bm{\alpha} = \{\alpha_{i}\}_{i = 1}^{n}$, the optimal approximation, or projection, can be obtained by minimising the distance between $f$ and $\hat{f}$ as measured by the norm induced by the full RKHS $\mathcal{H}_{k}$ \eqref{eq:function_projection_optimisation},
+		\begin{equation}
+			\bm{\alpha}^{\star} = \argmin_{\bm{\alpha} \in \mathbb{R}^{n}} \Vert \hat{f} - f \Vert
+		\label{eq:function_projection_optimisation}
+		\end{equation}
+
 		\begin{theorem} \label{thm:function_projection_solution}
 			(Optimal Function Projection)
-			The function $f \in \mathcal{H}_{k}$ can be approximated with $\hat{f} \in \mathcal{H}_{k, \ds{X}}$ \eqref{eq:function_projection} so that they are close as measured by the norm induced by the full RKHS $\mathcal{H}_{k}$, by tuning the embedding weights $\bm{\alpha} = \{\alpha_{i}\}_{i = 1}^{n}$ \eqref{eq:function_projection_optimisation}.
-			
+			The optimisation problem \eqref{eq:function_projection_optimisation} has a closed form solution \eqref{eq:function_projection_solution},
 			\begin{equation}
-				\hat{f} = \sum_{i = 1}^{n} \alpha_{i} k(\bvec{x}_{i}, \cdot) = \sum_{i = 1}^{n} \alpha_{i} \phi_{\bvec{x}_{i}} = \Phi_{\ds{X}} \bm{\alpha}
-			\label{eq:function_projection}
-			\end{equation}
-	
-			The optimisation problem \eqref{eq:function_projection_optimisation} has a closed form solution \eqref{eq:function_projection_solution}, where $K \equiv K_{\ds{X} \ds{X}} := \{k(\bvec{x}_{i}, \bvec{x}_{j})\}_{i = 1, j = 1}^{n, n}$ is the gram matrix and $\bvec{f} := f\{\ds{X}\} := \{f(\bvec{x}_{i})\}_{i = 1}^{n}$ is the function evaluated at the observed points.
-				
-			\begin{equation}
-				\bm{\alpha}^{\star} = \argmin_{\bm{\alpha} \in \mathbb{R}^{n}} \Vert \hat{f} - f \Vert
-			\label{eq:function_projection_optimisation}
-			\end{equation}
-			
-			\begin{equation}
-			\begin{aligned}
-				\bm{\alpha}^{\star} &= K^{-1} \bvec{f} \\
-				\hat{f} &= \Phi \bm{\alpha}^{\star} = \Phi K^{-1} \bvec{f}
+				\begin{aligned}
+					\bm{\alpha}^{\star} &= K^{-1} \bvec{f} \\
+					\hat{f} &= \Phi \bm{\alpha}^{\star} = \Phi K^{-1} \bvec{f}
+				\end{aligned}
 			\label{eq:function_projection_solution}
-			\end{aligned}
 			\end{equation}
-				
+			where $K \equiv K_{\ds{X} \ds{X}} := \{k(\bvec{x}_{i}, \bvec{x}_{j})\}_{i = 1, j = 1}^{n, n}$ is the gram matrix and $\bvec{f} := f\{\ds{X}\} := \{f(\bvec{x}_{i})\}_{i = 1}^{n}$ is the function evaluated at the observed points.
 		\end{theorem}
 			
 		\begin{proof}
-			Since the square is a monotonic function for positive inputs, the objective function can be rewritten as follows.
-			
+			Since the square is a monotonic function for positive inputs, the objective function can be rewritten as the squared normed difference between the function approximation and the actual function,
 			\begin{align*}
 				\bm{\alpha}^{\star} &= \argmin_{\bm{\alpha} \in \mathbb{R}^{n}} \Vert \hat{f} - f \Vert \tag{\cref{eq:function_projection_optimisation}} \\
 				&= \argmin_{\bm{\alpha} \in \mathbb{R}^{n}} \Vert \hat{f} - f \Vert^{2} \tag{monotonic transformation}
 			\end{align*}
-			
-			Since this is a positive quadratic form, it is known from quadratic programming that this optimisation has one solution that is obtained by setting the objective's gradient to zero. There is no need to check for the Hessian to distinguish between minimum and maximum, as the quadratic is convex and not concave. Expanding the norm as an inner product through its definition in the Hilbert space results in the following.
-	
+			Since this is a positive quadratic form, it is known from quadratic optimisation that this optimisation has one solution that is obtained by setting the objective's gradient to zero \citep{bertsekas1999nonlinear}. There is no need to check for the Hessian to distinguish between minimum and maximum, as the quadratic is convex and not concave. By expanding the norm as an inner product through its definition in the Hilbert space, the objective to be optimised reveals a quadratic form,
 			\begin{align*}
 				\Vert \hat{f} - f \Vert^{2} &= \langle \hat{f} - f, \hat{f} - f \rangle \tag{Hilbert norm definition} \\
 				&= \langle \hat{f}, \hat{f} \rangle - 2 \langle \hat{f}, f \rangle + \langle f, f \rangle \tag{bilinearity of $\inner{\cdot}{\cdot}$} \\
 				&=  \hat{f}^{T} \hat{f} - 2 \hat{f}^{T} f + f^{T} f \tag{linear algebra notation} \\
-				&= (\Phi_{\ds{X}} \bm{\alpha})^{T} \Phi_{\ds{X}}  \bm{\alpha} - 2 (\Phi_{\ds{X}}  \bm{\alpha})^{T} f + f^{T} f \tag{\cref{eq:function_projection}}\\
-				&= \bm{\alpha}^{T} \Phi_{\ds{X}} ^{T} \Phi_{\ds{X}}  \bm{\alpha} - 2 \bm{\alpha}^{T} \Phi_{\ds{X}} ^{T} f + f^{T} f \\
-				&= \bm{\alpha}^{T} K_{\ds{X} \ds{X}}  \bm{\alpha} - 2 \bm{\alpha}^{T} \bvec{f}\{\ds{X}\} + f^{T} f \\
+				&= (\Phi_{\ds{X}} \bm{\alpha})^{T} \Phi_{\ds{X}}  \bm{\alpha} - 2 (\Phi_{\ds{X}}  \bm{\alpha})^{T} f + f^{T} f \tag{\cref{eq:function_projection}} \\
+				&= \bm{\alpha}^{T} \Phi_{\ds{X}} ^{T} \Phi_{\ds{X}}  \bm{\alpha} - 2 \bm{\alpha}^{T} \Phi_{\ds{X}} ^{T} f + f^{T} f \tag{linear algebra manipulation}\\
+				&= \bm{\alpha}^{T} K_{\ds{X} \ds{X}}  \bm{\alpha} - 2 \bm{\alpha}^{T} \bvec{f}\{\ds{X}\} + f^{T} f \tag{reproducing property}
 			\end{align*}
-			
-			Differentiating the above results in the following.
-			
+			The quadratic objective is then differentiated,
 			\begin{align*}
 				\frac{d}{d \bm{\alpha}} \Vert \hat{f} - f \Vert^{2} &= \frac{d}{d \bm{\alpha}} 
 				\bigg[ \bm{\alpha}^{T} K_{\ds{X} \ds{X}}  \bm{\alpha} - 2 \bm{\alpha}^{T} \bvec{f}\{\ds{X}\} + f^{T} f \bigg]\\
 				&= 2 K_{\ds{X} \ds{X}}  \bm{\alpha} - 2 \bvec{f}\{\ds{X}\}
 			\end{align*}
-			
-			Setting the above to zero reveals the solution.
-			
+			Setting the derivative to zero reveals the solution \eqref{eq:function_projection_solution} to the optimisation problem \eqref{eq:function_projection_optimisation},
 			\begin{align*}
 				\frac{d}{d \bm{\alpha}} \Vert \hat{f} - f \Vert^{2} &= 0 \\
 				2 K_{\ds{X} \ds{X}}  \bm{\alpha}^{\star} - 2 \bvec{f}\{\ds{X}\} &= 0 \\
@@ -1054,26 +1047,37 @@
 			\end{align*}
 		\end{proof}
 		
-		In practice, it is possible that the kernel gram matrix has no inverse. In that case, we instead use the regularised inverse of the gram matrix \eqref{eq:regularised_function_projection_solution} so that the problem is well posed \citep{muandet2016kernel}, where $I_{n}$ is the identity matrix with size $n$. The regularisation parameter $\lambda$ is treated as a jitter quantity which should diminish as the number of observations increases. As such, it is customary to choose the smallest $\lambda^{2}$ such that the inverse exists, with the ideal situation being $\lambda = 0$ if the gram matrix is already invertible. 
-		
+		In practice, it is possible that the kernel gram matrix has no inverse. In that case, we instead use the regularised inverse of the gram matrix \eqref{eq:regularised_function_projection_solution} so that the problem is well posed \citep{muandet2016kernel}, where $I_{n}$ is the identity matrix with size $n$,
 		\begin{equation}
 			\bm{\alpha}^{\star} = (K_{\ds{X} \ds{X}} + \lambda^{2} I_{n})^{-1} \bvec{f}\{\ds{X}\}
 		\label{eq:regularised_function_projection_solution}
 		\end{equation}
+		The regularisation parameter $\lambda$ is treated as a jitter quantity which should diminish as the number of observations increases. As such, it is customary to choose the smallest $\lambda^{2}$ such that the inverse exists, with the ideal situation being $\lambda = 0$ if the gram matrix is already invertible. 
 
 	\subsection{Direct Empirical Distribution}
 	\label{sec:direct_quantile_regression:direct_empirical_distribution}
 
+		With \cref{thm:function_projection_solution}, any function $f \in \mathcal{H}_{k}$ in the full RKHS can be projected into the empirical RKHS as $\hat{f} \in \mathcal{H}_{k, \ds{X}}$.
+		
+		If $\mathbb{1}_{A} \in \mathcal{H}_{k}$, we can let $f = \mathbb{1}_{A}$ to obtain the projection of an indicator $\hat{\mathbb{1}}_{A} = \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\}$ into $\mathcal{H}_{k, \ds{X}}$ using \cref{thm:function_projection_solution}.
+
+		Recall that expectations of a function in the RKHS can be evaluated as the inner product \eqref{eq:function_expectation} between the kernel embedding and the function \citep{muandet2016kernel},
+		\begin{equation}
+			\inner{\muX}{f} = \expect{f(\rv{X})}
+		\label{eq:function_expectation}
+		\end{equation}
+		Then, motivated by the fact that $\mathbb{P}_{\bvec{\rv{X}}}[A] = \expect{\mathbb{1}_{A}(\bvec{\rv{X}})} = \inner{\mu_{\bvec{\rv{X}}}}{\mathbb{1}_{A}}$, we define the following direct estimate for the distribution and CDF, and derive a closed form expression for that estimate.
+		
 		\begin{theorem} \label{thm:empirical_distribution_and_cdf}
 			(Direct Empirical Distribution)
-			Assume that a kernel $k$ is chosen such that the indicator function is in $\mathcal{H}_{k}$. The direct empirical distribution measured on a set is simply the sum of weights on that set \eqref{eq:empirical_distribution}.
+			Assume that a kernel $k$ is chosen such that the indicator function is in $\mathcal{H}_{k}$. The direct empirical distribution measured on a set is simply the sum of weights on that set \eqref{eq:empirical_distribution},
 			\begin{equation}
-				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} = \sum_{i : \bvec{x}_{i} \in A} \beta_{i}
+				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} = \sum_{i : \bvec{x}_{i} \in A} \beta_{i}.
 			\label{eq:empirical_distribution}
 			\end{equation}
-			By the definition of the CDF, $P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]]$, the CDF shows a similar form \eqref{eq:empirical_cdf}.
+			By the definition of the CDF, $P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]]$, the CDF shows a similar form \eqref{eq:empirical_cdf},
 			\begin{equation}
-				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]] = \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}
+				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]] = \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}.
 			\label{eq:empirical_cdf}
 			\end{equation}
 			Note that the notation $\bvec{a} \leq \bvec{b}$ implies that $a_{i} \leq b_{i}$ for all $i \in \{1, \dots, d\}$.
@@ -1086,19 +1090,19 @@
 				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] &= \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} \tag{by construction} \\
 				&= \hat{\mu}_{\bvec{\rv{X}}}^{T}\hat{\mathbb{1}}_{A} \tag{linear algebra notation} \\
 				&= (\Phi \bm{\beta})^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} \tag{\cref{thm:function_projection_solution}} \\
-				&= \bm{\beta}^{T} \Phi^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} \\
+				&= \bm{\beta}^{T} \Phi^{T} \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\} \tag{matrix transpose} \\
 				&= \bm{\beta}^{T} K K^{-1} \mathbb{1}_{A}\{\ds{X}\} \tag{reproducing property} \\
-				&= \bm{\beta}^{T} \mathbb{1}_{A}\{\ds{X}\} \\
-				&= \sum_{i = 1}^{n} \beta_{i} \mathbb{1}_{A}(\bvec{x}_{i}) \\
-				&= \sum_{i : \bvec{x}_{i} \in A} \beta_{i}
+				&= \bm{\beta}^{T} \mathbb{1}_{A}\{\ds{X}\} \tag{gram matrices cancel out} \\
+				&= \sum_{i = 1}^{n} \beta_{i} \mathbb{1}_{A}(\bvec{x}_{i}) \tag{expanding the sum} \\
+				&= \sum_{i : \bvec{x}_{i} \in A} \beta_{i} \tag{definition of indicator function}
 			\end{align*}
 
 			The empirical estimate for the cumulative distribution function is then defined according to its theoretical definition, which derives \eqref{eq:empirical_cdf}.
 
 			\begin{align*}
 				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) &= \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]] \tag{definition of CDF} \\
-				&= \sum_{i : \bvec{x}_{i} \in (-\bm{\infty}, \bvec{x}]} \beta_{i} \\
-				&= \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}
+				&= \sum_{i : \bvec{x}_{i} \in (-\bm{\infty}, \bvec{x}]} \beta_{i} \tag{derived result \eqref{eq:empirical_distribution}}\\
+				&= \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i} \tag{equivalent notation}
 			\end{align*}
 		\end{proof}
 		
