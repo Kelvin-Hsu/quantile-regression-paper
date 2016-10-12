@@ -22,6 +22,9 @@
 \usepackage{vector}
 \usepackage[usenames, dvipsnames]{color}
 \usepackage{cleveref}
+\usepackage{float}
+\floatstyle{plaintop}
+\restylefloat{table}
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
@@ -1106,7 +1109,7 @@
 			(Smooth Empirical Distribution)
 			The smooth distribution \eqref{eq:smooth_empirical_distribution} and CDF \eqref{eq:smooth_empirical_cdf} estimate is simply the integral of the normalised embedding.
 			\begin{equation}
-				\tilde{\mathbb{1}}_{A} := \int_{A} k(\bvec{x}, \cdot) d\bvec{x} = \int_{A} \phi_{\bvec{x}} d\bvec{x}
+				\tilde{\mathbb{1}}_{A} := \int_{\mathcal{X}} \mathbb{1}_{A}(\bvec{x}) k(\bvec{x}, \cdot) d\bvec{x} = \int_{A} k(\bvec{x}, \cdot) d\bvec{x}
 			\label{eq:indicator_smooth}
 			\end{equation}
 			\begin{equation}
@@ -1300,6 +1303,7 @@
 \label{sec:experiments}
 
 		\begin{table*}
+			\vspace*{5mm}
 			\begin{center}
 				\resizebox{0.48\textwidth}{!}{
 					\begin{tabular}{l|ccc}
@@ -1362,7 +1366,9 @@
 									E & $0.123 \pm 0.017$ & $0.309 \pm 0.045$ & $0.153 \pm 0.027$
 								\end{tabular}}
 							\end{center}
+							
 							\caption{Top: Antigen and Weather results. Bottom: Motorcycle and Bone Mineral Density results.}
+							
 							\label{table:results}
 						\end{table*}
 						

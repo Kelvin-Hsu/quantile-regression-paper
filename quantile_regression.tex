@@ -97,16 +97,14 @@
 
 \begin{abstract}
 
-	Quantile regression is concerned with the estimation of quantiles from a conditional distribution of a response variable, offering a more complete and robust inference framework than the mean prediction. This is especially important in decision making applications where a risk probability is used to bound the acceptable ranges of the response variable. In this paper, we develop a nonparametric quantile regression framework by utilising the expressive power and flexibility of kernel embedding models, which transforms probability distributions into unique mean embeddings that can be represented directly from data. We present a set of novel algorithms for computing quantiles from such a nonparametric inference model, and compare it to state-of-the-art algorithms in quantile regression. On multiple standard datasets, our methods produces competitive or improved quantile estimates in comparison to the literature.
+	Quantile regression is concerned with the estimation of quantiles from a conditional distribution of a response variable. This offers a more complete and robust inference framework than mean regression. This is especially important in decision making applications where a risk probability is used to bound the acceptable ranges of the response variable. In this paper, we develop a nonparametric quantile regression framework by utilising the expressive power and flexibility of kernel embedding models, which transforms probability distributions into unique mean embeddings that can be represented directly from data. We present a set of novel algorithms for computing quantiles from such a nonparametric inference model, and compare it to state-of-the-art algorithms in quantile regression. On multiple standard datasets, our methods produces competitive or improved quantile estimates in comparison to the literature.
 
 \end{abstract}
 
-\section{Introduction}
+\section{INTRODUCTION}
 \label{sec:introduction}
 
-	Understanding risk is critical in any discipline making decisions under uncertainty. Uncertainty can arise from both incomplete information and randomness in events, whose behaviour can be captured by probabilistic methods. In many cases, such decisions depend on one or more quantities of interest, where the likelihood that such quantities will fall outside a nominal or acceptable range is used to quantify the corresponding risks involved.
-	
-	For example, the exterior toughness of a motorcycle can be designed to withstand a likely range of acceleration experienced under collision, and no more, in order to limit the development cost. The probability that the actual acceleration experienced falls outside this nominal range is seen as the level of risk involved in this decision. 
+	Understanding risk is critical in any discipline making decisions under uncertainty. Uncertainty can arise from both incomplete information and randomness in events, whose behaviour can be captured by probabilistic methods. In many cases, such decisions depend on one or more quantities of interest, where the likelihood that such quantities will fall outside a nominal or acceptable range is used to quantify the corresponding risks involved. For example, the material toughness of a motorcycle can be designed to withstand a likely range of acceleration experienced under collision, in order to limit the development cost. The probability that the actual acceleration experienced falls outside this nominal range is seen as the level of risk involved in this decision. 
 
 	\begin{figure}
 		\begin{center}
@@ -147,7 +145,7 @@
 % 
 % ^.
 	
-\section{Background}
+\section{BACKGROUND}
 \label{sec:background}
 	
 % * <lachlan@mccalman.info> 2016-10-05T23:47:01.875Z:
@@ -198,7 +196,7 @@
 	
 %		This section summarises fundamental and important results in the field of kernel embeddings that form the background of this paper.
 
-		In this paper we assume all kernels involved are positive definite and characteristic. That is, the kernel $k : \mathcal{X} \times \mathcal{X} \to \mathbb{R}$ defines a unique reproducing kernel Hilbert space (RKHS), denoted by $\mathcal{H}_{k}$ \citep{fukumizu2004dimensionality}. Let $\rv{X} : \Omega \to \mathcal{X}$ and $\rv{Y} : \Omega \to \mathcal{Y}$ be random variables with distributions $\mathbb{P}_{\rv{X}}$ and $\mathbb{P}_{\rv{Y}}$, and let $k$ and $l$ be characteristic positive definite kernels defined on $\mathcal{X}$ and $\mathcal{Y}$ respectively. Let $f \in \Hk$ and $g \in \Hl$ be real-valued functions.
+		In this paper we assume all kernels involved are positive definite and characteristic. A kernel $k : \mathcal{X} \times \mathcal{X} \to \mathbb{R}$ is \textit{characteristic} if it defines a unique reproducing kernel Hilbert space (RKHS), denoted by $\mathcal{H}_{k}$ \citep{fukumizu2004dimensionality}. Let $\rv{X} : \Omega \to \mathcal{X}$ and $\rv{Y} : \Omega \to \mathcal{Y}$ be random variables with distributions $\mathbb{P}_{\rv{X}}$ and $\mathbb{P}_{\rv{Y}}$, and let $k$ and $l$ be characteristic positive definite kernels defined on $\mathcal{X}$ and $\mathcal{Y}$ respectively. Let $f \in \Hk$ and $g \in \Hl$ be real-valued functions.
 		
 		The feature function of a RKHS can be obtained from the partially applied kernels $\phi_{x} := k(x, \cdot) \in \Hk$ and $\psi_{y} := l(y, \cdot) \in \Hl$, and forms the basis for the full RKHS. An inner product in the RKHS satisfies the reproducing property \eqref{eq:reproducing_property}, where the function evaluation operator within the full RKHS is the inner product with the feature function \citep{muandet2016kernel},
 		\begin{equation}
@@ -236,8 +234,7 @@
 			
 			In practice, the actual probability distributions of interest are not available in closed form, so that the mean embedding \eqref{eq:kernel_embedding} cannot be directly computed. Instead, independent and identically distributed (\textit{iid}) samples from probability distributions are available. Suppose that joint samples $\{x_{i}, y_{i}\}_{i = 1}^{n}$ are observed and collected in an \textit{iid} fashion from the joint distribution $\mathbb{P}_{\rv{X} \rv{Y}}$. Let $\ds{X} := \{x_{i}\}_{i = 1}^{n}$ and $\ds{Y} := \{y_{i}\}_{i = 1}^{n}$. It is possible to represent kernel embeddings empirically such that in the limit of infinite data, the empirical representations would converge to the true representations at an appropriate rate. Most significant, however, is the fact that important results for manipulating kernel embeddings also hold for their empirical representations \citep{muandet2016kernel}.
 			
-			By replacing the expectation with an empirical average, the resulting estimator \eqref{eq:empirical_embedding} converges to the true embedding \eqref{eq:kernel_embedding} at rate $O(n^{-1/2})$ \citep{smola2007hilbert}
-
+			By replacing the expectation with an empirical average, the resulting estimator \eqref{eq:empirical_embedding} converges to the true embedding \eqref{eq:kernel_embedding} at rate $O(n^{-1/2})$ \citep{smola2007hilbert},
 			\begin{equation}
 				\hatmuX := \frac{1}{n} \sum_{i = 1}^{n} \phi_{x_{i}} ;\quad \hatmuY := \frac{1}{n} \sum_{i = 1}^{n} \psi_{y_{i}}
 			\label{eq:empirical_embedding}
@@ -274,66 +271,65 @@
 %			
 %			Similarly, a feature matrix can be defined in the same way such that empirical representations of kernel embeddings can be reduced down to linear algebraic operations.
 %			
-			With an abuse of notation, a feature matrix $\Phi \equiv \Phi_{\ds{X}}$ is formed by stacking the corresponding feature vectors or functions \textit{horizontally} \eqref{eq:feature_matrix}, where each feature vector represents a column of that matrix  \citep{muandet2016kernel}. Here, the subscripts of $\Phi$ and $\Psi$ are dropped whenever it is clear from context the dataset involved. In this way, $\Phi$ and $\Psi$ has effective size $\cardX \times n$ and $\cardY \times n$, where $\Vert \cdot \Vert$ denotes the cardinality of a set, which is uncountably infinite in the case for continuous Euclidean spaces, such as $\mathbb{R}^{d}$.
-				
+			Following the notation of \cite{muandet2016kernel}, a feature matrix $\Phi \equiv \Phi_{\ds{X}}$ is formed by stacking the corresponding feature functions \textit{horizontally} \eqref{eq:feature_matrix}, where each function represents a column of that matrix,	
 			\begin{equation}
 				\Phi := \begin{bmatrix} \phi_{x_{1}} & \cdots & \phi_{x_{n}} \end{bmatrix}; \Psi := \begin{bmatrix} \psi_{y_{1}} & \cdots & \psi_{y_{n}} \end{bmatrix}
 			\label{eq:feature_matrix}
 			\end{equation}
-				
-
-			With this notation, general empirical embeddings can be written with matrix notation \eqref{eq:empirical_conditional_embedding_matrices}, where $\bm{\gamma} := \{\gamma_{i}\}_{i = 1}^{n}$ depends on $\ds{X}$ and $\bm{\beta} := \{\beta_{i}\}_{i = 1}^{n}$ depends on $\ds{Y}$ \citep{muandet2016kernel}. For marginal (non-conditional) embeddings, the weights become uniform such that $\gamma_{i} = \frac{1}{n}$ and $\beta_{i} = \frac{1}{n}$ for $i \in \{1, \dots, n\}$. However, the marginal embeddings will be written with general weights in later sections, so that the technique can be easily extended to conditional embeddings.
+			The subscripts of $\Phi$ and $\Psi$ are dropped whenever it is clear from context the dataset involved. In this way, $\Phi$ and $\Psi$ has effective size $\cardX \times n$ and $\cardY \times n$, where $\Vert \cdot \Vert$ denotes the cardinality of a set, which is uncountably infinite in the case for continuous Euclidean spaces.
 			
+			With this notation, general empirical embeddings can then be expressed as the matrix product of a feature matrix and a weight vector of size $n \times 1$ \eqref{eq:empirical_conditional_embedding_matrices},
 			\begin{equation}
-				\hatmuXy = \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}} = \Phi \bm{\beta} ;\quad \hatmuYx = \Psi \bm{\gamma}
+			\hatmuXy = \sum_{i = 1}^{n} \beta_{i} \phi_{x_{i}} = \Phi \bm{\beta} ;\quad \hatmuYx = \Psi \bm{\gamma}
 			\label{eq:empirical_conditional_embedding_matrices}
-			\end{equation}
-		
+			\end{equation}			
+			where $\bm{\gamma} := \{\gamma_{i}\}_{i = 1}^{n}$ depends on $\ds{X}$ and $\bm{\beta} := \{\beta_{i}\}_{i = 1}^{n}$ depends on $\ds{Y}$ for a conditional embedding. For marginal embeddings, the weights become uniform such that $\gamma_{i} = \frac{1}{n}$ and $\beta_{i} = \frac{1}{n}$ for $i \in \{1, \dots, n\}$. However, the marginal embeddings will be written with general weights in later sections, as our technique can be applied to any embedding in general.
+
 	\subsection{Quantiles and Quantile Regression}
 	\label{sec:background:quantiles}
 
+		The definition of a quantile is given as follows.
 		\begin{definition} \label{def:quantile}
 			\citep{takeuchi2006nonparametric}
-			Consider a real-valued random variable $\rv{X} : \Omega \to \mathbb{R}$. The \textit{$\tau$-quantiles}, $\tau \in (0, 1)$, of $\mathbb{P}_{\rv{X}}$ and $P_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}$ are defined as follows \eqref{eq:quantile}.
+			Consider a real-valued random variable $\rv{X} : \Omega \to \mathbb{R}$. The \textit{$\tau$-quantiles}, $\tau \in (0, 1)$, of $\mathbb{P}_{\rv{X}}$ and $P_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}$ is
 			\begin{equation}
-				\begin{aligned}
-					q_{\rv{X}}(\tau) &:= \inf\{x : P_{\rv{X}}(x) \geq \tau\} \equiv \inf_{P_{\rv{X}}(x) \geq \tau} x \\
-					q_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(\tau) &:= \inf\{x : P_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(x) \geq \tau\} \equiv \inf_{P_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(x) \geq \tau} x
-				\end{aligned}
+				q_{\rv{X}}(\tau) := \inf\{x : P_{\rv{X}}(x) \geq \tau\} \equiv \inf_{P_{\rv{X}}(x) \geq \tau} x
 			\label{eq:quantile}
 			\end{equation}
+%			\begin{equation}
+%				\begin{aligned}
+%					q_{\rv{X}}(\tau) &:= \inf\{x : P_{\rv{X}}(x) \geq \tau\} \equiv \inf_{P_{\rv{X}}(x) \geq \tau} x \\
+%					q_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(\tau) &:= \inf\{x : P_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(x) \geq \tau\} \equiv \inf_{P_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(x) \geq \tau} x
+%				\end{aligned}
+%			\label{eq:quantile}
+%			\end{equation}
 		\end{definition}
-
-		Finding the conditional quantile is an identical problem to finding a regular quantile, except with the CDF replaced by a conditional CDF. As such, for brevity and simpleness, in this paper we will present CDF estimation from a general embedding with general weights, whose form both conditional embeddings and regular embeddings share.
+		Finding the conditional quantile $q_{\rv{X} | \bvec{\rv{Y}}}(\tau)$ is an identical problem to finding a regular quantile $q_{\rv{X}}(\tau)$, except with the CDF $P_{\rv{X}}$ replaced by a conditional CDF $P_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}$. For brevity, we will present CDF estimation from an embedding with general weights, whose form is shared by both conditional and regular embeddings.
 
 		Quantile regression is then the problem of finding an empirical estimate $\hat{q}_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(\tau)$ for $q_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(\tau)$ given observations $\{(\bvec{y}_{i}, x_{i})\}_{i = 1}^{n}$ and a query point $\bvec{y}$.
 		
-		In practice, the infimum is often replaced with the minimum. If the CDF estimate is smooth and always increasing, the inequality becomes an equality, and obtaining quantiles becomes a root finding procedure once an estimate of the CDF is obtained \eqref{eq:quantile_root_finding}. Therefore, in this paper, we focus on techniques for CDF estimation from a given dataset, using both direct and pre-image approaches.
-		
+		In practice, the infimum is often replaced with the minimum. If the CDF estimate is smooth and always increasing, the inequality becomes an equality, and obtaining quantiles becomes a root finding procedure once an estimate of the CDF is obtained \eqref{eq:quantile_root_finding},
 		\begin{equation}
-			q_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(\tau) = x : P_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}(x) = \tau
+			q_{\rv{X}} = \bvec{y}}(\tau) = x : P_{\rv{X}}(x) = \tau
 		\label{eq:quantile_root_finding}
 		\end{equation}	
+		Therefore, in this paper, we focus on techniques for CDF estimation from a given dataset, using both direct and pre-image approaches.
 	
-\section{Direct Quantile Regression}
+\section{DIRECT QUANTILE REGRESSION}
 \label{sec:direct_quantile_regression}
 
 	The direct approach to quantile regression refers to techniques which computes an estimate of the CDF directly, without needing to compute the PDF first.
 	
-	Using \eqref{eq:function_expectation}, our approach begins by expressing the distribution as an inner product \eqref{eq:distribution_inner}.
-		
+	Using \eqref{eq:function_expectation}, our approach begins by expressing the distribution as an inner product between the mean embedding and the indicator function \eqref{eq:distribution_inner}, 
 	\begin{equation}
 		\mathbb{P}_{\bvec{\rv{X}}}[A] = \mathbb{E}[\mathbb{1}_{A}(\bvec{\rv{X}})] = \langle \mu_{\bvec{\rv{X}}}, \mathbb{1}_{A} \rangle
 	\label{eq:distribution_inner}
 	\end{equation}
-
-	The CDF  $P_{\bvec{\rv{X}}}$ reveals a similar structure to the distribution $\mathbb{P}_{\rv{X}}$ through \cref{def:cdf} \eqref{eq:cdf_inner}.
-			
+	The CDF  $P_{\bvec{\rv{X}}}$ reveals a similar structure to the distribution $\mathbb{P}_{\rv{X}}$ through \cref{def:cdf} \eqref{eq:cdf_inner},	
 	\begin{equation}
 		P_{\bvec{\rv{X}}}(\bvec{x}) := \mathbb{P}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]] = \langle \mu_{\bvec{\rv{X}}}, \mathbb{1}_{(-\bm{\infty}, \bvec{x}]} \rangle
 	\label{eq:cdf_inner}
 	\end{equation}
-
 	We will now focus our attention on how to estimate the distribution and CDF from a given dataset by empirically estimating \eqref{eq:distribution_inner} and \eqref{eq:cdf_inner}.
 	
 	\subsection{Optimal Function Projection}
@@ -341,23 +337,21 @@
 	
 		In order to estimate the distribution and CDF empirically, we would need both the empirical kernel embedding $\hat{\mu}_{\bvec{\rv{X}}}$ and a projection $\hat{\mathbb{1}}_{A}$ of the indicator function $\mathbb{1}_{A}$ into the same RKHS as $\hat{\mu}_{\bvec{\rv{X}}}$ so that a proper inner product within that RKHS can be evaluated.
 
-		Suppose $\ds{X} := \{\bvec{x}_{1}, \dots, \bvec{x}_{n}\} \in \mathbb{R}^{n \times d}$ is set of observations from $\mathbb{P}_{\rv{X}}$. Functions that can be represented by these samples are linear combinations of the feature functions $\phi_{\bvec{x}_{i}}$ at the observations \eqref{eq:function_projection} \citep{muandet2016kernel}. The span obtained by those basis $\{\phi_{\bvec{x}_{i}}\}_{i = 1}^{n}$ also forms a RKHS, denoted by $\mathcal{H}_{k, \ds{X}}$, and is a finite vector subspace of the full RKHS $\mathcal{H}_{k}$.
-		
+		Suppose $\ds{X} := \{\bvec{x}_{1}, \dots, \bvec{x}_{n}\} \in \mathbb{R}^{n \times d}$ is set of observations from $\mathbb{P}_{\rv{X}}$. Functions that can be represented by these samples are linear combinations of the feature functions $\phi_{\bvec{x}_{i}}$ \eqref{eq:function_projection} \citep{muandet2016kernel},
 		\begin{equation}
 			\hat{f} = \sum_{i = 1}^{n} \alpha_{i} k(\bvec{x}_{i}, \cdot) = \sum_{i = 1}^{n} \alpha_{i} \phi_{\bvec{x}_{i}} = \Phi \bm{\alpha}
 		\label{eq:function_projection}
 		\end{equation}
-	
-		We are interested in approximating the function $f \in \mathcal{H}_{k}$ with $\hat{f} \in \mathcal{H}_{k, \ds{X}}$ so that they are close as measured by the norm induced by the full RKHS $\mathcal{H}_{k}$, by tuning the embedding weights $\bm{\alpha} = \{\alpha_{i}\}_{i = 1}^{n}$ \eqref{eq:function_projection_optimisation}.
-			
+		The span obtained by those basis $\{\phi_{\bvec{x}_{i}}\}_{i = 1}^{n}$ also forms a RKHS, denoted by $\mathcal{H}_{k, \ds{X}}$, and is a finite vector subspace of the full RKHS $\mathcal{H}_{k}$.
+
+		We are interested in approximating $f \in \mathcal{H}_{k}$ with $\hat{f} \in \mathcal{H}_{k, \ds{X}}$ through tuning the weights \eqref{eq:function_projection_optimisation} until they are closest as measured by the RKHS-induced norm \eqref{eq:function_projection_optimisation},
 		\begin{equation}
 			\bm{\alpha}^{\star} = \argmin_{\bm{\alpha} \in \mathbb{R}^{n}} \Vert \hat{f} - f \Vert
 		\label{eq:function_projection_optimisation}
 		\end{equation}
-		
+		This optimisation has a solution given by \cref{thm:function_projection_solution}.
 		\begin{theorem} \label{thm:function_projection_solution}
-			The optimisation problem \eqref{eq:function_projection_optimisation} has a closed form solution $\bm{\alpha}^{\star} = K^{-1} \bvec{f}$ \eqref{eq:function_projection_solution}, where $K \equiv K_{\ds{X} \ds{X}} := \{k(\bvec{x}_{i}, \bvec{x}_{j})\}_{i = 1, j = 1}^{n, n}$ is the gram matrix and $\bvec{f} := f\{\ds{X}\} := \{f(\bvec{x}_{i})\}_{i = 1}^{n}$ is the function evaluated at the observed points \eqref{eq:function_projection_solution}. See supplementary for proof.
-			
+			The optimisation \eqref{eq:function_projection_optimisation} has a closed form solution $\bm{\alpha}^{\star} = K^{-1} \bvec{f}$ \eqref{eq:function_projection_solution}, where $K \equiv K_{\ds{X} \ds{X}} := \{k(\bvec{x}_{i}, \bvec{x}_{j})\}_{i = 1, j = 1}^{n, n}$ is the gram matrix and $\bvec{f} := f\{\ds{X}\} := \{f(\bvec{x}_{i})\}_{i = 1}^{n}$. See supplementary for proof.
 			\begin{equation}
 				\hat{f} = \Phi \bm{\alpha}^{\star} = \Phi K^{-1} \bvec{f}
 			\label{eq:function_projection_solution}
@@ -367,20 +361,14 @@
 	\subsection{Direct Empirical Distribution}
 	\label{sec:direct_quantile_regression:optimal_empirical_distribution}
 	
-		By \cref{thm:function_projection_solution} and letting $f = \mathbb{1}_{A}$,  the projection of an indicator function into $\mathcal{H}_{k, \ds{X}}$ \eqref{eq:indicator_projection} can be used to derive the direct empirical distribution.
-			
-		\begin{equation}
-			\hat{\mathbb{1}}_{A} = \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\}
-		\label{eq:indicator_projection}
-		\end{equation}
-			
+		If $\mathbb{1}_{A} \in \mathcal{H}_{k}$, we can let $f = \mathbb{1}_{A}$ to obtain the projection of an indicator $\hat{\mathbb{1}}_{A} = \Phi K^{-1} \mathbb{1}_{A}\{\ds{X}\}$ into $\mathcal{H}_{k, \ds{X}}$ using \cref{thm:function_projection_solution}. Motivated by \eqref{eq:distribution_inner}, $\hat{\mathbb{1}}_{A}$ can then be used to derive the direct empirical distribution as follows.
 		\begin{theorem} \label{thm:empirical_distribution_and_cdf}
 			Assume that a kernel $k$ is chosen such that the indicator function is in $\mathcal{H}_{k}$. The direct empirical distribution measured on a set is simply the sum of weights on that set \eqref{eq:empirical_distribution}. See supplementary for proof.
 			\begin{equation}
 				\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] := \inner{\hat{\mu}_{\bvec{\rv{X}}}}{ \hat{\mathbb{1}}_{A}} = \sum_{i : \bvec{x}_{i} \in A} \beta_{i}
 			\label{eq:empirical_distribution}
 			\end{equation}
-			By \cref{def:cdf}, the CDF shows a similar form \eqref{eq:empirical_cdf}.
+			By \cref{def:cdf}, the CDF shows a similar form \eqref{eq:empirical_cdf},
 			\begin{equation}
 				\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) := \hat{\mathbb{P}}_{\bvec{\rv{X}}}[(-\bm{\infty}, \bvec{x}]] = \sum_{i : \bvec{x}_{i} \leq \bvec{x}} \beta_{i}
 			\label{eq:empirical_cdf}
@@ -401,13 +389,12 @@
 			\label{fig:direct_quantile_regression}
 		\end{figure}
 		
-		By embedding indicator functions, the resulting CDF estimate \eqref{eq:empirical_cdf} is discontinuous at the jumps located at each data point. Directly differentiating this would result in a superposition of Dirac deltas for the PDF. However, in many applications, the PDF is rather smooth, and thus so is the CDF. Many characteristic kernels are also smooth, and thus so are the functions within their RKHS. Therefore, instead of taking the inner product between the embedding and the indicator function, we propose to take the inner product with a function $\tilde{\mathbb{1}}_{A}$ \eqref{eq:indicator_smooth} that is within the full RKHS $\mathcal{H}_{k}$ and converges to the indicator function $\mathbb{1}_{A}$ as the kernel bandwidth goes to zero.
-		
+		By embedding indicator functions, the resulting CDF estimate \eqref{eq:empirical_cdf} is discontinuous at the jumps located at each data point. Directly differentiating this would result in a superposition of Dirac deltas for the PDF. However, in many applications, the PDF is rather smooth, and thus so is the CDF. Many characteristic kernels are also smooth, and thus so are the functions within their RKHS. Therefore, instead of taking the inner product with the indicator projection into $\mathcal{H}_{k, \ds{X}}$, we propose to take the inner product with the indicator projection into the full RKHS $\mathcal{H}_{k}$ \eqref{eq:indicator_smooth}, which would converges to the indicator function $\mathbb{1}_{A}$ as the kernel bandwidth goes to zero,
 		\begin{equation}
-			\tilde{\mathbb{1}}_{A} := \int_{A} k(\bvec{x}, \cdot) d\bvec{x} = \int_{A} \phi_{\bvec{x}} d\bvec{x}
+			\tilde{\mathbb{1}}_{A} := \int_{\mathcal{X}} \mathbb{1}_{A}(\bvec{x}) k(\bvec{x}, \cdot) d\bvec{x} = \int_{A} k(\bvec{x}, \cdot) d\bvec{x}
 		\label{eq:indicator_smooth}
 		\end{equation}
-		
+		This leads to the following smooth CDF estimate.
 		\begin{theorem} \label{thm:smooth_empirical_distribution_and_cdf}
 			The smooth distribution \eqref{eq:smooth_empirical_distribution} and CDF \eqref{eq:smooth_empirical_cdf} estimate is simply an integral of the normalised embedding. See supplementary for proof.
 			\begin{equation}
@@ -424,51 +411,41 @@
 			\end{equation}
 		\end{theorem}
 
-		The estimates are expressed as a summation of the kernel integrals, which would need to be analytically derived or otherwise estimated. For a Gaussian kernel, analytical form can be derived \eqref{eq:smooth_empirical_cdf_gaussian_kernel}.
-
+		The estimates are expressed as a summation of the kernel integrals, which would need to be analytically derived or otherwise estimated. For a Gaussian kernel, analytical form can be derived \eqref{eq:smooth_empirical_cdf_gaussian_kernel},
 		\begin{equation}
 			\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \frac{1}{2} \sum_{i = 1}^{n} \beta_{i} \prod_{j = 1}^{d} \Bigg[1 + \mathrm{erf}\bigg(\frac{x_{j} - x_{i, j}}{\sigma_{j} \sqrt{2}}\bigg)\Bigg]
 		\label{eq:smooth_empirical_cdf_gaussian_kernel}
 		\end{equation}
-
-		Even if analytical form cannot be derived for some kernels $k$, since it is independent of the embedding weights, the integral $\bvec{K}(\bvec{x}) \equiv \bvec{K}_{\ds{X}}(\bvec{x})$ \eqref{eq:kernel_integral} can be approximated and pre-computed before inference begins.
+		Even if the analytical form cannot be derived for some kernels $k$, since it is independent of the embedding weights, the integral $\bvec{K}(\bvec{x}) \equiv \bvec{K}_{\ds{X}}(\bvec{x})$ \eqref{eq:kernel_integral} can be approximated and pre-computed before inference begins.
 
 		With this approach, CDF estimates are now smooth and can be shown to converge to the true CDF in the limit of $n \rightarrow \infty$ and vanishing kernel bandwidth. However, due to the possibility of negative weights $\beta_{i}$, both direct approaches may produce CDF estimates that are not strictly non-decreasing, as shown in \cref{fig:direct_quantile_regression}. Notice that the non-smooth direct CDF estimate jumps at locations corresponding to training points, and that, due to the negative weights, the smooth CDF estimate contain components that go below zero such that the resultant CDF estimate may not be strictly non-decreasing. Furthermore, the resulting CDF may not end at $1$ as the input goes to infinity. To rectify this, we propose a pre-image approach to CDF estimation.
 
-\section{Pre-Image Quantile Regression}
+\section{PRE-IMAGE QUANTILE REGRESSION}
 \label{sec:pre_image_quantile_regression}
 
 %	\warn{So we need to cite MKBR before we talk about integrating it. The integration part is relatively short and straight forward, so the section would comprise of deriving and discussing MKBR with examples, and then discuss integration briefly, and then present example figures.}
 	
-	Given a particular embedding, the empirical PDF can be recovered through the quadratic programming pre-image (\qpi) method proposed by \cite{mccalman2013multi}. This method represents the PDF as a mixture of the features $k(\bvec{x}_{i}, \cdot)$ centred at each of the data points, and thus has as many components as the number of data points. Through minimising the RKHS distance between the true PDF and the PDF estimate, the resulting algorithm reduces to a tractable quadratic programming optimisation problem, which finds the optimal weights $\bvec{w} = \{w_{i}\}_{i = 1}^{n}$ for which $\hat{p}_{\bvec{\rv{X}}}$ \eqref{eq:qpi} is closest to the true PDF. 
-	
+	Given a particular embedding, the empirical PDF can be recovered through the quadratic programming pre-image (\qpi) method proposed by \cite{mccalman2013multi}. This method represents the PDF as a mixture of the features $k(\bvec{x}_{i}, \cdot)$ centred at each of the data points, and thus has as many components as the number of data points. Through minimising the RKHS distance between the true PDF and the PDF estimate, the resulting algorithm reduces to a tractable quadratic programming optimisation problem, which finds the optimal weights $\bvec{w} = \{w_{i}\}_{i = 1}^{n}$ for which $\hat{p}_{\bvec{\rv{X}}}$ \eqref{eq:qpi} is closest to the true PDF $p_{\bvec{\rv{X}}}$,
 	\begin{equation}
 		\hat{p}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} w_{i} k(\bvec{x}_{i}, \bvec{x})
 	\label{eq:qpi}
 	\end{equation}
-
-	Since \qpi\space recovers a valid PDF that is as smooth as the kernel $k$, integrating this PDF would result a smooth, proper distribution $\hat{\mathbb{P}}_{\bvec{\rv{X}}}$ \eqref{eq:qpi_empirical_distribution} and CDF $\hat{P}_{\bvec{\rv{X}}}$ \eqref{eq:qpi_empirical_cdf} that is always non-decreasing.
-	
+	Since \qpi\space recovers a valid PDF that is as smooth as the kernel $k$, integrating this PDF would result a smooth, proper distribution $\hat{\mathbb{P}}_{\bvec{\rv{X}}}$ \eqref{eq:qpi_empirical_distribution} and CDF $\hat{P}_{\bvec{\rv{X}}}$ \eqref{eq:qpi_empirical_cdf} that is always non-decreasing,
 	\begin{equation}
 		\hat{\mathbb{P}}_{\bvec{\rv{X}}}[A] = \int_{A} \hat{p}_{\bvec{\rv{X}}}(\bvec{x}) d\bvec{x} = \sum_{i = 1}^{n} w_{i} \int_{A} k(\bvec{x}_{i}, \bvec{x}) d\bvec{x}
 	\label{eq:qpi_empirical_distribution}
 	\end{equation}
-	
 	\begin{equation}
 		\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \sum_{i = 1}^{n} w_{i} \int_{-\bm{\infty}}^{\bvec{x}} k(\bvec{x}_{i}, \bvec{x}') d\bvec{x}' =  \bvec{w}^{T} \bvec{K}(\bvec{x})
 	\label{eq:qpi_empirical_cdf}
 	\end{equation}
-	
+	This CDF estimate is essentially of the same form as the smooth direct estimate \eqref{eq:smooth_empirical_cdf_gaussian_kernel}, but with the embedding weights $\bm{\beta}$ replaced by the density weights $\bvec{w}$. Since the density weights $\bvec{w}$ are by construction of \qpi\space always positive, unlike the embedding weights $\bm{\beta}$, the resulting CDF is guaranteed to be non-decreasing. Again, the integral $\bvec{K}(\bvec{x})$ \eqref{eq:kernel_integral} can be pre-computed for efficient inference, and analytical form is available for Gaussian kernels by replacing the embedding weights $\beta_{i}$ by the density weights $w_{i}$ in \eqref{eq:smooth_empirical_cdf_gaussian_kernel}.
 %	Similar to the smooth distribution estimate \eqref{eq:smooth_empirical_distribution} and CDF estimate \eqref{eq:smooth_empirical_cdf}, the estimates \eqref{eq:qpi_empirical_distribution} and \eqref{eq:qpi_empirical_cdf} require the integral of the kernel $k$, which can either be analytically derived or at least approximated and pre-computed beforehand. Again, analytical form is available for Gaussian kernels, by replacing the embedding weights $\beta_{i}$ by the recovered density weights $w_{i}$ in \eqref{eq:smooth_empirical_cdf_gaussian_kernel}.
-	
 %	\begin{equation}
 %		\hat{P}_{\bvec{\rv{X}}}(\bvec{x}) = \frac{1}{2} \sum_{i = 1}^{n} w_{i} \prod_{j = 1}^{d} \Bigg[1 + \mathrm{erf}\bigg(\frac{x_{j} - x_{i, j}}{\sigma_{j} \sqrt{2}}\bigg)\Bigg]
 %	\label{eq:qpi_empirical_cdf_gaussian_kernel}
 %	\end{equation}
-	
-	This CDF estimate is essentially of the same form as the smooth direct estimate \eqref{eq:smooth_empirical_cdf_gaussian_kernel}, but with the embedding weights $\bm{\beta}$ replaced by the recovered density weights $\bvec{w}$. Since the density weights $\bvec{w}$ are by construction of \qpi\space always positive, unlike the embedding weights $\bm{\beta}$, the resulting CDF is guaranteed to be non-decreasing. Again, the integral $\bvec{K}(\bvec{x})$ \eqref{eq:kernel_integral} can be pre-computed for efficient inference and analytical form is available for Gaussian kernels by replacing the embedding weights $\beta_{i}$ by the recovered density weights $w_{i}$ in \eqref{eq:smooth_empirical_cdf_gaussian_kernel}.
- 
-\section{Hyperparameter Learning}
+\section{HYPERPARAMETER LEARNING}
 \label{sec:hyperparameter_learning}
 
 	With all kernel based techniques, the kernel $k = k_{\bm{\theta}}$ itself is usually specified from a family of kernels parametrised by some hyperparameters $\bm{\theta}$. For example, a Gaussian kernel would be specified by its length scale parameters. Whichever family we choose, we would have to find the optimal hyperparameters that results in the best inference accuracy. %The number of parameters would depend on whether the kernel is isotropic ($1$ parameter), anisotropic axis-aligned ($d$ parameters), or general ($d(d - 1)/2$ parameters).
@@ -476,7 +453,6 @@
 	We considered two approaches to hyperparameter learning for the purpose of quantile regression.
 	
 	The first approach involves minimising the expected pinball loss \eqref{eq:expected_pinball_loss} for a dataset $\ds{X} := \{x_{i}\}_{i = 1}^{n}$, where the pinball loss is defined by \eqref{eq:pinball_loss}. The minimiser of the expected pinball loss \eqref{eq:expected_pinball_loss} is the $\tau$-quantile $z = q_{\rv{X}}(\tau)$ of the distribution $\mathbb{P}_{\rv{X}}$ \citep{koenker1978regression}.
-	
 	\begin{equation}
 		L_{\tau}(x, z) = \left\{ \begin{array}{lr}
 			(x - z) \tau & : x \geq z \\
@@ -484,25 +460,25 @@
 		\end{array} \right.
 	\label{eq:pinball_loss}
 	\end{equation}
-	
 	This expected pinball loss \eqref{eq:expected_pinball_loss} is evaluated over a leave-out validation set from the available training data obtained from a standard cross-validation procedure. We will call this approach \textit{pinball learning}.
-	
 	\begin{equation}
 		\bar{L}_{\tau}(\ds{X}, z) := \frac{1}{n} \sum_{i = 1}^{n} L_{\tau}(x_{i}, z)
 	\label{eq:expected_pinball_loss}
 	\end{equation}
-	
 	The expected pinball loss is tolerant to CDF estimates which may not be strictly non-decreasing, such as \eqref{eq:empirical_cdf} and \eqref{eq:smooth_empirical_cdf}. This however also means that pinball loss is specific to a particular quantile such that each quantile estimate requires separate optimisations despite using the same training set. The result is that quantile estimates may actually cross for certain query locations, where for example a point may be regarded as being below the 0.5 quantile but above the 0.6 quantile, a phenomenon known as quantile crossing \citep{he1997quantile}. 
 	
-	Instead, we can optimise the parameters with respect to the log joint probability of observing the collected dataset \eqref{eq:lml}, also called the log marginal likelihood. Evaluated over the whole training set, this is akin to method of log marginal likelihood optimisation in the Gaussian process context. However, here we choose to evaluate it over a leave-out validation set. We will call this approach \textit{marginal likelihood learning}. The advantage of this approach is that it is independent of the particular quantile estimate chosen. As such, a single, consistent CDF is generated for all quantile queries, eliminating the possibility of quantile crossing. 
-	
+	Instead, we can optimise the parameters with respect to the log joint probability of observing the collected dataset \eqref{eq:lml}, also called the log marginal likelihood,
 	\begin{equation}
 		\log(p_{\rv{X}^{(n)}, \bm{\theta}}(x_{1}, \dots, x_{n}))= \sum_{i = 1}^{n} \log(\hat{p}_{\rv{X}, \bm{\theta}}(x_{i}))
 	\label{eq:lml}
 	\end{equation}
-	
+	Evaluated over the whole training set, this is akin to method of log marginal likelihood optimisation in the Gaussian process context. However, here we choose to evaluate it over a leave-out validation set. We will call this approach \textit{marginal likelihood learning}. The advantage of this approach is that it is independent of the particular quantile estimate chosen. As such, a single, consistent CDF is generated for all quantile queries, eliminating the possibility of quantile crossing. 
+
 	Computing the marginal likelihood requires the density, even though direct approaches do not need them, making this method more natural in the pre-image approach. Nevertheless, this is only necessary during the learning stage. Once obtained, the optimal hyperparameters can be used in the direct approach for inference without density recovery.
-	
+
+\section{SUMMARY OF ALGORITHMS}
+\label{sec:quantile_regression_algorithms}
+
 	\begin{figure*}[t]
 		\centering
 		\begin{subfigure}[b]{0.32\textwidth}
@@ -517,10 +493,6 @@
 		\caption{Results from the three quantile experiments. The error bars in these figures represent $\pm 1$ standard deviation of the pinball loss over the testing set.}
 		\label{fig:qfull}
 	\end{figure*}
-
-\section{Summary of Quantile Regression Algorithms}
-\label{sec:quantile_regression_algorithms}
-	
 	% Suppose some data $\{(\bvec{y}_{i}, x_{i})\}_{i = 1}^{n}$ is collected from a joint distribution $\mathbb{P}_{\rv{Y} \rv{X}}$. We can either find the standard empirical embedding $\hat{\mu}_{\rv{X}}$ or empirical conditional embedding $\hat{\mu}_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}$, both of which is of the form $\Phi \bm{\beta}$. This is also true for posterior embeddings obtained from KBR \citep{fukumizu2013kernel}, making these techniques very general in nature.
 	We present the following algorithms for quantile regression based on the methods proposed in this paper. Table \ref{table:quantile_regression_methods} lists the properties of each of these algorithms.
 
@@ -566,7 +538,7 @@
 			q_{\rv{X}}(\tau) = x : \bvec{\tilde{w}}^{T} \bvec{K}(x) = \tau
 		\end{equation}
 		where $\bvec{\tilde{w}}$ is the clip-normalised weights of the relevant embedding.
-		Both pinball learning and marginal likelihood learning can be used. We denote this algorithm as NB with done with pinball learning, and NL when done with marginal likelihood learning.
+		Both pinball learning and marginal likelihood learning can be used. We denote this algorithm as NB when done with pinball learning, and NL when done with marginal likelihood learning.
 	\end{definition}	
 	
 	\begin{table}[t!]
@@ -602,7 +574,7 @@
 	
 	The cheapest algorithm is DR, which is simply a (conditional) sum of the mixture weights and is therefore $O(n)$ in the number of training points. Similarly, DS, NL, and NB are also $O(n)$, but requires pre-computation of the kernel integral $\eqref{eq:kernel_integral}$ of constant complexity. The most expensive are the \qpi-based pre-image estimators (JL and JB), which require solving a quadratic program and therefore introduces a further factor of $O(n^2)$. However, if a pre-image estimate is also required for other tasks and is therefore already available, then JL and JB also only introduces a further factor of $O(n)$.
 	
-\section{Related Work}
+\section{RELATED WORK}
 \label{sec:related_work}
 
 	Quantile regression was first introduced by \cite{koenker1978regression}, which considered inference based on an unknown linear model. Being more robust to noise and thus effective in modelling non-Gaussian behaviour, the median (0.5-quantile) is examined, rather than the mean. The Linear Quantile Estimator (Algorithm A) was constructed through minimising the pinball loss \eqref{eq:pinball_loss}, which, for a linear model, can be formulated as a linear programming problem with efficient solutions.
@@ -641,7 +613,7 @@
 	
 
 	
-\section{Experiments}
+\section{EXPERIMENTS}
 \label{sec:experiments}
 		
 	We now test the performance of our algorithms on four standard datasets commonly used in the literature for conditional quantile estimation: Antigen, Weather, Bone Mineral Density, and Motorcycle. Antigen, Weather and Motorcycle were taken from the UCI repository \citep{lichman2013uci} and Bone Mass Density from the ``ElemStatLearn'' R package \citep{hastie2005the}. We compare our algorithms to state-of-the-art direct and pre-image techniques for conditional quantile estimation (Algorithms A, B, C, D, and E).
@@ -650,7 +622,7 @@
 %	
 %	We evaluated the algorithms on four datasets commonly used in the literature for conditional quantile estimation tests: Antigen, Weather, Bone Mineral Density, and Motorcycle. Antigen, Weather and Motorcycle were taken from the UCI repository \citep{lichman2013uci} and Bone Mass Density from the ``ElemStatLearn'' R package \citep{hastie2005the}.
 	
-	For all experiments, performance was evaluated by five-fold cross validation and the average pinball loss over the hold-out set. The average and standard deviation of the performance over these five tests was used as the final score. Three quantile levels $\tau$ were tested for each dataset: 0.1, 0.5 and 0.9. Any categorical variables in the data were ignored. All input and output variables were standardised to have zero mean and unit variance in each dimension.
+	For all experiments, performance was evaluated by five-fold cross validation and the average pinball loss over the hold-out set. The average, and standard deviation, of the performance over these five tests was used as the final score. Three quantile levels $\tau$ were tested for each dataset: 0.1, 0.5 and 0.9. Any categorical variables in the data were ignored. All input and output variables were standardised to have zero mean and unit variance in each dimension.
 	
 	We place a Gaussian kernel for both the input variable $y$ and the output variable $x$. For the input $y$, we whiten the data to decorrelate each dimension using a form of automatic relevance determination \citep{rasmussen2006gaussian} such that an anisotropic but diagonal Gaussian kernel can be used. All our algorithms were trained with (nested) five-fold cross-validation.
 % * <lachlan@mccalman.info> 2016-10-06T00:13:07.395Z:
@@ -686,10 +658,10 @@
 		
 		Figure \ref{fig:motorcycleresults} plots the quantiles estimated for the Motorcycle dataset for three of the algorithms. The piecewise-constant quantile estimates are clearly visible in the DR plot. The JB plot has each quantile trained separately, and as a result the 0.1 and 0.9 quantile both fit the boundary of the data very closely. The NL plot shows a much smoother representation, as these are quantiles for a single underlying cumulative distribution (trained with the marginal likelihood learning).
 
-\section{Conclusion}
+\section{CONCLUSION}
 \label{sec:conclusion}
 	
-	This paper presented a set of novel algorithms for estimating quantiles nonparametrically from kernel embeddings of probability distributions given sampled observations. By projecting the indicator function into the RKHS, we first present a direct approach where the empirical CDF can be computed directly, but lack the the desired smoothness and non-decreasing property. We then impose smoothness by instead projecting a smooth function within the full RKHS that becomes the indicator function in the limit of vanishing bandwidth. At a trade off with computational complexity, the non-decreasing constraint is guaranteed by a pre-image approach, where the effective weights is to be recovered from a quadratic program.
+	This paper presented a set of novel algorithms for estimating quantiles nonparametrically from kernel embeddings of probability distributions given sampled observations. By projecting the indicator function into the RKHS, we first present a direct approach where the empirical CDF can be computed directly, but lack the desired smoothness and non-decreasing property. We then impose smoothness by instead projecting a smooth function within the full RKHS that becomes the indicator function in the limit of vanishing bandwidth. At a trade off with computational complexity, the non-decreasing constraint is guaranteed by a pre-image approach, where the effective weights is to be recovered from a quadratic program.
 	
 	We then construct quantile estimators from these CDF estimates using numerical root-finding, and considered training on both the pinball loss and the log marginal likelihood. We then evaluated the resulting algorithms using a set of well-known machine learning datasets.
 	
