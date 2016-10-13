@@ -497,7 +497,7 @@
 		\begin{subfigure}[b]{0.32\textwidth}
 			\includegraphics[width=\textwidth]{figures/Weather_results}
 		\end{subfigure}
-		\caption{Results from the three quantile experiments. The error bars in these figures represent $\pm 1$ standard deviation of the pinball loss over the testing set.}
+		\caption{Results from the three quantile experiments. The error bars in these figures represent $\pm 1$ standard deviation of the pinball loss over the testing set. A: Linear Quantile Estimator; B: Quantile SVM; C: Reduction to Classification; D: Quantile GP; E: Heteroskedastic Quantile GP}
 		\label{fig:qfull}
 	\end{figure*}
 	% Suppose some data $\{(\bvec{y}_{i}, x_{i})\}_{i = 1}^{n}$ is collected from a joint distribution $\mathbb{P}_{\rv{Y} \rv{X}}$. We can either find the standard empirical embedding $\hat{\mu}_{\rv{X}}$ or empirical conditional embedding $\hat{\mu}_{\rv{X} | \bvec{\rv{Y}} = \bvec{y}}$, both of which is of the form $\Phi \bm{\beta}$. This is also true for posterior embeddings obtained from KBR \citep{fukumizu2013kernel}, making these techniques very general in nature.
@@ -668,18 +668,19 @@
 \section{CONCLUSION}
 \label{sec:conclusion}
 	
-	This paper presented a set of novel algorithms for estimating quantiles nonparametrically from kernel embeddings of probability distributions given sampled observations. By projecting the indicator function into the RKHS, we first present a direct approach where the empirical CDF can be computed directly, but lack the desired smoothness and non-decreasing property. We then impose smoothness by instead projecting a smooth function within the full RKHS that becomes the indicator function in the limit of vanishing bandwidth. At a trade off with computational complexity, the non-decreasing constraint is guaranteed by a pre-image approach, where the effective weights is to be recovered from a quadratic program.
+	This paper presented a set of novel algorithms for estimating quantiles nonparametrically from kernel embeddings of probability distributions given sampled observations. By projecting indicator functions into the RKHS spanned by features at the observations, we first present an efficient direct non-smooth CDF estimate. We then impose smoothness by instead projecting a smooth function into the full RKHS. At a trade off with computational complexity, the non-decreasing constraint is then guaranteed by a pre-image approach, where the effective weights is to be recovered from a quadratic program.
 	
-	We then construct quantile estimators from these CDF estimates using numerical root-finding, and considered training on both the pinball loss and the log marginal likelihood. We then evaluated the resulting algorithms using a set of well-known machine learning datasets.
+	We then construct quantile estimators from these CDF estimates using numerical root-finding, and considered training on both the pinball loss and the log marginal likelihood. Finally, the resulting algorithms are tested on a set of well-known machine learning datasets.
 	
-	Our pre-image quantile estimators in particular were comparable to, or better than, the state-of-the-art algorithms in the literature. These algorithms can be trained either using pinball loss, for a slight increase in performance, or with negative log marginal likelihood, to guarantee the non-crossing constraint. Additionally, all our algorithms explicitly represent multimodal distributions, and can model datasets with strong heteroskedasticty.
+	Our pre-image quantile estimators in particular were comparable to, or better than, state-of-the-art algorithms. These algorithms can be trained either using pinball loss, for a slight increase in performance, or with negative log marginal likelihood, to guarantee the non-crossing constraint. Additionally, all our algorithms explicitly represent multimodal distributions, and can model datasets with strong heteroskedasticty.
 	
 	An interesting direction for future work would include the investigation of a complete Bayesian learning framework, where the latent phenomenon can be represented as a kernel embedding, and the learning objective is evaluated over the whole training set at once instead of over a separate validation set, similar to marginal likelihood learning in the GPR framework.
 
-\section*{Acknowledgements}
+%\section*{Acknowledgements}
+%
+%	This work is supported by anonymous organisations.
 
-	This work is supported by anonymous organisations.
-
+\newpage
 \bibliography{kernel_embeddings}
 
 \end{document}
