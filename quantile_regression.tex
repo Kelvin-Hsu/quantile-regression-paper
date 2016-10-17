@@ -26,6 +26,11 @@
 \usepackage{caption}
 \usepackage{subcaption}
 
+% Make Table Caption on Top
+\usepackage{float}
+\floatstyle{plaintop}
+\restylefloat{table}
+
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
 \theoremstyle{theorem}
@@ -168,7 +173,7 @@
 		\citep{bauer1981probability}
 		The \textit{distribution} of a random variable $\rv{X} : \Omega \to \mathcal{X}$ is the Borel measure $\mathbb{P}_{\rv{X}} : \mathcal{A} \to [0, 1]$ defined by
 		\begin{equation}
-			\mathbb{P}_{\rv{X}}[A] := \mathbb{P}[\rv{X} \in A].
+			\mathbb{P}_{\rv{X}}[A] := \mathbb{P}[\rv{X} \in A],
 		\label{eq:distribution}
 		\end{equation}
 		where the event $\{\rv{X} \in A\} := \rv{X}^{-1}[A] := \{\omega \in \Omega : \rv{X}(\omega) \in A\} \in \mathcal{W}$ is the inverse image of $A \in \mathcal{A}$ (thus $A \subseteq \mathcal{X}$ by definition) under the random variable $\rv{X}$.
@@ -387,7 +392,7 @@
 				\includegraphics[width=\columnwidth]{figures/cumulativeexamplesmooth}
 				\includegraphics[width=\columnwidth]{figures/cumulativeexampleerf}
 			\end{center}
-			\caption{\small (Left) The PDF obtained through the pre-image method on the Motorcycle dataset (blue) and The embedding weights at the training points (red). (Right) The resulting CDF estimate using the direct estimate \eqref{eq:empirical_cdf} and smooth estimate \eqref{eq:smooth_empirical_cdf_gaussian_kernel}. (Bottom) The smooth CDF estimate again (green) with its individual error function components (red) overlayed \eqref{eq:smooth_empirical_cdf_gaussian_kernel}.}
+			\caption{\small (Left) The PDF obtained through the pre-image method on the Motorcycle dataset (blue) and the embedding weights at the training points (red). (Right) The resulting CDF estimate using the direct estimate \eqref{eq:empirical_cdf} and smooth estimate \eqref{eq:smooth_empirical_cdf}. (Bottom) The smooth CDF estimate again (green) with its individual error function components (red) overlayed \eqref{eq:smooth_empirical_cdf_gaussian_kernel}.}
 			\label{fig:direct_quantile_regression}
 		\end{figure}
 		
@@ -542,7 +547,7 @@
 	\begin{definition}
 		The \textit{clip-normalised $\tau$-quantile estimate} is
 		\begin{equation}
-			q_{\rv{X}}(\tau) = x : \bvec{\tilde{w}}^{T} \bvec{K}(x) = \tau.
+			q_{\rv{X}}(\tau) = x : \bvec{\tilde{w}}^{T} \bvec{K}(x) = \tau,
 		\end{equation}
 		where $\bvec{\tilde{w}}$ is the clip-normalised weights of the relevant embedding.
 		Both pinball learning and marginal likelihood learning can be used. We denote this algorithm as NB when done with pinball learning, and NL when done with marginal likelihood learning.
@@ -579,7 +584,7 @@
 		
 	The computational complexity of these algorithms varies from $O(n \log(n))$ to $O(n^{3} \log(n))$ in the number of training points $n$ (\cref{table:quantile_regression_methods}). The 1-D root-finding required to solve the quantile equation \eqref{eq:quantile_root_finding} introduces a factor of $\log(n)$ in all cases (using a binary search). The difference lies in the CDF estimation technique. %, whose computational complexity is discussed in the supplementary material.
 	
-	The cheapest algorithm is DR, which is simply a (conditional) sum of the mixture weights and is therefore $O(n)$ in the number of training points. Similarly, DS, NL, and NB are also $O(n)$, but requires pre-computation of the kernel integral $\eqref{eq:kernel_integral}$ of constant complexity. The most expensive are the \qpi-based pre-image estimators (JL and JB), which require solving a quadratic program and therefore introduces a further factor of $O(n^2)$. However, if a pre-image estimate is also required for other tasks and is therefore already available, then JL and JB also only introduces a further factor of $O(n)$.
+	The cheapest algorithm is DR, which is simply a (conditional) sum of the mixture weights and is therefore $O(n)$ in the number of training points. Similarly, DS, NL, and NB are also $O(n)$, but requires pre-computation of the kernel integral $\eqref{eq:kernel_integral}$ of constant complexity. The most expensive are the \qpi-based pre-image estimators (JL and JB), which require solving a quadratic program and therefore introduces a further factor of $O(n^{2})$. However, if a pre-image estimate is also required for other tasks and is therefore already available, then JL and JB also only introduces a further factor of $O(n)$.
 	
 \section{RELATED WORK}
 \label{sec:related_work}
